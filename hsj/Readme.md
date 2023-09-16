@@ -1,14 +1,4 @@
-# Feature
-
-<br>
-
-* 수집기
-* 원천 : 네이버
-
-
-<br><br>
-
-# 수진
+# 프로젝트 구성원
 
 <br>
 
@@ -16,26 +6,38 @@
 <table>
     <thead>
         <tr>
-            <th colspan=1>a</th>
-            <th colspan=1>ab</th>
+            <th colspan=1>이름</th>
+            <th colspan=1>역할</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>1</td>
-            <td>2</td>
+            <td>김윤호</td>
+            <td>빛윤호</td>
         </tr>
         <tr>
-            <td>1</td>
-            <td>2</td>
+            <td>이경민</td>
+            <td>2km</td>
         </tr>
         <tr>
-            <td>1</td>
-            <td>2</td>
+            <td>박성호</td>
+            <td>데스노트</td>
         </tr>
         <tr>
-            <td>1</td>
-            <td>2</td>
+            <td>지민지</td>
+            <td>갓민지</td>
+        </tr>
+        <tr>
+            <td>조성인</td>
+            <td>우파루파</td>
+        </tr>
+        <tr>
+            <td>지혜현</td>
+            <td>HHJEE</td>
+        </tr>
+        <tr>
+            <td>현수진</td>
+            <td>나</td>
         </tr>
     </tbody>
 </table>
