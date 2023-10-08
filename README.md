@@ -96,4 +96,23 @@ Team.DPV 가 고민한 것들은 모두가 간편하게 사용할 수 있어야 
 
 </div>
 
+<br><br>
 
+# 3. Knowledge
+
+<br>
+
+* <a href="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/Reposiotry_rule.md">Issue & Branch Rule</a>
+* <a href="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/Hadoop.md">Hadoop 세팅</a>
+* <a href="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/MariaDB.md">MariaDB 이중화 세팅</a>
+* <a href="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/Postgres.md">Postgres 세팅</a>
+* <a href="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/React_Native.md">React Native 세팅</a>
+* <a href ="https://github.com/FINAL-BUSAN-2/DataPointOfView/blob/develop/knowledge/Spark_Setting.md>">Pyspark 세팅</a>
+
+<div align="right">
+
+[목차로](#home1)
+
+</div>
+
+<br><br>
