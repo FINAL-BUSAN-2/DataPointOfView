@@ -1,34 +1,26 @@
 import React, { useState } from 'react';
 import { View, Button, Text } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DatePicker from 'react-native-date-picker'
 
 const TimePicker = () => {
-  const [selectedTime, setSelectedTime] = useState('');
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: Date) => {
-    setSelectedTime(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    hideDatePicker();
-  };
-
+  const [date, setDate] = useState(new Date())
+  const [open, setOpen] = useState(false);
   return (
     <View>
-      <Button title="시간 선택" onPress={showDatePicker} />
-      <Text>선택된 시간: {selectedTime}</Text>
+      <Button title="시간 선택" onPress={() => setOpen(true)} />
 
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="time"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
+      <DatePicker
+        modal
+        open={open}
+        date={date}
+        onConfirm={(date) => {
+          setOpen(false)
+          setDate(date)
+        }}
+        onCancel={() => {
+          setOpen(false)
+        }}
       />
     </View>
   );

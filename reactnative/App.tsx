@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
 import LoginComponent from './login'; // ./login.js 파일을 가져옴
+import TimeComponent from './datetimepicker'
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
@@ -23,7 +24,7 @@ function App() {
         <LogoComponent />
       ) : (
         // 로그인 화면을 표시
-        <LoginComponent />
+        <TimeComponent />
       )}
     </View>
   );
