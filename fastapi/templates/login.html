@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 할거야</title>
+  </head>
+  <body>
+    <a href="javascript: kakaoLogin()">kakao_login</a>
+    <a href="javascript: kakaoLogout()">kakao_logout</a>
+    <a href="javascript: userInfo()">정보 보기</a>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+      // Kakao API 초기화
+      window.Kakao.init("d5f43a85be784fb7ca46330a217f6d9c");
+
+      let kakaoUserInfo = null;
+
+      // Kakao 로그인 함수
+      function kakaoLogin() {
+        window.Kakao.Auth.login({
+          scope: "profile_nickname, account_email, gender, age_range",
+          success: function (authObj) {
+            console.log(authObj);
+
+            // Kakao 사용자 정보 요청
+            window.Kakao.API.request({
+              url: "/v2/user/me",
+              success: (res) => {
+                kakaoUserInfo = res.kakao_account;
+                console.log(kakaoUserInfo);
+              },
+            });
+          },
+        });
+      }
+
+      function userInfo() {
+        if (kakaoUserInfo) {
+          const infoText = `이름: ${kakaoUserInfo.profile.nickname}\n이메일: ${kakaoUserInfo.email}\n성별: ${kakaoUserInfo.gender}\n연령대: ${kakaoUserInfo.age_range}`;
+          alert(infoText);
+        } else {
+          alert("사용자 정보를 먼저 가져와야 합니다.");
+        }
+      }
+
+      // Kakao 로그아웃 함수
+      function kakaoLogout() {
+        window.Kakao.Auth.logout(function () {
+          console.log("로그아웃 되었습니다.");
+          kakaoUserInfo = null;
+        });
+      }
+    </script>
+  </body>
+</html>
