@@ -1,14 +1,60 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
+
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
 };
 
 const Main: React.FC<MainProps> = ({navigation}) => {
+  const [isLogoVisible, setLogoVisible] = useState(true);
+  const [isLogin, setLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState<string | null>(null);
   const [showImageItems, setShowImageItems] = useState(false);
+
+  useEffect(() => {
+    // After 1 second hide the logo screen and show the login screen
+    const timer = setTimeout(() => {
+      setLogoVisible(false);
+    }, 1000); // delay of 1 second
+
+    // Register URL schema event handler
+    const handleOpenURL = (event: {url: string}) => {
+      const url = event.url;
+      const decodedUserInfo = decodeURIComponent(url.split('?user_info=')[1]);
+      setUserInfo(decodedUserInfo);
+      setLogin(true);
+    };
+
+    Linking.addListener('url', handleOpenURL);
+
+    return () => {
+      clearTimeout(timer); // clear timer when component unmounts
+      Linking.removeEventlistener('url', handleOpenURL); // remove event listener
+    };
+  }, []);
+
+  // Handle URL schema
+  const handleOpenURL = (event: {url: string}) => {
+    const url = event.url;
+
+    // Extract user info by decoding the URL
+    const decodedUserInfo = decodeURIComponent(url.split('?user_info=')[1]);
+
+    // Set extracted user info to state
+    setUserInfo(decodedUserInfo);
+    // Set login status (for example if there is user info then consider it as logged in)
+    setLogin(true);
+  };
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
     setShowImageItems(!showImageItems);
