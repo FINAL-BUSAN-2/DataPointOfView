@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 
 const TimePicker = () => {
@@ -7,7 +7,6 @@ const TimePicker = () => {
   const [showDatePicker, setShowDatePicker] = useState(true);
 
   const handleDateChange = (selectedDate: Date) => {
-    setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
     }
@@ -16,7 +15,12 @@ const TimePicker = () => {
   return (
     <View>
       {showDatePicker ? (
-        <DatePicker date={date} onDateChange={handleDateChange} />
+        <DatePicker
+          date={date}
+          onDateChange={handleDateChange}
+          mode="time"
+          fadeToColor="none"
+        />
       ) : (
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <Text style={{fontSize: 16}}>Select Date</Text>

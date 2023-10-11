@@ -29,7 +29,7 @@ const LocalMain = () => {
         // 로고 화면을 표시
         <LogoComponent />
       ) : (
-        // 로그인 화면을 표시
+        // 메인 화면을 표시
         <LoginComponent />
       )}
     </View>
@@ -40,7 +40,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="LocalMain" component={LocalMain} />
+        {/* <Stack.Screen name="LocalMain" component={LocalMain} /> */}
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen
           name="Health"

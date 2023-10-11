@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
+import {Toggle} from './components';
+import {addRoutine} from './api';
 
 const RoutineNameBox = () => {
   // 루틴명 입력
@@ -33,11 +35,7 @@ const RoutineNameBox = () => {
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
   // 추가 설정
-  const [addtionEnabled, setAddtionEnabled] = useState<string>('');
-  // 추가 설정
-  const [isAdditionEnabled, setIsAdditionEnabled] = useState<boolean>(false);
-  // 추가하기
-  const [newTask, setNewTask] = useState('');
+  const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -72,10 +70,20 @@ const RoutineNameBox = () => {
     }
   };
   // 추가 설정 핸들러
-  const handleaddtionEnabled = (category: string) => {
-    setAddtionEnabled(category);
+  const handletagsEnabled = (category: string) => {
+    setTagsEnabled(category);
   };
-
+  // 저장 핸들러
+  const handleSubmit = () => {
+    addRoutine(
+      routineName,
+      parseInt(set),
+      parseInt(reps),
+      selectedDate,
+      selectedDaysOfWeek,
+      tagsEnabled,
+    );
+  };
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -155,12 +163,55 @@ const RoutineNameBox = () => {
             </>
           )}
         </TouchableOpacity>
-        {/* 시간 선택 */}
-        <TimeComponent />
+
+        <View style={styles.Timecontainer}>
+          {/* 시간 선택 */}
+          <TimeComponent />
+        </View>
+
+        {/* 태그 선택 */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: '15%',
+          }}>
+          <Text>태그</Text>
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Weight')}
+            style={
+              tagsEnabled === 'Weight' ? styles.selectedButton : styles.button
+            }>
+            <Text>근력운동</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Cardio')}
+            style={
+              tagsEnabled === 'Cardio' ? styles.selectedButton : styles.button
+            }>
+            <Text>유산소</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Stretching')}
+            style={
+              tagsEnabled === 'Stretching'
+                ? styles.selectedButton
+                : styles.button
+            }>
+            <Text>스트레칭</Text>
+          </TouchableOpacity>
+        </View>
+        <Toggle
+          label={'알림'}
+          value={notificationEnabled}
+          onChange={setNotificationEnabled}
+        />
         {/* 알림 설정 */}
-        <View style={styles.notificationcontainer}>
+        {/* <View style={styles.notificationcontainer}>
           <Text style={styles.notification}>알림</Text>
-          {/* 알림 설정 스위치 */}
+          알림 설정 스위치
           <View style={styles.notificationswitch}>
             <Switch
               value={notificationEnabled}
@@ -168,22 +219,57 @@ const RoutineNameBox = () => {
               style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
             />
           </View>
-        </View>
+        </View> */}
 
         {/* 반복 설정 */}
-        <View style={styles.repeatcontainer}>
-          <Text style={styles.repeat}>반복</Text>
-          {/* 반복 설정 스위치 */}
-          <View style={styles.repeatswitch}>
+        <Toggle
+          label={'반복'}
+          value={repeatEnabled}
+          onChange={setRepeatEnabled}>
+          {repeatEnabled && (
+            <>
+              <View style={styles.dayPickerContainer}>
+                <View style={styles.dayButtonRow}>
+                  {['월', '화', '수', '목', '금', '토', '일'].map(day => (
+                    <TouchableOpacity
+                      key={`day-${day}`}
+                      onPress={() => handleDayOfWeekToggle(day)}
+                      style={[
+                        styles.dayButton,
+                        selectedDaysOfWeek.includes(day) &&
+                          styles.selectedDayButton,
+                      ]}>
+                      <Text
+                        key={`text-${day}`}
+                        style={[
+                          styles.dayButtonText,
+                          selectedDaysOfWeek.includes(day) &&
+                            styles.selectedDayButtonText,
+                        ]}>
+                        {day}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </>
+          )}
+        </Toggle>
+
+        {/* 반복 설정 */}
+        {/* <View style={styles.repeatcontainer}>
+          <Text style={styles.repeat}>반복</Text> */}
+        {/* 반복 설정 스위치 */}
+        {/* <View style={styles.repeatswitch}>
             <Switch
               value={repeatEnabled}
               onValueChange={value => setRepeatEnabled(value)}
               style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
             />
           </View>
-        </View>
+        </View> */}
         {/* 요일 선택 */}
-        {repeatEnabled && (
+        {/* {repeatEnabled && (
           <>
             <View style={styles.dayPickerContainer}>
               <View style={styles.dayButtonRow}>
@@ -210,117 +296,15 @@ const RoutineNameBox = () => {
               </View>
             </View>
           </>
-        )}
-
-        {/* 추가 설정 */}
-        <View style={styles.addtioncontainer}>
-          <Text style={styles.addtion}>추가 설정</Text>
-          {/* 추가 설정 스위치 */}
-          <View style={styles.addtionswitch}>
-            <Switch
-              value={isAdditionEnabled}
-              onValueChange={value => setIsAdditionEnabled(value)}
-              style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
-            />
-          </View>
-        </View>
-        {/* 태그 및 컬러 선택 */}
-        {isAdditionEnabled && (
-          <>
-            {/* 태그 선택 */}
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text>태그</Text>
-              <TouchableOpacity
-                onPress={() => handleaddtionEnabled('근력운동')}
-                style={
-                  addtionEnabled === '근력운동'
-                    ? styles.selectedButton
-                    : styles.button
-                }>
-                <Text>근력운동</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => handleaddtionEnabled('유산소')}
-                style={
-                  addtionEnabled === '유산소'
-                    ? styles.selectedButton
-                    : styles.button
-                }>
-                <Text>유산소</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => handleaddtionEnabled('스트레칭')}
-                style={
-                  addtionEnabled === '스트레칭'
-                    ? styles.selectedButton
-                    : styles.button
-                }>
-                <Text>스트레칭</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{marginTop: 20}}></View>
-
-            {/* 컬러 선택 */}
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text>컬러</Text>
-              <TouchableOpacity onPress={() => console.log('Red selected')}>
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: '#FF0000',
-                    marginLeft: 10,
-                    borderRadius: 15,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => console.log('Yellow selected')}>
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: '#FFB700',
-                    marginLeft: 10,
-                    borderRadius: 15,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => console.log('Lime selected')}>
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: '#42FF00',
-                    marginLeft: 10,
-                    borderRadius: 15,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => console.log('Purple selected')}>
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: '#CC00FF',
-                    marginLeft: 10,
-                    borderRadius: 15,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
+        )} */}
       </ScrollView>
 
       {/* 추가하기 */}
-      <View style={styles.addContainer}>
+      <TouchableOpacity onPress={handleSubmit} style={styles.addContainer}>
         <View style={styles.addTab}>
           <Text style={styles.addtext}>추가하기</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -420,6 +404,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+
+  // 시간 설정
+  Timecontainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   /// 알람 설정
@@ -530,16 +520,10 @@ const styles = StyleSheet.create({
     height: 200,
   },
 
-  cat: {
-    marginTop: 200,
-    width: 350,
-    height: 500,
-  },
-
   //addContainer
   addContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
     height: 70,
