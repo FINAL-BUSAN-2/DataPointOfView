@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Linking} from 'react-native';
 import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
 import LoginComponent from './login'; // ./login.js 파일을 가져옴
-import FirstScreenComponent from './FirstScreen';
+import FirstScreenComponent from './Main';
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
