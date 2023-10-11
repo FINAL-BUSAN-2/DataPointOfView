@@ -105,7 +105,7 @@ const RoutineNameBox = () => {
               style={styles.Routineinput}
               value={routineName}
               onChangeText={handleRoutineNameChange}
-              placeholder="건강기능식품명을 입력해 주세요!"
+              placeholder="루틴명을 입력해 주세요!"
             />
             {/* 카메라 아이콘 */}
             <TouchableOpacity
@@ -127,9 +127,9 @@ const RoutineNameBox = () => {
           </View>
         </View>
 
-        {/*몇회&몇정 입력 박스 */}
+        {/*일%회 입력 박스 */}
         <View style={styles.setreps}>
-          {/* 몇회 입력 */}
+          {/* 일 입력 */}
           <TextInput
             style={styles.setrepsinput}
             value={set}
@@ -137,8 +137,8 @@ const RoutineNameBox = () => {
             placeholder="       "
             keyboardType="numeric"
           />
-          <Text style={styles.setrepstext}>회 X</Text>
-          {/* 몇정 입력 */}
+          <Text style={styles.setrepstext}>일 X</Text>
+          {/* 몇회 입력 */}
           <TextInput
             style={styles.setrepsinput}
             value={reps}
@@ -146,7 +146,7 @@ const RoutineNameBox = () => {
             placeholder="       "
             keyboardType="numeric"
           />
-          <Text style={styles.setrepstext}>정</Text>
+          <Text style={styles.setrepstext}>회</Text>
         </View>
 
         {/* 시간 선택 */}
@@ -238,16 +238,16 @@ const RoutineNameBox = () => {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text>태그</Text>
             <TouchableOpacity
-              onPress={() => handleTagSelection('에너지 및 다량 영양소')}
+              onPress={() => handleTagSelection('기타')}
               style={
-                addtionEnabled === '에너지 및 다량 영양소'
+                addtionEnabled === '기타'
                   ? styles.selectedButton
                   : styles.button
               }>
-              <Text>에너지 및 다량 영양소</Text>
+              <Text>기타</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => handleTagSelection('비타민')}
               style={
                 addtionEnabled === '비타민'
@@ -265,7 +265,7 @@ const RoutineNameBox = () => {
                   : styles.button
               }>
               <Text>무기질</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View style={{marginTop: 20}}></View>
