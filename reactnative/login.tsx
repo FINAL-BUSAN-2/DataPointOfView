@@ -35,7 +35,7 @@ const App = () => {
         onPress={kakaoPress}
         style={{width: 315, height: 75, margin: 10}}>
         <Image
-          source={require('./images/login/kakao_login_large_narrow.png')}
+          source={require('./android/app/src/images/login/kakao_login_large_narrow.png')}
           style={{width: '100%', height: '100%'}}
         />
       </TouchableOpacity>
@@ -44,7 +44,7 @@ const App = () => {
         onPress={naverPress}
         style={{width: 315, height: 75, margin: 10}}>
         <Image
-          source={require('./images/login/naver_login.png')}
+          source={require('./android/app/src/images/login/naver_login.png')}
           style={{width: '100%', height: '100%', borderRadius: 12}}
         />
       </TouchableOpacity>
@@ -53,7 +53,7 @@ const App = () => {
         onPress={googlePress}
         style={{width: 330, height: 80, margin: 6}}>
         <Image
-          source={require('./images/login/google_login.png')}
+          source={require('./android/app/src/images/login/google_login.png')}
           style={{width: '100%', height: '100%'}}
         />
       </TouchableOpacity>

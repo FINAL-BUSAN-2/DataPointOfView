@@ -1,12 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Linking} from 'react-native';
-import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
-import LoginComponent from './login'; // ./login.js 파일을 가져옴
-import FirstScreenComponent from './Main';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
+
+//컴포넌트 import
+import LogoComponent from './logo'; // ./logo.tsx 파일을 가져옴
+import LoginComponent from './login'; // ./login.tsx 파일을 가져옴
+import Main from './Main'; //Main.tsx 메인화면
+import Health from './Health'; //Health.tsx 건강루틴추가
+import Pill from './Pill'; //Pill.tsx 영양루틴추가
+import Etc from './Etc'; // Etc.tsx 기타루틴추가
+
+const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(false);
+  const [isLogin, setLogin] = useState(false); //true일경우 로그인상태
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   useEffect(() => {
@@ -49,12 +59,65 @@ function App() {
         <LogoComponent />
       ) : isLogin ? (
         // 사용자가 로그인한 경우 다른 컴포넌트 표시 (사용자 정보를 전달할 수 있음)
-        <FirstScreenComponent userInfo={userInfo} />
+        <Main userInfo={userInfo} />
       ) : (
         // 사용자가 로그인하지 않은 경우 로그인 화면 표시
         <LoginComponent />
       )}
     </View>
+
+<NavigationContainer>
+<Stack.Navigator screenOptions={{headerShown: false}}>
+  <Stack.Screen name="LocalMain" component={LocalMain} />
+  <Stack.Screen name="Main" component={Main} />
+  <Stack.Screen
+    name="Health"
+    component={Health}
+    options={({navigation}) => ({
+      headerShown: true,
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.goBack()}
+        />
+      ),
+      headerTitle: '건강 루틴 추가',
+    })}
+  />
+  <Stack.Screen
+    name="Pill"
+    component={Pill}
+    options={({navigation}) => ({
+      headerShown: true,
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.goBack()}
+        />
+      ),
+      headerTitle: '영양 루틴 추가',
+    })}
+  />
+  <Stack.Screen
+    name="Etc"
+    component={Etc}
+    options={({navigation}) => ({
+      headerShown: true,
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.goBack()}
+        />
+      ),
+      headerTitle: '기타 루틴 추가',
+    })}
+  />
+</Stack.Navigator>
+</NavigationContainer>
+
+
+
+
   );
 }
 

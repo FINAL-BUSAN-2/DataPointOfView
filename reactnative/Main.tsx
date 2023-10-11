@@ -19,11 +19,11 @@ const Main: React.FC<MainProps> = ({navigation}) => {
   };
   // 영양 페이지 이동 함수
   const movetest1 = () => {
-    navigation.navigate('pill');
+    navigation.navigate('Pill');
   };
   // 기타 페이지 이동 함수
   const movetest2 = () => {
-    navigation.navigate('test2');
+    navigation.navigate('Etc');
   };
 
   return (
