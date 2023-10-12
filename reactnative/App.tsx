@@ -1,92 +1,64 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Linking} from 'react-native';
 import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
-import LoginComponent from './login';
+import LoginComponent from './login'; // ./login.js 파일을 가져옴
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HeaderBackButton} from '@react-navigation/elements';
 import Main from './Main';
 import Health from './Health';
 import pill from './pill';
-import test2 from './test2';
 
 const Stack = createStackNavigator();
 
-const LocalMain = () => {
+function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
+  const [isLogin, setLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   useEffect(() => {
+    // 3초 후에 로고 화면을 숨기고 로그인 화면 보이기
     const timer = setTimeout(() => {
       setLogoVisible(false);
-    }, 1500); // 1.5초 지연
+    }, 3000); // 3초 지연
 
-    return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머 해제
+    // URL 스키마 이벤트 핸들러 등록
+    Linking.addEventListener('url', handleOpenURL);
+
+    return () => {
+      clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머 해제
+      Linking.removeEventListener('url', handleOpenURL); // 이벤트 리스너 해제
+    };
   }, []);
 
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {isLogoVisible ? (
-        // 로고 화면을 표시
-        <LogoComponent />
-      ) : (
-        // 메인 화면을 표시
-        <LoginComponent />
-      )}
-    </View>
-  );
-};
+  // URL 스키마 처리
+  const handleOpenURL = event => {
+    const url = event.url;
 
-const App = () => {
+    // URL 디코딩을 통해 사용자 정보 추출
+    const decodedUserInfo = decodeURIComponent(url.split('?user_info=')[1]);
+
+    // 추출된 사용자 정보를 상태에 설정하고 로그인 상태로 변경합니다.
+    setUserInfo(decodedUserInfo);
+    setLogin(true);
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="LocalMain" component={LocalMain} /> */}
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen
-          name="Health"
-          component={Health}
-          options={({navigation}) => ({
-            headerShown: true,
-            headerLeft: props => (
-              <HeaderBackButton
-                {...props}
-                onPress={() => navigation.goBack()}
-              />
-            ),
-            headerTitle: '건강 루틴 추가',
-          })}
-        />
-        <Stack.Screen
-          name="pill"
-          component={pill}
-          options={({navigation}) => ({
-            headerShown: true,
-            headerLeft: props => (
-              <HeaderBackButton
-                {...props}
-                onPress={() => navigation.goBack()}
-              />
-            ),
-            headerTitle: '영양 루틴 추가',
-          })}
-        />
-        <Stack.Screen
-          name="test2"
-          component={test2}
-          options={({navigation}) => ({
-            headerShown: true,
-            headerLeft: props => (
-              <HeaderBackButton
-                {...props}
-                onPress={() => navigation.goBack()}
-              />
-            ),
-            headerTitle: '기타 루틴 추가',
-          })}
-        />
+        {isLogoVisible ? (
+          <Stack.Screen name="Logo" component={LogoComponent} />
+        ) : !isLogin ? (
+          <Stack.Screen name="Login" component={LoginComponent} />
+        ) : (
+          <>
+            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Health" component={Health} />
+            <Stack.Screen name="pill" component={pill} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
 
 export default App;
