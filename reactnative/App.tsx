@@ -16,10 +16,10 @@ function App() {
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   useEffect(() => {
-    // 3초 후에 로고 화면을 숨기고 로그인 화면 보이기
+    // 1초 후에 로고 화면을 숨기고 로그인 화면 보이기
     const timer = setTimeout(() => {
       setLogoVisible(false);
-    }, 3000); // 3초 지연
+    }, 1000); // 1초 지연
 
     // URL 스키마 이벤트 핸들러 등록
     Linking.addEventListener('url', handleOpenURL);

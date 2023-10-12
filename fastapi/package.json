@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@react-native-seoul/kakao-login": "^5.3.0"
+  }
+}

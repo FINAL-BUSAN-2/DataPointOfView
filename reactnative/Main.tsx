@@ -1,13 +1,30 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
+import axios from 'axios';
+
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
+  userInfo: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Main: React.FC<MainProps> = ({navigation}) => {
+const Main: React.FC<MainProps> = ({
+  navigation,
+  userInfo,
+  setLogin,
+  setUserInfo,
+}) => {
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
@@ -26,6 +43,22 @@ const Main: React.FC<MainProps> = ({navigation}) => {
     navigation.navigate('test2');
   };
 
+  const logOut = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.0.190:3344/kakao/logout',
+      );
+
+      if (response.data && response.data.message) {
+        Alert.alert('로그아웃', response.data.message); // "로그아웃 되었습니다." 메시지 표시
+        setLogin(false);
+        setUserInfo(null);
+      }
+    } catch (error) {
+      Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,7 +72,7 @@ const Main: React.FC<MainProps> = ({navigation}) => {
               marginRight: 16,
             }}
           />
-          <Text style={styles.title}>HP-log</Text>
+          <Text style={styles.title}>HP-log / {userInfo}님</Text>
         </View>
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
