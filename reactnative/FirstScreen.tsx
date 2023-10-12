@@ -1,11 +1,21 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {CommonType} from './commonType';
+import axios from 'axios';
 
 type FirstScreenProps = {
   navigation: StackNavigationProp<CommonType.RootStackPageList, 'FirstScreen'>;
   userInfo: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 type FirstScreenState = {
@@ -23,6 +33,22 @@ class FirstScreen extends Component<FirstScreenProps, FirstScreenState> {
   handleFloatingBarClick = () => {
     const {showImageItems} = this.state;
     this.setState({showImageItems: !showImageItems});
+  };
+
+  logOut = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.0.190:3344/kakao/logout',
+      );
+
+      if (response.data && response.data.message) {
+        Alert.alert('로그아웃', response.data.message); // "로그아웃 되었습니다." 메시지 표시
+        this.props.setLogin(false);
+        this.props.setUserInfo(null);
+      }
+    } catch (error) {
+      Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
+    }
   };
 
   render() {
@@ -51,7 +77,7 @@ class FirstScreen extends Component<FirstScreenProps, FirstScreenState> {
                 marginRight: 16,
               }}
             />
-            <Text style={styles.title}>HP-log</Text>
+            <Text style={styles.title}>HP-log / {userInfo}님</Text>
           </View>
           <View style={styles.rightContainer}>
             {/* 달력 아이콘 */}
@@ -75,13 +101,15 @@ class FirstScreen extends Component<FirstScreenProps, FirstScreenState> {
             />
 
             {/* 환경설정 아이콘 */}
-            <Image
-              source={require('./android/app/src/img/settings.png')}
-              style={{
-                width: 30,
-                height: 30,
-              }}
-            />
+            <TouchableOpacity onPress={this.logOut}>
+              <Image
+                source={require('./android/app/src/img/settings.png')}
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         {/* Timeline Bar */}
@@ -170,7 +198,6 @@ class FirstScreen extends Component<FirstScreenProps, FirstScreenState> {
             </TouchableOpacity>
           </View>
         )}
-        <Text>{userInfo}</Text>
       </View>
     );
   }

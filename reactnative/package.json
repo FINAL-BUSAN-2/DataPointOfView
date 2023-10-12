@@ -1,5 +1,5 @@
 {
-  "name": "reactnative",
+  "name": "testProject",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,8 +10,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-navigation/stack": "^6.3.18",
+    "axios": "^1.5.1",
     "react": "18.2.0",
-    "react-native": "0.72.5"
+    "react-native": "0.72.5",
+    "react-native-calendars": "^1.1301.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

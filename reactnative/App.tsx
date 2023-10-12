@@ -49,7 +49,11 @@ function App() {
         <LogoComponent />
       ) : isLogin ? (
         // 사용자가 로그인한 경우 다른 컴포넌트 표시 (사용자 정보를 전달할 수 있음)
-        <FirstScreenComponent userInfo={userInfo} />
+        <FirstScreenComponent
+          userInfo={userInfo}
+          setLogin={setLogin}
+          setUserInfo={setUserInfo}
+        />
       ) : (
         // 사용자가 로그인하지 않은 경우 로그인 화면 표시
         <LoginComponent />
