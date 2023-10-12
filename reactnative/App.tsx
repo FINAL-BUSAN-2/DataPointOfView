@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
-import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
-import LoginComponent from './login';
+import LogoComponent from './logo'; //logo.tsx
+import LoginComponent from './login'; //login.tsx
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HeaderBackButton} from '@react-navigation/elements';
 import Main from './Main';
 import Health from './Health';
 import pill from './pill';
-import test2 from './test2';
+import test2 from './Etc';
 
 const Stack = createStackNavigator();
 

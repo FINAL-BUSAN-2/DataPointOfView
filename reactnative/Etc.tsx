@@ -15,7 +15,7 @@ import {Toggle} from './components';
 import {addRoutine} from './api';
 
 const RoutineNameBox = () => {
-  // 루틴명 입력
+  //루틴명 입력
   const [routineName, setRoutineName] = useState('');
   // 세트 입력
   const [set, setSet] = useState('');
@@ -46,33 +46,46 @@ const RoutineNameBox = () => {
     console.log('+버튼 클릭');
     // 여기에 "+" 버튼이 클릭됐을 때의 로직을 구현하세요.
   };
-  // 세트 입력 핸들러
+  // 몇회 입력 핸들러
   const handleSetChange = (text: string) => {
+    //숫자가 아닌 문자가 입력될 경우 입력x (숫자가아닌문자는빈문자열로바꿈)
     const numericValue = text.replace(/[^0-9]/g, '');
     setSet(numericValue);
+    console.log(`입력된 몇회: ${numericValue}`);
   };
-  // 횟수 입력 핸들러
+  // 몇정 입력 핸들러
   const handleRepsChange = (text: string) => {
+    //숫자가 아닌 문자가 입력될 경우 입력x (숫자가아닌문자는빈문자열로바꿈)
     const numericValue = text.replace(/[^0-9]/g, '');
     setReps(numericValue);
+    console.log(`입력된 몇정: ${numericValue}`);
   };
   // 달력 호출 및 선택 핸들러
   const handleDateSelect = (date: any) => {
     setSelectedDate(date.dateString);
     setShowCalendar(false);
+    console.log(`선택된 날짜: ${date.dateString}`);
   };
+
   // 반복 요일 선택 핸들러
   const handleDayOfWeekToggle = (day: string) => {
     if (selectedDaysOfWeek.includes(day)) {
+      // 이미 선택된 요일을 다시 클릭한 경우, 해당 요일을 배열에서 제거
       setSelectedDaysOfWeek(selectedDaysOfWeek.filter(d => d !== day));
+      console.log(`요일 ${day} 해제됨`);
     } else {
+      // 아직 선택되지 않은 요일을 클릭한 경우, 해당 요일을 배열에 추가
       setSelectedDaysOfWeek([...selectedDaysOfWeek, day]);
+      console.log(`요일 ${day} 선택됨`);
     }
   };
+
   // 태그 설정 핸들러
-  const handletagsEnabled = (category: string) => {
-    setTagsEnabled(category);
+  const handletagsEnabled = (tag: string) => {
+    console.log(`태그 ${tag} 선택됨`);
+    setTagsEnabled(tag);
   };
+
   // 저장 핸들러
   const handleSubmit = () => {
     addRoutine(
@@ -84,8 +97,8 @@ const RoutineNameBox = () => {
       tagsEnabled,
     );
   };
-
   //
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -96,7 +109,7 @@ const RoutineNameBox = () => {
               style={styles.Routineinput}
               value={routineName}
               onChangeText={handleRoutineNameChange}
-              placeholder="루틴 이름을 설정해주세요"
+              placeholder="루틴명을 입력해 주세요!"
             />
             {/* 카메라 아이콘 */}
             <TouchableOpacity
@@ -118,9 +131,9 @@ const RoutineNameBox = () => {
           </View>
         </View>
 
-        {/* 세트 & 횟수 입력 박스 */}
+        {/*일%회 입력 박스 */}
         <View style={styles.setreps}>
-          {/* 세트 입력 */}
+          {/* 일 입력 */}
           <TextInput
             style={styles.setrepsinput}
             value={set}
@@ -128,8 +141,8 @@ const RoutineNameBox = () => {
             placeholder="       "
             keyboardType="numeric"
           />
-          <Text style={styles.setrepstext}>세트 X</Text>
-          {/* 횟수 입력 */}
+          <Text style={styles.setrepstext}>일 X</Text>
+          {/* 몇회 입력 */}
           <TextInput
             style={styles.setrepsinput}
             value={reps}
@@ -178,31 +191,14 @@ const RoutineNameBox = () => {
           }}>
           <Text>태그</Text>
           <TouchableOpacity
-            onPress={() => handletagsEnabled('Weight')}
+            onPress={() => handletagsEnabled('기타')}
             style={
-              tagsEnabled === 'Weight' ? styles.selectedButton : styles.button
+              tagsEnabled === '기타' ? styles.selectedButton : styles.button
             }>
-            <Text>근력운동</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => handletagsEnabled('Cardio')}
-            style={
-              tagsEnabled === 'Cardio' ? styles.selectedButton : styles.button
-            }>
-            <Text>유산소</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => handletagsEnabled('Stretching')}
-            style={
-              tagsEnabled === 'Stretching'
-                ? styles.selectedButton
-                : styles.button
-            }>
-            <Text>스트레칭</Text>
+            <Text>기타</Text>
           </TouchableOpacity>
         </View>
+
         <Toggle
           label={'알림'}
           value={notificationEnabled}
