@@ -15,6 +15,17 @@ function App() {
   const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
+  function MainWrapper(props) {
+    return (
+      <Main
+        {...props}
+        userInfo={userInfo}
+        setLogin={setLogin}
+        setUserInfo={setUserInfo}
+      />
+    );
+  }
+
   useEffect(() => {
     // 1초 후에 로고 화면을 숨기고 로그인 화면 보이기
     const timer = setTimeout(() => {
@@ -51,7 +62,7 @@ function App() {
           <Stack.Screen name="Login" component={LoginComponent} />
         ) : (
           <>
-            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Main" component={MainWrapper} />
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
           </>

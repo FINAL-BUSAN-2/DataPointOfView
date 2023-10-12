@@ -50,7 +50,7 @@ const Main: React.FC<MainProps> = ({
       );
 
       if (response.data && response.data.message) {
-        Alert.alert('로그아웃', response.data.message); // "로그아웃 되었습니다." 메시지 표시
+        Alert.alert('message', response.data.message); // "로그아웃 되었습니다." 메시지 표시
         setLogin(false);
         setUserInfo(null);
       }
@@ -97,13 +97,15 @@ const Main: React.FC<MainProps> = ({
           />
 
           {/* 환경설정 아이콘 */}
-          <Image
-            source={require('./android/app/src/img/settings.png')}
-            style={{
-              width: 30,
-              height: 30,
-            }}
-          />
+          <TouchableOpacity onPress={logOut}>
+            <Image
+              source={require('./android/app/src/img/settings.png')}
+              style={{
+                width: 30,
+                height: 30,
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       {/* 타임라인바 */}
