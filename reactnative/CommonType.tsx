@@ -6,7 +6,7 @@ export type RootStackPageList = {
   default: undefined;
   Main: undefined;
   Health: undefined;
-  test2: undefined;
+  Etc: undefined;
   pill: undefined;
 };
 // }

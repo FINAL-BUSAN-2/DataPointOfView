@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Main from './Main';
 import Health from './Health';
 import pill from './pill';
+import etc from './Etc';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ function App() {
             <Stack.Screen name="Main" component={MainWrapper} />
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
+            <Stack.Screen name="etc" component={etc} />
           </>
         )}
       </Stack.Navigator>

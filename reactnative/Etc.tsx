@@ -88,7 +88,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
 
-  // 태그 선택 핸들러
+  // 태그 설정 핸들러
   const handletagsEnabled = (tag: string) => {
     console.log(`태그 ${tag} 선택됨`);
     setTagsEnabled(tag);
@@ -105,6 +105,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       tagsEnabled,
     );
   };
+  //
 
   return (
     <>
@@ -115,14 +116,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       </View>
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          <View style={styles.pillheader}>
+          <View style={styles.etcheader}>
             {/* 루틴명 입력 */}
             <View style={styles.Routinename}>
               <TextInput
                 style={styles.Routineinput}
                 value={routineName}
                 onChangeText={handleRoutineNameChange}
-                placeholder="건강기능식품명을 입력해 주세요!"
+                placeholder="루틴명을 입력해 주세요!"
               />
               {/* 카메라 아이콘 */}
               <TouchableOpacity
@@ -144,9 +145,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             </View>
           </View>
 
-          {/*몇회&몇정 입력 박스 */}
+          {/*일%회 입력 박스 */}
           <View style={styles.setreps}>
-            {/* 몇회 입력 */}
+            {/* 일 입력 */}
             <TextInput
               style={styles.setrepsinput}
               value={set}
@@ -154,8 +155,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               placeholder="       "
               keyboardType="numeric"
             />
-            <Text style={styles.setrepstext}>회 X</Text>
-            {/* 몇정 입력 */}
+            <Text style={styles.setrepstext}>일 X</Text>
+            {/* 몇회 입력 */}
             <TextInput
               style={styles.setrepsinput}
               value={reps}
@@ -163,7 +164,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               placeholder="       "
               keyboardType="numeric"
             />
-            <Text style={styles.setrepstext}>정</Text>
+            <Text style={styles.setrepstext}>회</Text>
           </View>
 
           {/* 날짜 선택 (달력 호출) */}
@@ -206,29 +207,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             }}>
             <Text>태그</Text>
             <TouchableOpacity
-              onPress={() => handletagsEnabled('에너지 및 다량 영양소')}
+              onPress={() => handletagsEnabled('기타')}
               style={
-                tagsEnabled === '에너지 및 다량 영양소'
-                  ? styles.selectedButton
-                  : styles.button
+                tagsEnabled === '기타' ? styles.selectedButton : styles.button
               }>
-              <Text>에너지 및 다량 영양소</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('비타민')}
-              style={
-                tagsEnabled === '비타민' ? styles.selectedButton : styles.button
-              }>
-              <Text>비타민</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('무기질')}
-              style={
-                tagsEnabled === '무기질' ? styles.selectedButton : styles.button
-              }>
-              <Text>무기질</Text>
+              <Text>기타</Text>
             </TouchableOpacity>
           </View>
 
@@ -345,9 +328,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgb(231,230,230)',
+    width: '100%',
   },
   scrollView: {},
-  pillheader: {
+  etcheader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
@@ -393,7 +377,7 @@ const styles = StyleSheet.create({
     height: 34,
   },
 
-  /// 몇회 & 몇정 설정
+  /// 세트 & 횟수 설정
   setreps: {
     width: 300,
     flexDirection: 'row',
@@ -552,7 +536,7 @@ const styles = StyleSheet.create({
   //addContainer
   addContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
     height: 70,
@@ -575,6 +559,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+
   header: {
     flexDirection: 'row',
     alignItems: 'stretch',
