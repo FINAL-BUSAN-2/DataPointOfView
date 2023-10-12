@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Request, Depends, HTTPException
-from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.responses import RedirectResponse
 from urllib.parse import quote
@@ -15,8 +14,6 @@ local_host = '192.168.0.190:3344'
 KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
 KAKAO_REDIRECT_URI = f"http://{local_host}/kakao/callback"
 LOGOUT_REDIRECT_URI = f"http://{local_host}/kakao/logout_callback"
-
-templates = Jinja2Templates(directory="templates")
 
 # Kakao 로그인 페이지로 리다이렉트
 @app.get("/kakao/login")
@@ -76,11 +73,3 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
     return {"message": "로그아웃 되었습니다."}
-
-@app.get("/")
-async def root(request: Request):
-    return templates.TemplateResponse("login.html",{"request": request})
-
-@app.get("/kakao")
-async def root(request: Request):
-    return templates.TemplateResponse("login.html",{"request": request})
