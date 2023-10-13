@@ -35,6 +35,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   );
   // 달력 호출
   const [showCalendar, setShowCalendar] = useState(false);
+  6;
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
