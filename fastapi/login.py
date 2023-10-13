@@ -8,6 +8,7 @@ app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='bce5bcfe36455290d51dd4258cfb2737e54b79188d9d51aa162f6ed9e6e706f3')
 
 local_host = '172.16.10.195:3344'
+server = '3.34.178.43'
 
 # Kakao API 설정
 KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
