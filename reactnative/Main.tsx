@@ -46,7 +46,7 @@ const Main: React.FC<MainProps> = ({
   const logOut = async () => {
     try {
       const response = await axios.get(
-        'http://192.168.0.190:3344/kakao/logout',
+        'http://172.16.10.195:3344/kakao/logout',
       );
 
       if (response.data && response.data.message) {
