@@ -8,7 +8,6 @@ export const addRoutine = async (
   rtn_day,
   rtn_sdate,
   rtn_tag,
-  rtn_email,
 ) => {
   try {
     const response = await axios.post('http://10.0.2.2:8000/routines', {
@@ -19,7 +18,6 @@ export const addRoutine = async (
       rtn_day,
       rtn_sdate,
       rtn_tag,
-      rtn_email,
     });
     console.log(response.data);
   } catch (error) {

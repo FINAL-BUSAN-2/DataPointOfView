@@ -29,7 +29,7 @@ class Routine(BaseModel):
     rtn_reps: int  # 1일 반복갯수
     rtn_time: str  # 알림시간
     rtn_day: List[str]  # 반복 요일
-    rtn_sdate: datetime  # 시작날짜
+    rtn_sdate: str  # 시작날짜
     rtn_tag: str  # 루틴분류태그
 
 
@@ -40,7 +40,7 @@ def create_routine(routine: Routine):
 
         # SQL 쿼리를 실행하기 위한 cursor 객체를 생성
         cursor = db_conn.cursor()
-        # 리스트를 문자열로 변환
+        # 리스트를 문자열로 변환``
         rtn_day_str = ",".join(routine.rtn_day)
         # SQL 쿼리 생성
         query = "INSERT INTO rtn_setting (rtn_nm, rtn_set, rtn_reps,rtn_time, rtn_day, rtn_sdate, rtn_tag) VALUES (%s,%s,%s,%s,%s,%s,%s)"
@@ -49,7 +49,8 @@ def create_routine(routine: Routine):
             routine.rtn_set,
             routine.rtn_reps,
             routine.rtn_time,
-            rtn_day_str,
+            routine.rtn_day,
+            datetime.fromisoformat(routine.rtn_sdate),  # 문자열을 datetime 객체로 변환
             routine.rtn_sdate.strftime("%Y-%m-%d %H:%M:%S"),
             routine.rtn_tag,
         )

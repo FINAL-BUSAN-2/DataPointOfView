@@ -42,7 +42,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
-  // 추가 설정
+  // // 추가 설정
+  // const [tagsEnabled, setTagsEnabled] = useState<string>('');
+
+  //태그 설정
+  // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
   const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
@@ -97,12 +101,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 저장 핸들러
   const handleSubmit = () => {
     addRoutine(
-      routineName,
-      parseInt(set),
-      parseInt(reps),
-      selectedDate,
-      selectedDaysOfWeek,
-      tagsEnabled,
+      routineName, //루틴명
+      parseInt(set), //세트
+      parseInt(reps), //횟수
+      selectedDate, //날짜선택
+      selectedDaysOfWeek, //반복요일
+      tagsEnabled, //추가설정
+      notificationEnabled, //알림
     );
   };
 
