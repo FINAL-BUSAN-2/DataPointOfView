@@ -7,18 +7,20 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Main from './Main';
 import Health from './Health';
 import pill from './pill';
-import etc from './Etc';
+import Etc from './Etc';
+import HplogSet from './hplogset';
+import Access from './Access';
 
 const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(false);
+  const [isLogin, setLogin] = useState(true);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
-  function MainWrapper(props) {
+  function SetWrapper(props) {
     return (
-      <Main
+      <HplogSet
         {...props}
         userInfo={userInfo}
         setLogin={setLogin}
@@ -63,10 +65,12 @@ function App() {
           <Stack.Screen name="Login" component={LoginComponent} />
         ) : (
           <>
-            <Stack.Screen name="Main" component={MainWrapper} />
+            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="hplogset" component={SetWrapper} />
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
-            <Stack.Screen name="etc" component={etc} />
+            <Stack.Screen name="Etc" component={Etc} />
+            <Stack.Screen name="Access" component={Access} />
           </>
         )}
       </Stack.Navigator>

@@ -40,23 +40,15 @@ const Main: React.FC<MainProps> = ({
   };
   // 기타 페이지 이동 함수
   const movetest2 = () => {
-    navigation.navigate('etc');
+    navigation.navigate('Etc');
+  };
+  // 개인 페이지 이동 함수
+  const movetest3 = () => {
+    navigation.navigate('Access');
   };
 
-  const logOut = async () => {
-    try {
-      const response = await axios.get(
-        'http://172.16.10.195:3344/kakao/logout',
-      );
-
-      if (response.data && response.data.message) {
-        Alert.alert('message', response.data.message); // "로그아웃 되었습니다." 메시지 표시
-        setLogin(false);
-        setUserInfo(null);
-      }
-    } catch (error) {
-      Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
-    }
+  const goHplogSet = async () => {
+    navigation.navigate('hplogset');
   };
 
   return (
@@ -64,14 +56,23 @@ const Main: React.FC<MainProps> = ({
       <View style={styles.header}>
         {/* 앱 로고 및 이름 */}
         <View style={styles.leftContainer}>
-          <Image
-            source={require('./android/app/src/img/red.png')}
-            style={{
-              width: 30,
-              height: 30,
-              marginRight: 16,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              console.log('제발');
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Main'}],
+              });
+            }}>
+            <Image
+              source={require('./android/app/src/img/red.png')}
+              style={{
+                width: 45,
+                height: 45,
+                marginRight: 16,
+              }}
+            />
+          </TouchableOpacity>
           <Text style={styles.title}>HP-log / {userInfo}님</Text>
         </View>
         {/* 우측 상단 */}
@@ -97,7 +98,7 @@ const Main: React.FC<MainProps> = ({
           />
 
           {/* 환경설정 아이콘 */}
-          <TouchableOpacity onPress={logOut}>
+          <TouchableOpacity onPress={goHplogSet}>
             <Image
               source={require('./android/app/src/img/settings.png')}
               style={{
@@ -143,21 +144,32 @@ const Main: React.FC<MainProps> = ({
           <Text>추천</Text>
         </View>
         {/* 홈 */}
-        <View style={styles.homeTab}>
-          <Image
-            source={require('./android/app/src/img/home.png')}
-            style={styles.homeIcon}
-          />
-          <Text style={styles.homeText}>홈</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            console.log('호잇');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Main'}],
+            });
+          }}>
+          <View style={styles.homeTab}>
+            <Image
+              source={require('./android/app/src/img/home.png')}
+              style={styles.homeIcon}
+            />
+            <Text style={styles.homeText}>홈</Text>
+          </View>
+        </TouchableOpacity>
         {/* 개인 */}
-        <View style={styles.accTab}>
-          <Image
-            source={require('./android/app/src/img/accessibility.png')}
-            style={styles.accIcon}
-          />
-          <Text>개인</Text>
-        </View>
+        <TouchableOpacity onPress={movetest3}>
+          <View style={styles.accTab}>
+            <Image
+              source={require('./android/app/src/img/accessibility.png')}
+              style={styles.accIcon}
+            />
+            <Text>개인</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* 플로팅바 */}
@@ -255,7 +267,7 @@ const styles = StyleSheet.create({
   },
   // 앱 이름
   title: {
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: 'bold',
   },
 
