@@ -8,5 +8,7 @@ export type RootStackPageList = {
   Health: undefined;
   Etc: undefined;
   pill: undefined;
+  hplogset: undefined;
+  Access: undefined;
 };
 // }
