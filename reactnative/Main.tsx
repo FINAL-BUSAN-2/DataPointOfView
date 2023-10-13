@@ -43,20 +43,8 @@ const Main: React.FC<MainProps> = ({
     navigation.navigate('etc');
   };
 
-  const logOut = async () => {
-    try {
-      const response = await axios.get(
-        'http://172.16.10.195:3344/kakao/logout',
-      );
-
-      if (response.data && response.data.message) {
-        Alert.alert('message', response.data.message); // "로그아웃 되었습니다." 메시지 표시
-        setLogin(false);
-        setUserInfo(null);
-      }
-    } catch (error) {
-      Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
-    }
+  const goHplogSet = async () => {
+    navigation.navigate('hplogset');
   };
 
   return (
@@ -97,7 +85,7 @@ const Main: React.FC<MainProps> = ({
           />
 
           {/* 환경설정 아이콘 */}
-          <TouchableOpacity onPress={logOut}>
+          <TouchableOpacity onPress={goHplogSet}>
             <Image
               source={require('./android/app/src/img/settings.png')}
               style={{
