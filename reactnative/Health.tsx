@@ -195,11 +195,31 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             }}>
             <Text>태그</Text>
             <TouchableOpacity
-              onPress={() => handletagsEnabled('Weight')}
+              onPress={() => handletagsEnabled('Upper Body')}
               style={
-                tagsEnabled === 'Weight' ? styles.selectedButton : styles.button
+                tagsEnabled === 'Upper Body'
+                  ? styles.selectedButton
+                  : styles.button
               }>
-              <Text>근력운동</Text>
+              <Text>상체</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handletagsEnabled('Lower Body')}
+              style={
+                tagsEnabled === 'Lower Body'
+                  ? styles.selectedButton
+                  : styles.button
+              }>
+              <Text>하체</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handletagsEnabled('Core')}
+              style={
+                tagsEnabled === 'Core' ? styles.selectedButton : styles.button
+              }>
+              <Text>코어</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

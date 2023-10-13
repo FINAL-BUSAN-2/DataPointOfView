@@ -8,6 +8,7 @@ const TimePicker = () => {
 
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
+      console.log(`Selected Time: ${selectedDate}`);
       setDate(selectedDate);
     }
   };

@@ -4,18 +4,22 @@ export const addRoutine = async (
   rtn_nm,
   rtn_set,
   rtn_reps,
-  rtn_sdate,
+  rtn_time,
   rtn_day,
+  rtn_sdate,
   rtn_tag,
+  rtn_email,
 ) => {
   try {
     const response = await axios.post('http://10.0.2.2:8000/routines', {
       rtn_nm,
       rtn_set,
       rtn_reps,
-      rtn_sdate,
+      rtn_time,
       rtn_day,
+      rtn_sdate,
       rtn_tag,
+      rtn_email,
     });
     console.log(response.data);
   } catch (error) {

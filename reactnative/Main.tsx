@@ -40,7 +40,7 @@ const Main: React.FC<MainProps> = ({
   };
   // 기타 페이지 이동 함수
   const movetest2 = () => {
-    navigation.navigate('etc');
+    navigation.navigate('Etc');
   };
 
   const logOut = async () => {

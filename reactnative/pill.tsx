@@ -206,16 +206,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             }}>
             <Text>태그</Text>
             <TouchableOpacity
-              onPress={() => handletagsEnabled('에너지 및 다량 영양소')}
-              style={
-                tagsEnabled === '에너지 및 다량 영양소'
-                  ? styles.selectedButton
-                  : styles.button
-              }>
-              <Text>에너지 및 다량 영양소</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
               onPress={() => handletagsEnabled('비타민')}
               style={
                 tagsEnabled === '비타민' ? styles.selectedButton : styles.button
@@ -229,6 +219,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 tagsEnabled === '무기질' ? styles.selectedButton : styles.button
               }>
               <Text>무기질</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handletagsEnabled('기타')}
+              style={
+                tagsEnabled === '기타' ? styles.selectedButton : styles.button
+              }>
+              <Text>기타</Text>
             </TouchableOpacity>
           </View>
 
