@@ -60,7 +60,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
           <Text style={styles.buttonText}>로그아웃</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
-          <Text style={styles.buttonText}>회원정보수정</Text>
+          <Text style={styles.buttonText}>회원정보 수정</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
           <Text style={styles.buttonText}>탈퇴</Text>
