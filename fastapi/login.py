@@ -32,7 +32,7 @@ async def kakao_callback(code: str, request: Request):
         "grant_type": "authorization_code",
         "client_id": "17f09694974ed4f10f7a0a1d1a00bfb8",
         "client_secret": "P7D4JsJNhGYnw3q94ozQKZVEttGo3IoE",
-        "redirect_uri": f"http://{local_host}/kakao/callback",
+        "redirect_uri": f"{local_host}/kakao/callback",
         "code": code,
     }
 
