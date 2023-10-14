@@ -34,7 +34,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
 
   const logOut = async () => {
     try {
-      const response = await axios.get('http://3.34.178.43:3344/kakao/logout');
+      const response = await axios.get('http://43.200.178.131/kakao/logout');
 
       if (response.data && response.data.message) {
         Alert.alert('message', response.data.message); // "로그아웃 되었습니다." 메시지 표시
@@ -60,7 +60,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
           <Text style={styles.buttonText}>로그아웃</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
-          <Text style={styles.buttonText}>회원정보수정</Text>
+          <Text style={styles.buttonText}>회원정보 수정</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
           <Text style={styles.buttonText}>탈퇴</Text>
