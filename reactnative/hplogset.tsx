@@ -35,7 +35,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
   const logOut = async () => {
     try {
       const response = await axios.get(
-        'http://172.16.10.195:3344/kakao/logout',
+        'http://172.31.98.158:3344/kakao/logout',
       );
 
       if (response.data && response.data.message) {
