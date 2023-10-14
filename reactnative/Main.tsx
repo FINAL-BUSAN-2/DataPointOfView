@@ -19,12 +19,7 @@ type MainProps = {
   setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Main: React.FC<MainProps> = ({
-  navigation,
-  userInfo,
-  setLogin,
-  setUserInfo,
-}) => {
+const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
