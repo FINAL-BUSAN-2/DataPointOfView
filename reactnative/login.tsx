@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image, Alert} from 'react-native';
 import {Linking} from 'react-native';
 
-const kakao_url = 'http://3.34.178.43:3344/kakao/login';
+const kakao_url = 'http://43.200.178.131:3344/kakao/login';
 
 const App = () => {
   const kakaoPress = () => {

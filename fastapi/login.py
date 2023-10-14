@@ -7,7 +7,7 @@ import httpx
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='bce5bcfe36455290d51dd4258cfb2737e54b79188d9d51aa162f6ed9e6e706f3')
 
-local_host = 'http://3.34.178.43:3344'
+local_host = 'http://43.200.178.131:3344'
 
 # Kakao API 설정
 KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
