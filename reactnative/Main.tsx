@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import axios from 'axios';
 
 // 화면 관리
 type MainProps = {
@@ -40,6 +39,10 @@ const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
   // 개인 페이지 이동 함수
   const movetest3 = () => {
     navigation.navigate('Access');
+  };
+  // 소셜 페이지 이동 함수
+  const movetest4 = () => {
+    navigation.navigate('Social');
   };
 
   const goHplogSet = async () => {
@@ -130,14 +133,16 @@ const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
-        {/* 추천 */}
-        <View style={styles.upTab}>
-          <Image
-            source={require('./android/app/src/img/thumb_up.png')}
-            style={styles.upIcon}
-          />
-          <Text>추천</Text>
-        </View>
+        {/* 소셜 */}
+        <TouchableOpacity onPress={movetest4}>
+          <View style={styles.upTab}>
+            <Image
+              source={require('./android/app/src/img/thumb_up.png')}
+              style={styles.upIcon}
+            />
+            <Text>소셜</Text>
+          </View>
+        </TouchableOpacity>
         {/* 홈 */}
         <TouchableOpacity
           onPress={() => {
