@@ -46,7 +46,7 @@ const Main: React.FC<MainProps> = ({
   const movetest3 = () => {
     navigation.navigate('Access');
   };
-
+  // 환경설정 페이지 이동 함수
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
   };
@@ -77,23 +77,12 @@ const Main: React.FC<MainProps> = ({
         </View>
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
-          {/* 달력 아이콘 */}
-          <Image
-            source={require('./android/app/src/img/calendar.png')}
-            style={{
-              width: 30,
-              height: 30,
-              right: 20,
-            }}
-          />
-
           {/* 알림 아이콘 */}
           <Image
             source={require('./android/app/src/img/notification.png')}
             style={{
               width: 30,
               height: 30,
-              right: 10,
             }}
           />
 
@@ -379,17 +368,17 @@ const styles = StyleSheet.create({
   // 홈
   homeTab: {
     bottom: 20,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(43,58,85,0.7)',
   },
   // 홈 아이콘
   homeIcon: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
   },
   // 홈 텍스트
   homeText: {
