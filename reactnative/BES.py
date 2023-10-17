@@ -41,7 +41,7 @@ class Routine(Base):
     rtn_reps = Column(Integer)
     rtn_tag = Column(String(255))
     rtn_day = Column(String(255))
-    # rtn_sdate = Column(DateTime)
+    rtn_sdate = Column(DateTime)
 
 
 class RoutineCreate(BaseModel):
@@ -50,7 +50,7 @@ class RoutineCreate(BaseModel):
     rtn_reps: int
     rtn_tag: str
     rtn_day: str
-    # rtn_sdate: str
+    rtn_sdate: datetime
 
     @validator("rtn_sdate")
     def validate_datetime(cls, value):
@@ -74,7 +74,7 @@ def create_routine(routine: RoutineCreate):
                 rtn_reps=routine.rtn_reps,
                 rtn_tag=routine.rtn_tag,
                 rtn_day=routine.rtn_day,
-                # rtn_sdate=routine.rtn_sdate,
+                rtn_sdate=routine.rtn_sdate,
             )
 
             db.add(db_routine)
