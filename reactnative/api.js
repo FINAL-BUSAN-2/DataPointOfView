@@ -8,7 +8,8 @@ export const addRoutine = async (
   rtn_reps,
   rtn_tag,
   rtn_day,
-  rtn_sdate,
+  //rtn_sdate,
+  //rtn_time
 ) => {
   try {
     const data = {
@@ -17,7 +18,8 @@ export const addRoutine = async (
       rtn_reps: rtn_reps, // 1일 반복 갯수
       rtn_tag: String(rtn_tag), // 태그
       rtn_day: String(rtn_day),
-      rtn_sdate: rtn_sdate,
+      //rtn_sdate: rtn_sdate,
+      //rtn_time:date
     };
 
     const response = await axios.post('http://10.0.2.2:8000/routines', data);

@@ -35,6 +35,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   );
   // 달력 호출
   const [showCalendar, setShowCalendar] = useState(false);
+
+  //시간선택
+  const [selectedTime, setSelectedTime] = useState<string>(''); // 초기값은 빈 문자열로 설정
+
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
@@ -47,10 +51,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
   const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
-  ////핸들러
+  //////////핸들러
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
     setRoutineName(text);
+    console.log(`입력된 루틴명: ${text}`); // 입력된 루틴명을 콘솔에 출력
   };
   // 아이콘 추가 핸들러
   const handleAddButtonClick = () => {
@@ -72,10 +77,25 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     console.log(`입력된 몇정: ${numericValue}`);
   };
   // 달력 호출 및 선택 핸들러
+  // const handleDateSelect = (date: any) => {
+  //   setSelectedDate(formatDate(date.dateString));
+  //   setShowCalendar(false);
+  //   console.log(`선택된 날짜: ${formatDate(date.dateString)}`);
+  // };
+
   const handleDateSelect = (date: any) => {
     setSelectedDate(date.dateString);
     setShowCalendar(false);
     console.log(`선택된 날짜: ${date.dateString}`);
+  };
+
+  //시간 핸들러
+  // TimeComponent 컴포넌트에서 시간 데이터를 선택한 후 setSelectedTime을 호출하여 저장
+  // const handleTimeSelect = (time: string) => {
+  //   setSelectedTime(formatTime(time));
+  // };
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
   };
 
   // 반복 요일 선택 핸들러
@@ -100,16 +120,34 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 저장 핸들러
   const handleSubmit = () => {
     console.log('추가하기 버튼 클릭');
+    //addRoutine 함수로 DB에 데이터를 전송
     addRoutine(
       routineName, //루틴명
       parseInt(set), //세트
       parseInt(reps), //횟수
       //selectedDate, //날짜선택
-      //selectedTime//시간
+      //selectedTime, //시간
       tagsEnabled, //태그
       selectedDaysOfWeek, //반복요일
     );
   };
+
+  // 서버에서 요구하는 날짜 및 시간 형식으로 변환
+  // const formatDate = (date: string) => {
+  //   const d = new Date(date);
+  //   const year = d.getFullYear();
+  //   const month = `0${d.getMonth() + 1}`.slice(-2);
+  //   const day = `0${d.getDate()}`.slice(-2);
+  //   return `${year}-${month}-${day}`;
+  // };
+
+  // const formatTime = (time: string) => {
+  //   const d = new Date(time);
+  //   const hours = `0${d.getHours()}`.slice(-2);
+  //   const minutes = `0${d.getMinutes()}`.slice(-2);
+  //   const seconds = `0${d.getSeconds()}`.slice(-2);
+  //   return `${hours}:${minutes}:${seconds}`;
+  // };
 
   return (
     <>
