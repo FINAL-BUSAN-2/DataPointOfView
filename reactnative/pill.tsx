@@ -12,7 +12,7 @@ import {
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
-import {addRoutine} from './api';
+import {addRoutine} from './routine_add_api';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -104,8 +104,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       routineName, //루틴명
       parseInt(set), //세트
       parseInt(reps), //횟수
-      selectedDate, //날짜선택
-      //  //시간부분빠짐
+      //selectedDate, //날짜선택
+      //시간부분빠짐
       tagsEnabled, //태그
       selectedDaysOfWeek, //반복요일
     );
