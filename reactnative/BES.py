@@ -41,8 +41,8 @@ class Routine(Base):
     rtn_reps = Column(Integer)
     rtn_tag = Column(String(255))
     rtn_day = Column(String(255))
-    # rtn_sdate = Column(DateTime)
-    # rtn_time = Column(date)
+    rtn_sdate = Column(String(10))
+    rtn_time = Column(String(8))
 
 
 class RoutineCreate(BaseModel):
@@ -51,14 +51,8 @@ class RoutineCreate(BaseModel):
     rtn_reps: int
     rtn_tag: str
     rtn_day: str
-    # rtn_sdate: datetime
-    # rtn_time:date
-
-    # @validator("rtn_sdate")
-    # def validate_datetime(cls, value):
-    #     if not isinstance(value, datetime):
-    #         raise ValueError("Input should be an instance of DateTime")
-    #     return value
+    rtn_sdate: str
+    rtn_time: str
 
 
 @app.post("/routines", response_model=RoutineCreate)
@@ -76,8 +70,8 @@ def create_routine(routine: RoutineCreate):
                 rtn_reps=routine.rtn_reps,
                 rtn_tag=routine.rtn_tag,
                 rtn_day=routine.rtn_day,
-                # rtn_sdate=routine.rtn_sdate,
-                # rtn_time=routine.rtn_time,
+                rtn_sdate=routine.rtn_sdate,
+                rtn_time=routine.rtn_time,
             )
 
             db.add(db_routine)

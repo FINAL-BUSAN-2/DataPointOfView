@@ -8,7 +8,10 @@ const TimePicker = () => {
 
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
-      console.log(`Selected Time: ${selectedDate}`);
+      const hours = selectedDate.getHours().toString().padStart(2, '0');
+      const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+      const selectedTime = `${hours}:${minutes}`;
+      console.log(`Selected Time: ${selectedTime}`);
       setDate(selectedDate);
     }
   };
@@ -24,7 +27,7 @@ const TimePicker = () => {
         />
       ) : (
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-          <Text style={{fontSize: 16}}>Select Date</Text>
+          <Text style={{fontSize: 16}}>Select Time</Text>
         </TouchableOpacity>
       )}
     </View>

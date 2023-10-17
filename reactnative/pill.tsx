@@ -78,11 +78,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   };
   // 달력 호출 및 선택 핸들러
   // const handleDateSelect = (date: any) => {
-  //   setSelectedDate(formatDate(date.dateString));
-  //   setShowCalendar(false);
-  //   console.log(`선택된 날짜: ${formatDate(date.dateString)}`);
-  // };
-
   const handleDateSelect = (date: any) => {
     setSelectedDate(date.dateString);
     setShowCalendar(false);
@@ -125,29 +120,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       routineName, //루틴명
       parseInt(set), //세트
       parseInt(reps), //횟수
-      //selectedDate, //날짜선택
-      //selectedTime, //시간
+      selectedDate, //날짜선택
+      selectedTime, //시간
       tagsEnabled, //태그
       selectedDaysOfWeek, //반복요일
     );
   };
-
-  // 서버에서 요구하는 날짜 및 시간 형식으로 변환
-  // const formatDate = (date: string) => {
-  //   const d = new Date(date);
-  //   const year = d.getFullYear();
-  //   const month = `0${d.getMonth() + 1}`.slice(-2);
-  //   const day = `0${d.getDate()}`.slice(-2);
-  //   return `${year}-${month}-${day}`;
-  // };
-
-  // const formatTime = (time: string) => {
-  //   const d = new Date(time);
-  //   const hours = `0${d.getHours()}`.slice(-2);
-  //   const minutes = `0${d.getMinutes()}`.slice(-2);
-  //   const seconds = `0${d.getSeconds()}`.slice(-2);
-  //   return `${hours}:${minutes}:${seconds}`;
-  // };
 
   return (
     <>
