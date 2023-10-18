@@ -87,10 +87,47 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.bestChallenge}>
+          <Text style={styles.challengeText}>뉴스</Text>
+          <View style={styles.bestChallenge1}>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bestChallenge2}>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bestChallengeButton}>
+              <Text style={styles.bestChallengeText}>
+                카테고리별 인기 챌린지
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {/* 챌린지 랭크 */}
         <View style={styles.challengeRank}>
           <View style={styles.challengeRankTitle}>
-            <Text style={styles.challengeText}>Top rank</Text>
+            <Text style={styles.challengeText}>인기 루틴 Top 3</Text>
           </View>
           <View style={styles.rankButtonGroup}>
             <TouchableOpacity style={styles.rankButton} onPress={challengeInfo}>
@@ -104,17 +141,7 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.bestChallenge}>
-          <TouchableOpacity style={styles.bestChallengeButton}>
-            <Text style={styles.bestChallengeText}>카테고리별 인기 챌린지</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bestChallengeButton}>
-            <Text style={styles.bestChallengeText}>카테고리별 인기 챌린지</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bestChallengeButton}>
-            <Text style={styles.bestChallengeText}>카테고리별 인기 챌린지</Text>
-          </TouchableOpacity>
-        </View>
+
         {/* 네비게이션바 */}
         <View style={styles.navBarContainer}>
           {/* 소셜 */}
@@ -253,11 +280,7 @@ const styles = StyleSheet.create({
 
   challengeRank: {
     height: 300,
-    backgroundColor: 'rgb(245,235,224)',
-    borderWidth: 1,
-    borderColor: 'black',
     margin: 20,
-    borderRadius: 20,
   },
 
   challengeRankTitle: {
@@ -289,12 +312,20 @@ const styles = StyleSheet.create({
   bestChallenge: {
     backgroundColor: 'rgb(245,235,224)',
     margin: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     padding: 10,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 20,
+  },
+  bestChallenge1: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  bestChallenge2: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   bestChallengeButton: {
