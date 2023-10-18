@@ -7,12 +7,12 @@ import httpx
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='bce5bcfe36455290d51dd4258cfb2737e54b79188d9d51aa162f6ed9e6e706f3')
 
-local_host = '172.16.10.195:3344'
+local_host = 'http://43.200.178.131:3344'
 
 # Kakao API 설정
 KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
-KAKAO_REDIRECT_URI = f"http://{local_host}/kakao/callback"
-LOGOUT_REDIRECT_URI = f"http://{local_host}/kakao/logout_callback"
+KAKAO_REDIRECT_URI = f"{local_host}/kakao/callback"
+LOGOUT_REDIRECT_URI = f"{local_host}/kakao/logout_callback"
 
 # Kakao 로그인 페이지로 리다이렉트
 @app.get("/kakao/login")
@@ -32,7 +32,7 @@ async def kakao_callback(code: str, request: Request):
         "grant_type": "authorization_code",
         "client_id": "17f09694974ed4f10f7a0a1d1a00bfb8",
         "client_secret": "P7D4JsJNhGYnw3q94ozQKZVEttGo3IoE",
-        "redirect_uri": f"http://{local_host}/kakao/callback",
+        "redirect_uri": f"{local_host}/kakao/callback",
         "code": code,
     }
 
