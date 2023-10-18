@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(true);
+  const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   function SetWrapper(props) {
@@ -32,6 +32,16 @@ function App() {
   function MainWrapper(props) {
     return (
       <Main
+        {...props}
+        userInfo={userInfo}
+        setLogin={setLogin}
+        setUserInfo={setUserInfo}
+      />
+    );
+  }
+  function AccessWrapper(props) {
+    return (
+      <Access
         {...props}
         userInfo={userInfo}
         setLogin={setLogin}
@@ -81,7 +91,7 @@ function App() {
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
             <Stack.Screen name="Etc" component={Etc} />
-            <Stack.Screen name="Access" component={Access} />
+            <Stack.Screen name="Access" component={AccessWrapper} />
           </>
         )}
       </Stack.Navigator>
