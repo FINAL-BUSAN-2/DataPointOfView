@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import axios from 'axios';
 
 type HplogSetProps = {
   navigation: StackNavigationProp<RootStackPageList, 'hplogset'>;
@@ -34,17 +33,25 @@ const HplogSet: React.FC<HplogSetProps> = ({
 
   const logOut = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131/kakao/logout');
+      const response = await fetch('http://43.200.178.131:3344/kakao/logout');
 
-      if (response.data && response.data.message) {
-        Alert.alert('message', response.data.message); // "로그아웃 되었습니다." 메시지 표시
-        setLogin(false);
-        setUserInfo(null);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.message) {
+          Alert.alert('message', data.message); // "로그아웃 되었습니다." 메시지 표시
+          setLogin(false);
+          setUserInfo(null);
+        }
+      } else {
+        console.error('로그아웃 오류:', response.status);
+        Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
       }
     } catch (error) {
-      Alert.alert('로그아웃 오류', '로그아웃 중 문제가 발생했습니다.');
+      console.error('네트워크 오류:', error);
+      Alert.alert('네트워크 오류', '네트워크 오류가 발생했습니다.');
     }
   };
+
   return (
     <>
       <View style={styles.header}>
