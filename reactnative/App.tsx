@@ -10,6 +10,8 @@ import pill from './pill';
 import Etc from './Etc';
 import HplogSet from './hplogset';
 import Access from './Access';
+import Social from './Social';
+import NewsInfo from './NewsInfo';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,17 @@ function App() {
   function MainWrapper(props) {
     return (
       <Main
+        {...props}
+        userInfo={userInfo}
+        setLogin={setLogin}
+        setUserInfo={setUserInfo}
+      />
+    );
+  }
+
+  function SocialWrapper(props) {
+    return (
+      <Social
         {...props}
         userInfo={userInfo}
         setLogin={setLogin}
@@ -82,6 +95,8 @@ function App() {
             <Stack.Screen name="pill" component={pill} />
             <Stack.Screen name="Etc" component={Etc} />
             <Stack.Screen name="Access" component={Access} />
+            <Stack.Screen name="Social" component={SocialWrapper} />
+            <Stack.Screen name="NewsInfo" component={NewsInfo} />
           </>
         )}
       </Stack.Navigator>

@@ -10,5 +10,7 @@ export type RootStackPageList = {
   pill: undefined;
   hplogset: undefined;
   Access: undefined;
+  Social: undefined;
+  NewsInfo: undefined;
 };
 // }
