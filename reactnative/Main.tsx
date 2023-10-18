@@ -14,10 +14,18 @@ import axios from 'axios';
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
-  userInfo: string;
+  userInfo: string; //로그인된 사용자ID
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
 };
+
+//DB에서 루틴정보받아오기
+interface RoutineData {
+  id: number; //임시로number해놓음
+  rtn_name: string;
+  rtn_time: string;
+  rtn_tag: string;
+}
 
 const Main: React.FC<MainProps> = ({
   navigation,
@@ -25,6 +33,27 @@ const Main: React.FC<MainProps> = ({
   setLogin,
   setUserInfo,
 }) => {
+  ///추가된루틴데이터가져오기
+  //const [routineData, setRoutineData] = useState<RoutineData[]>([]);
+  //const [data, setData] = useState([]);
+  const [data, setData] = useState<RoutineData[]>([]);
+  useEffect(() => {
+    fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 엔드포인트를 수정해야 합니다.
+
+      if (response.data) {
+        setData(response.data); //데이터를설정함
+      } else {
+        console.error('데이터가 없습니다.');
+      }
+    } catch (error) {
+      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+    }
+  };
+
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
@@ -130,6 +159,18 @@ const Main: React.FC<MainProps> = ({
       {/* 편집 */}
       <View style={styles.orderbox}>
         <Text style={styles.ordertext}>순서변경/즐겨찾기</Text>
+      </View>
+
+      {/* 루틴DB에서 값 받아오기 필요한 컬럼 => 시간,루틴명,태그 */}
+      <View>
+        {data.map(item => (
+          //  key={item.id}
+          <View>
+            <Text>Routine Name: {item.rtn_name}</Text>
+            <Text>Tag: {item.rtn_tag}</Text>
+            <Text>Time: {item.rtn_time}</Text>
+          </View>
+        ))}
       </View>
 
       {/* 네비게이션바 */}

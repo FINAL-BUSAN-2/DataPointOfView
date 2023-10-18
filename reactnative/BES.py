@@ -8,6 +8,8 @@ from sqlalchemy import Column, MetaData, Table, Integer, String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+from typing import List
+from fastapi import Request
 
 app = FastAPI()
 
@@ -70,6 +72,7 @@ def create_routine(routine: RoutineCreate):
                 rtn_day=routine.rtn_day,
                 rtn_sdate=routine.rtn_sdate,
                 rtn_time=routine.rtn_time,
+                ##rtn_email=> 로그인정보에서 받아옴 request.session["user_email"] ,rtn_id => 메일아이디+0000001 이런형식
             )
 
             db.add(db_routine)
@@ -80,3 +83,33 @@ def create_routine(routine: RoutineCreate):
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         return {"error": "데이터 삽입 중 오류 발생"}
+
+
+#### 루틴데이터받아오기
+class RoutineResponse(BaseModel):
+    rtn_time: str
+    rtn_name: str
+    rtn_tag: str
+
+
+def get_rtn_from_database():
+    with SessionLocal() as db:
+        routines = db.query(Routine).all()
+        return routines
+
+
+# 루틴 데이터를 반환하는 엔드포인트 정의
+# @app.get("/rtnlist", response_model=List[RoutineResponse])
+# async def read_routines(request: Request):
+#    routines = get_rtn_from_database()
+#    return {"routines": routines}
+
+
+@app.get("/rtnlist", response_model=List[RoutineResponse])
+async def read_routines(request: Request):
+    routines = get_rtn_from_database()
+    rtn_names = [routine.rtn_nm for routine in routines]
+    rtn_tags = [routine.rtn_tag for routine in routines]
+    rtn_times = [routine.rtn_time for routine in routines]
+
+    return {"rtn_names": rtn_names, "rtn_tags": rtn_tags, "rtn_times": rtn_times}

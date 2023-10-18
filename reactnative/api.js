@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+///// 루틴페이지에서 입력된 값 DB로 전송하기
 export const addRoutine = async (
   rtn_nm,
   rtn_set,
@@ -33,5 +34,16 @@ export const addRoutine = async (
     if (error.response) {
       console.error(error.response.data); // 서버 응답 데이터 출력
     }
+  }
+};
+
+////// DB에서 루틴 데이터 받아오기
+const fetchData = async () => {
+  try {
+    const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 실제 API 엔드포인트로 대체합니다.
+    const data = response.data; // 데이터베이스에서 가져온 데이터가 여기에 들어갑니다.
+    // 컴포넌트의 상태를 업데이트하거나 데이터와 관련된 작업을 수행합니다.
+  } catch (error) {
+    console.error('데이터 가져오기 오류:', error);
   }
 };
