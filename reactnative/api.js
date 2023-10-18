@@ -12,6 +12,11 @@ export const addRoutine = async (
   rtn_time,
 ) => {
   try {
+    //유효성검사
+    //if (!rtn_nm || !rtn_set || !rtn_reps || !rtn_tag || !rtn_time) {
+    //throw new Error('필수 필드를 모두 입력하세요.');
+    //}
+
     const data = {
       rtn_nm: String(rtn_nm), // 루틴명
       rtn_set: rtn_set, // 1일 반복 횟수
@@ -23,6 +28,7 @@ export const addRoutine = async (
     };
 
     const response = await axios.post('http://10.0.2.2:8000/routines', data);
+    // 나중에 dpv_webserver주소변경 현재 http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지

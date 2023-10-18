@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
-DATABASE_URL = "mysql://jmj:dbdb@localhost/testdb"
+DATABASE_URL = "mysql://root:dbdb@localhost/testdb"
 engine = create_engine(DATABASE_URL)
 
 meta = MetaData
