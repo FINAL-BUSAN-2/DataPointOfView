@@ -36,10 +36,10 @@ class Routine(Base):
     rtn_nm = Column(String(255), index=True)
     rtn_set = Column(Integer)
     rtn_reps = Column(Integer)
-    # rtn_tag = Column(String(255))
-    # rtn_day = Column(String(255))
-    # rtn_sdate = Column(String(10))
-    # rtn_time = Column(String(8))
+    rtn_tag = Column(String(255))
+    rtn_day = Column(String(255))
+    rtn_sdate = Column(String(10))
+    rtn_time = Column(String(8))
 
 
 class RoutineCreate(BaseModel):
@@ -47,9 +47,9 @@ class RoutineCreate(BaseModel):
     rtn_set: int
     rtn_reps: int
     rtn_tag: str
-    # rtn_day: str
-    # rtn_sdate: str
-    # rtn_time: str
+    rtn_day: str
+    rtn_sdate: str
+    rtn_time: str
 
 
 @app.post("/routines", response_model=RoutineCreate)
@@ -66,9 +66,9 @@ def create_routine(routine: RoutineCreate):
                 rtn_set=routine.rtn_set,
                 rtn_reps=routine.rtn_reps,
                 rtn_tag=routine.rtn_tag,
-                # rtn_day=routine.rtn_day,
-                # rtn_sdate=routine.rtn_sdate,
-                # rtn_time=routine.rtn_time,
+                rtn_day=routine.rtn_day,
+                rtn_sdate=routine.rtn_sdate,
+                rtn_time=routine.rtn_time,
             )
 
             db.add(db_routine)
