@@ -18,7 +18,7 @@ const MyScreen = () => {
       </View>
       <View style={styles.body}>
         <Image
-          source={require('./android/app/src/img/bigaccessibility.png')}
+          source={require('./android/app/src/img/staticbody.png')}
           style={styles.bodyimg}
         />
       </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bodyimg: {
-    width: '70%',
+    width: '85%',
     height: '100%',
   },
   // 통계
