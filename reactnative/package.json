@@ -24,6 +24,7 @@
     "react-native-calendars": "^1.1301.0",
     "react-native-date-picker": "^4.3.3",
     "react-native-elements": "^3.4.3",
+    "react-native-pager-view": "^6.2.2",
     "react-native-gesture-handler": "^2.13.2",
     "react-native-pager-view": "^6.2.2",
     "react-native-reanimated": "^3.5.4",
