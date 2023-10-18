@@ -2,7 +2,11 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 
-const TimePicker = () => {
+interface TimePickerProps {
+  onTimeChange: (newTime: string) => void;
+}
+
+const TimePicker = ({onTimeChange}: TimePickerProps) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(true);
 
@@ -13,6 +17,7 @@ const TimePicker = () => {
       const selectedTime = `${hours}:${minutes}`;
       console.log(`Selected Time: ${selectedTime}`);
       setDate(selectedDate);
+      onTimeChange(selectedTime); // 선택한 시간을 부모 컴포넌트로 전달
     }
   };
 

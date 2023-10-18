@@ -37,7 +37,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   //시간선택
-  const [selectedTime, setSelectedTime] = useState<string>(''); // 초기값은 빈 문자열로 설정
+  const [selectedTime, setSelectedTime] = useState('');
+  const handleTimeChange = (newTime: string) => {
+    setSelectedTime(newTime);
+  };
 
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
@@ -84,15 +87,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     console.log(`선택된 날짜: ${date.dateString}`);
   };
 
-  //시간 핸들러
-  // TimeComponent 컴포넌트에서 시간 데이터를 선택한 후 setSelectedTime을 호출하여 저장
-  // const handleTimeSelect = (time: string) => {
-  //   setSelectedTime(formatTime(time));
-  // };
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
-  };
-
   // 반복 요일 선택 핸들러
   const handleDayOfWeekToggle = (day: string) => {
     if (selectedDaysOfWeek.includes(day)) {
@@ -120,10 +114,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       routineName, //루틴명
       parseInt(set), //세트
       parseInt(reps), //횟수
-      selectedDate, //날짜선택
-      selectedTime, //시간
       tagsEnabled, //태그
       selectedDaysOfWeek, //반복요일
+      selectedDate, //날짜선택
+      selectedTime, //시간
     );
   };
 
@@ -212,10 +206,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               </>
             )}
           </TouchableOpacity>
-
           {/* 시간 선택 */}
           <View style={styles.Timecontainer}>
-            <TimeComponent />
+            <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
           {/* 태그 선택 */}

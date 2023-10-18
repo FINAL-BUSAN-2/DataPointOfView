@@ -35,6 +35,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   );
   // 달력 호출
   const [showCalendar, setShowCalendar] = useState(false);
+
+  //시간선택
+  const [selectedTime, setSelectedTime] = useState('');
+  const handleTimeChange = (newTime: string) => {
+    setSelectedTime(newTime);
+  };
+
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
@@ -99,11 +106,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 저장 핸들러
   const handleSubmit = () => {
     addRoutine(
-      routineName,
-      parseInt(set),
-      parseInt(reps),
-      //selectedDate,
-      selectedDaysOfWeek,
+      routineName, //루틴명
+      parseInt(set), //세트
+      parseInt(reps), //횟수
+      tagsEnabled, //태그
+      selectedDaysOfWeek, //반복요일
+      selectedDate, //날짜선택
+      selectedTime, //시간
     );
   };
   //
@@ -196,7 +205,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
           {/* 시간 선택 */}
           <View style={styles.Timecontainer}>
-            <TimeComponent />
+            <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
           {/* 태그 선택 태그없애기로함 */}
