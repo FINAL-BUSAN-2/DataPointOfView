@@ -105,11 +105,29 @@ def get_rtn_from_database():
 #    return {"routines": routines}
 
 
+# @app.get("/rtnlist", response_model=List[RoutineResponse])
+# async def read_routines(request: Request):
+#     routines = get_rtn_from_database()
+#     rtn_names = [routine.rtn_nm for routine in routines]
+#     rtn_tags = [routine.rtn_tag for routine in routines]
+#     rtn_times = [routine.rtn_time for routine in routines]
+
+#     return {"rtn_names": rtn_names, "rtn_tags": rtn_tags, "rtn_times": rtn_times}
+
+
 @app.get("/rtnlist", response_model=List[RoutineResponse])
 async def read_routines(request: Request):
     routines = get_rtn_from_database()
-    rtn_names = [routine.rtn_nm for routine in routines]
-    rtn_tags = [routine.rtn_tag for routine in routines]
-    rtn_times = [routine.rtn_time for routine in routines]
 
-    return {"rtn_names": rtn_names, "rtn_tags": rtn_tags, "rtn_times": rtn_times}
+    response_data = []
+
+    for routine in routines:
+        response_data.append(
+            RoutineResponse(
+                rtn_name=routine.rtn_nm,
+                rtn_tag=routine.rtn_tag,
+                rtn_time=routine.rtn_time,
+            )
+        )
+
+    return response_data

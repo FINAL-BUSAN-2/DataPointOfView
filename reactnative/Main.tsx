@@ -59,6 +59,7 @@ const Main: React.FC<MainProps> = ({
   const handleFloatingBarClick = () => {
     setShowImageItems(!showImageItems);
   };
+  ``;
   // 건강 페이지 이동 함수
   const movetest = () => {
     navigation.navigate('Health');
