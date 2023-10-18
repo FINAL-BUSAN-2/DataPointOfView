@@ -12,9 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import daily from './daily';
-import monthly from './monthly';
+import Daily from './daily';
 
 // 화면 관리
 type AccessProps = {
@@ -34,8 +32,6 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
   const navigation =
     useNavigation<StackNavigationProp<RootStackPageList, 'Access'>>();
-  // 탭 기반 인터페이스
-  const Tab = createMaterialTopTabNavigator();
   // 환경설정 페이지 이동 함수
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
@@ -89,25 +85,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
         </View>
       </View>
 
-      {/* 탭 스크린 */}
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: {
-            width: '50%',
-            alignSelf: 'center',
-            backgroundColor: 'rgb(231,230,230)',
-            elevation: 0,
-          },
-          tabBarLabelStyle: {
-            fontSize: 16,
-          },
-          tabBarIndicatorStyle: {
-            backgroundColor: 'rgb(43,58,85)',
-          },
-        }}>
-        <Tab.Screen name="일별 통계" component={daily} />
-        <Tab.Screen name="월별 통계" component={monthly} />
-      </Tab.Navigator>
+      <Daily />
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
