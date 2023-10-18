@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const formattedDate = new Date().toISOString(); // 2023-10-17T12:34:56.000Z 형식의 문자열
-
 export const addRoutine = async (
   rtn_nm,
   rtn_set,

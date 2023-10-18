@@ -18,9 +18,10 @@ logger = logging.getLogger(__name__)
 
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 DATABASE_URL = "mysql://root:dbdb@localhost/testdb"
+##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
-meta = MetaData
+# meta = MetaData
 
 # 세션 생성
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
