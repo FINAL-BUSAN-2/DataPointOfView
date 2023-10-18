@@ -15,12 +15,23 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(true);
+  const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   function SetWrapper(props) {
     return (
       <HplogSet
+        {...props}
+        userInfo={userInfo}
+        setLogin={setLogin}
+        setUserInfo={setUserInfo}
+      />
+    );
+  }
+
+  function MainWrapper(props) {
+    return (
+      <Main
         {...props}
         userInfo={userInfo}
         setLogin={setLogin}
@@ -36,11 +47,11 @@ function App() {
     }, 1000); // 1초 지연
 
     // URL 스키마 이벤트 핸들러 등록
-    Linking.addEventListener('url', handleOpenURL);
+    const subscription = Linking.addEventListener('url', handleOpenURL);
 
     return () => {
       clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머 해제
-      Linking.removeEventListener('url', handleOpenURL); // 이벤트 리스너 해제
+      subscription.remove(); // 이벤트 리스너 해제
     };
   }, []);
 
@@ -65,7 +76,7 @@ function App() {
           <Stack.Screen name="Login" component={LoginComponent} />
         ) : (
           <>
-            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Main" component={MainWrapper} />
             <Stack.Screen name="hplogset" component={SetWrapper} />
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
