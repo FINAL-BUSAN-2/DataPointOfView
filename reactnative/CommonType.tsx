@@ -11,6 +11,6 @@ export type RootStackPageList = {
   hplogset: undefined;
   Access: undefined;
   Social: undefined;
-  ChallengeInfo: undefined;
+  NewsInfo: undefined;
 };
 // }

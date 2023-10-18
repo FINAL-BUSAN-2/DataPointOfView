@@ -3,11 +3,11 @@ import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
-type ChallengeInfoProps = {
-  navigation: StackNavigationProp<RootStackPageList, 'ChallengeInfo'>;
+type NewsInfoProps = {
+  navigation: StackNavigationProp<RootStackPageList, 'NewsInfo'>;
 };
 
-const ChallengeInfo: React.FC<ChallengeInfoProps> = ({navigation}) => {
+const NewsInfo: React.FC<NewsInfoProps> = ({navigation}) => {
   const handleBackPress = () => {
     navigation.goBack();
   };
@@ -158,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChallengeInfo;
+export default NewsInfo;

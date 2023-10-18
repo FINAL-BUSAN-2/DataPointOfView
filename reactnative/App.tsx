@@ -11,7 +11,7 @@ import Etc from './Etc';
 import HplogSet from './hplogset';
 import Access from './Access';
 import Social from './Social';
-import ChallengeInfo from './ChallengeInfo';
+import NewsInfo from './NewsInfo';
 
 const Stack = createStackNavigator();
 
@@ -96,7 +96,7 @@ function App() {
             <Stack.Screen name="Etc" component={Etc} />
             <Stack.Screen name="Access" component={Access} />
             <Stack.Screen name="Social" component={SocialWrapper} />
-            <Stack.Screen name="ChallengeInfo" component={ChallengeInfo} />
+            <Stack.Screen name="NewsInfo" component={NewsInfo} />
           </>
         )}
       </Stack.Navigator>

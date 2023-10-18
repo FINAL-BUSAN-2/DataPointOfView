@@ -24,8 +24,13 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
     navigation.navigate('hplogset');
   };
 
-  const challengeInfo = async () => {
-    navigation.navigate('ChallengeInfo');
+  const newsInfo = async search => {
+    let response = await fetch(
+      `http://43.200.178.131:3344/naver/news/?search=${search}`,
+    );
+    let data = await response.json();
+
+    navigation.navigate('NewsInfo', {newsData: data});
   };
 
   return (
@@ -90,10 +95,10 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
         <View style={styles.bestChallenge}>
           <Text style={styles.challengeText}>뉴스</Text>
           <View style={styles.bestChallenge1}>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('건강기능식품')}>
+              <Text style={styles.bestChallengeText}>건강기능식품</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bestChallengeButton}>
               <Text style={styles.bestChallengeText}>
@@ -130,13 +135,13 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             <Text style={styles.challengeText}>인기 루틴 Top 3</Text>
           </View>
           <View style={styles.rankButtonGroup}>
-            <TouchableOpacity style={styles.rankButton} onPress={challengeInfo}>
+            <TouchableOpacity style={styles.rankButton}>
               <Text style={styles.bestChallengeText}>1위</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton} onPress={challengeInfo}>
+            <TouchableOpacity style={styles.rankButton}>
               <Text style={styles.bestChallengeText}>2위</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton} onPress={challengeInfo}>
+            <TouchableOpacity style={styles.rankButton}>
               <Text style={styles.bestChallengeText}>3위</Text>
             </TouchableOpacity>
           </View>
