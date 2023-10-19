@@ -6,10 +6,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  FlatList,
+  SafeAreaView,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import axios from 'axios';
+
+////
 
 // 화면 관리
 type MainProps = {
@@ -36,16 +42,22 @@ const Main: React.FC<MainProps> = ({
   ///추가된루틴데이터가져오기
   //const [routineData, setRoutineData] = useState<RoutineData[]>([]);
   //const [data, setData] = useState([]);
-  const [data, setData] = useState<RoutineData[]>([]);
+  const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
   }, []);
+
   const fetchData = async () => {
     try {
       const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 엔드포인트를 수정해야 합니다.
 
       if (response.data) {
-        setData(response.data); //데이터를설정함
+        // 데이터 가져오고
+        const data = response.data;
+        //rtn_time을 기준으로 오름차순 정렬
+        data.sort((a, b) => a.rtn_time.localeCompare(b.rtn_time));
+        //정렬된 데이터를설정함
+        setData(data);
       } else {
         console.error('데이터가 없습니다.');
       }
@@ -163,13 +175,32 @@ const Main: React.FC<MainProps> = ({
       </View>
 
       {/* 루틴DB에서 값 받아오기 필요한 컬럼 => 시간,루틴명,태그 */}
+
+      {/* <FlatList
+        data={data}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => (
+          <View style={styles.routineItem}>
+            <Text style={styles.routineName}>
+              Routine Name: {item.rtn_name}
+            </Text>
+            <Text style={styles.routineTag}>Tag: {item.rtn_tag}</Text>
+            <Text style={styles.routineTime}>Time: {item.rtn_time}</Text>
+          </View>
+        )}
+      /> */}
+
       <View>
         {data.map(item => (
-          //  key={item.id}
-          <View>
-            <Text>Routine Name: {item.rtn_name}</Text>
-            <Text>Tag: {item.rtn_tag}</Text>
-            <Text>Time: {item.rtn_time}</Text>
+          <View key={item.id} style={styles.roundedBox}>
+            <Text style={styles.rtntext}>{item.rtn_time}</Text>
+
+            <View style={styles.routinelist}>
+              <Text>
+                {' '}
+                {item.rtn_tag} {item.rtn_name}
+              </Text>
+            </View>
           </View>
         ))}
       </View>
@@ -485,5 +516,46 @@ const styles = StyleSheet.create({
     bottom: 25,
     textAlign: 'center',
   },
+  //루틴 리스트 스타일
+  roundedBox: {
+    //backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+  },
+  routinelist: {
+    backgroundColor: 'rgb(231,230,230)',
+    borderRadius: 10,
+    //padding: 10,
+    marginBottom: 10,
+    borderWidth: 1, // 테두리 두께
+    borderColor: 'black', // 테두리 색상
+  },
+
+  rtntext: {
+    marginLeft: 10, // 원하는 간격 크기로 조정
+  },
+
+  // // Define styles for routine items
+  // routineItem: {
+  //   backgroundColor: '#fff',
+  //   margin: 10,
+  //   padding: 10,
+  //   borderRadius: 10,
+  // },
+  // routineName: {
+  //   fontSize: 16,
+  //   fontWeight: 'bold',
+  //   color: '#000000',
+  // },
+  // routineTag: {
+  //   fontSize: 14,
+  //   color: '#888',
+  // },
+  // routineTime: {
+  //   fontSize: 14,
+  //   color: '#888',
+  // },
 });
 export default Main;

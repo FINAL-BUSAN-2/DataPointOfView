@@ -124,6 +124,7 @@ async def read_routines(request: Request):
     for routine in routines:
         response_data.append(
             RoutineResponse(
+                id=routine.id,
                 rtn_name=routine.rtn_nm,
                 rtn_tag=routine.rtn_tag,
                 rtn_time=routine.rtn_time,
