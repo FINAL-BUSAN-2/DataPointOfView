@@ -102,7 +102,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView>
           <View style={styles.healthheader}>
             {/* 루틴명 입력 */}
             <View style={styles.Routinename}>
@@ -314,25 +314,41 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           </>
         )} */}
         </ScrollView>
-
-        {/* 추가하기 */}
-        <TouchableOpacity onPress={handleSubmit} style={styles.addContainer}>
-          <View style={styles.addTab}>
-            <Text style={styles.addtext}>추가하기</Text>
-          </View>
-        </TouchableOpacity>
       </View>
+      {/* 추가하기 */}
+      <TouchableOpacity onPress={handleSubmit} style={styles.addContainer}>
+        <View style={styles.addTab}>
+          <Text style={styles.addtext}>추가하기</Text>
+        </View>
+      </TouchableOpacity>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgb(231,230,230)',
     width: '100%',
+  },
+  header: {
+    height: '10%',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    padding: 20,
+    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    borderBottomWidth: 0,
+    borderBottomColor: '#ddd',
+  },
+
+  backButton: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginRight: 10,
+    color: 'rgb(231,230,230)',
   },
   scrollView: {},
   healthheader: {
@@ -475,10 +491,11 @@ const styles = StyleSheet.create({
   },
   dayPickerContainer: {
     marginTop: 0,
-    marginBottom: 10,
+    marginBottom: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',
+    paddingBottom: '10%',
   },
 
   dayButton: {},
@@ -495,25 +512,6 @@ const styles = StyleSheet.create({
     color: 'rgb(206,119,119)',
   },
 
-  /// 추가 설정
-  addtioncontainer: {
-    marginTop: 0,
-    width: 360,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  addtion: {
-    marginLeft: 50,
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#000000',
-  },
-  addtionswitch: {
-    marginRight: 50,
-  },
   button: {
     padding: 5,
     margin: 5,
@@ -531,19 +529,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 
-  checklist: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    height: 200,
-  },
-
   //addContainer
   addContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
-    height: 70,
     alignItems: 'center',
     elevation: 50, // for Android
   },
@@ -554,7 +545,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -562,22 +553,6 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-
-  header: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
-    borderBottomWidth: 0,
-    borderBottomColor: '#ddd',
-  },
-
-  backButton: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginRight: 10,
   },
 });
 
