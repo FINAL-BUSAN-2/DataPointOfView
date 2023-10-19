@@ -3,6 +3,11 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
+### 뉴스크롤링에 사용할 라이브러리
+import pandas as pd
+from bs4 import BeautifulSoup
+import requests
+
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='bce5bcfe36455290d51dd4258cfb2737e54b79188d9d51aa162f6ed9e6e706f3')
@@ -72,3 +77,19 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
     return {"message": "로그아웃 되었습니다."}
+
+@app.get("/naver/news/")
+def naver_news_crawling(search: str):
+    url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=0'
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
+    news = requests.get(url,headers=headers)
+    news_html = BeautifulSoup(news.text,"html.parser")
+    news_list = []
+    for i in range(5) :
+        title = news_html.select_one(f"#sp_nws{i+1} > div > div > a").get_text()
+        href = news_html.select_one(f"#sp_nws{i+1} > div > div > a")["href"]
+        img = news_html.select_one(f'#sp_nws{i+1} > div > a > img')['src']
+        news_list.append({'title':title,'href':href,'img':img})
+    df = pd.DataFrame(news_list)
+    
+    return df.to_dict(orient='records')
