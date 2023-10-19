@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
-  SafeAreaView,
   Linking,
   ScrollView,
 } from 'react-native';
@@ -176,9 +175,9 @@ const Main: React.FC<MainProps> = ({
 
       {/* 루틴DB에서 값 받아오기 필요한 컬럼 => 시간,루틴명,태그 */}
 
-      {/* <FlatList
+      <FlatList
         data={data}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.routineItem}>
             <Text style={styles.routineName}>
@@ -188,8 +187,8 @@ const Main: React.FC<MainProps> = ({
             <Text style={styles.routineTime}>Time: {item.rtn_time}</Text>
           </View>
         )}
-      /> */}
-
+      />
+      {/* 
       <View>
         {data.map(item => (
           <View key={item.id} style={styles.roundedBox}>
@@ -203,7 +202,7 @@ const Main: React.FC<MainProps> = ({
             </View>
           </View>
         ))}
-      </View>
+      </View> */}
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -537,25 +536,25 @@ const styles = StyleSheet.create({
     marginLeft: 10, // 원하는 간격 크기로 조정
   },
 
-  // // Define styles for routine items
-  // routineItem: {
-  //   backgroundColor: '#fff',
-  //   margin: 10,
-  //   padding: 10,
-  //   borderRadius: 10,
-  // },
-  // routineName: {
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  //   color: '#000000',
-  // },
-  // routineTag: {
-  //   fontSize: 14,
-  //   color: '#888',
-  // },
-  // routineTime: {
-  //   fontSize: 14,
-  //   color: '#888',
-  // },
+  // Define styles for routine items
+  routineItem: {
+    backgroundColor: '#fff',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
+  routineName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+  routineTag: {
+    fontSize: 14,
+    color: '#888',
+  },
+  routineTime: {
+    fontSize: 14,
+    color: '#888',
+  },
 });
 export default Main;
