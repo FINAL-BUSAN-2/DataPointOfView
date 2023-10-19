@@ -35,6 +35,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   );
   // 달력 호출
   const [showCalendar, setShowCalendar] = useState(false);
+
+  //시간선택
+  const [selectedTime, setSelectedTime] = useState('');
+  const handleTimeChange = (newTime: string) => {
+    setSelectedTime(newTime);
+  };
+
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
@@ -42,7 +49,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
-  // 추가 설정
+
+  //태그 설정
+  // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
   const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
@@ -97,12 +106,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 저장 핸들러
   const handleSubmit = () => {
     addRoutine(
-      routineName,
-      parseInt(set),
-      parseInt(reps),
-      selectedDate,
-      selectedDaysOfWeek,
-      tagsEnabled,
+      routineName, //루틴명
+      parseInt(set), //세트
+      parseInt(reps), //횟수
+      tagsEnabled, //태그
+      selectedDaysOfWeek, //반복요일
+      selectedDate, //날짜선택
+      selectedTime, //시간
     );
   };
   //
@@ -195,25 +205,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
           {/* 시간 선택 */}
           <View style={styles.Timecontainer}>
-            <TimeComponent />
+            <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginLeft: '15%',
-            }}>
-            <Text>태그</Text>
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('기타')}
-              style={
-                tagsEnabled === '기타' ? styles.selectedButton : styles.button
-              }>
-              <Text>기타</Text>
-            </TouchableOpacity>
-          </View>
+          {/* 태그 선택 태그없애기로함 */}
 
           <Toggle
             label={'알림'}

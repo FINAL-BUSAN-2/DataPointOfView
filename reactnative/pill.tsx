@@ -35,6 +35,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   );
   // 달력 호출
   const [showCalendar, setShowCalendar] = useState(false);
+
+  //시간선택
+  const [selectedTime, setSelectedTime] = useState('');
+  const handleTimeChange = (newTime: string) => {
+    setSelectedTime(newTime);
+  };
+
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
@@ -42,12 +49,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
-  // 추가 설정
+
+  //태그 설정
+  // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
   const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
+  //////////핸들러
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
     setRoutineName(text);
+    console.log(`입력된 루틴명: ${text}`); // 입력된 루틴명을 콘솔에 출력
   };
   // 아이콘 추가 핸들러
   const handleAddButtonClick = () => {
@@ -69,6 +80,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     console.log(`입력된 몇정: ${numericValue}`);
   };
   // 달력 호출 및 선택 핸들러
+  // const handleDateSelect = (date: any) => {
   const handleDateSelect = (date: any) => {
     setSelectedDate(date.dateString);
     setShowCalendar(false);
@@ -96,13 +108,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   // 저장 핸들러
   const handleSubmit = () => {
+    console.log('추가하기 버튼 클릭');
+    //addRoutine 함수로 DB에 데이터를 전송
     addRoutine(
-      routineName,
-      parseInt(set),
-      parseInt(reps),
-      selectedDate,
-      selectedDaysOfWeek,
-      tagsEnabled,
+      routineName, //루틴명
+      parseInt(set), //세트
+      parseInt(reps), //횟수
+      tagsEnabled, //태그
+      selectedDaysOfWeek, //반복요일
+      selectedDate, //날짜선택
+      selectedTime, //시간
     );
   };
 
@@ -191,10 +206,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               </>
             )}
           </TouchableOpacity>
-
           {/* 시간 선택 */}
           <View style={styles.Timecontainer}>
-            <TimeComponent />
+            <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
           {/* 태그 선택 */}
@@ -205,16 +219,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               marginLeft: '15%',
             }}>
             <Text>태그</Text>
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('에너지 및 다량 영양소')}
-              style={
-                tagsEnabled === '에너지 및 다량 영양소'
-                  ? styles.selectedButton
-                  : styles.button
-              }>
-              <Text>에너지 및 다량 영양소</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => handletagsEnabled('비타민')}
               style={
@@ -229,6 +233,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 tagsEnabled === '무기질' ? styles.selectedButton : styles.button
               }>
               <Text>무기질</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handletagsEnabled('기타')}
+              style={
+                tagsEnabled === '기타' ? styles.selectedButton : styles.button
+              }>
+              <Text>기타</Text>
             </TouchableOpacity>
           </View>
 

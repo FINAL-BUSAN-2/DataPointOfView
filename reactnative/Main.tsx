@@ -6,24 +6,70 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  FlatList,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
+////
+
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
-  userInfo: string;
+  userInfo: string; //로그인된 사용자ID
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
+//DB에서 루틴정보받아오기
+interface RoutineData {
+  id: number; //임시로number해놓음
+  rtn_name: string;
+  rtn_time: string;
+  rtn_tag: string;
+}
+
+const Main: React.FC<MainProps> = ({
+  navigation,
+  userInfo,
+  setLogin,
+  setUserInfo,
+}) => {
+  ///추가된루틴데이터가져오기
+  //const [routineData, setRoutineData] = useState<RoutineData[]>([]);
+  //const [data, setData] = useState([]);
+  const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
+  useEffect(() => {
+    fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 엔드포인트를 수정해야 합니다.
+
+      if (response.data) {
+        // 데이터 가져오고
+        const data = response.data;
+        //rtn_time을 기준으로 오름차순 정렬
+        data.sort((a, b) => a.rtn_time.localeCompare(b.rtn_time));
+        //정렬된 데이터를설정함
+        setData(data);
+      } else {
+        console.error('데이터가 없습니다.');
+      }
+    } catch (error) {
+      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+    }
+  };
+
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
     setShowImageItems(!showImageItems);
   };
+  ``;
   // 건강 페이지 이동 함수
   const movetest = () => {
     navigation.navigate('Health');
@@ -43,6 +89,7 @@ const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
   // 소셜 페이지 이동 함수
   const movetest4 = () => {
     navigation.navigate('Social');
+
   };
 
   const goHplogSet = async () => {
@@ -119,6 +166,37 @@ const Main: React.FC<MainProps> = ({navigation, userInfo}) => {
       <View style={styles.orderbox}>
         <Text style={styles.ordertext}>순서변경/즐겨찾기</Text>
       </View>
+
+      {/* 루틴DB에서 값 받아오기 필요한 컬럼 => 시간,루틴명,태그 */}
+
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.routineItem}>
+            <Text style={styles.routineName}>
+              Routine Name: {item.rtn_name}
+            </Text>
+            <Text style={styles.routineTag}>Tag: {item.rtn_tag}</Text>
+            <Text style={styles.routineTime}>Time: {item.rtn_time}</Text>
+          </View>
+        )}
+      />
+      {/* 
+      <View>
+        {data.map(item => (
+          <View key={item.id} style={styles.roundedBox}>
+            <Text style={styles.rtntext}>{item.rtn_time}</Text>
+
+            <View style={styles.routinelist}>
+              <Text>
+                {' '}
+                {item.rtn_tag} {item.rtn_name}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View> */}
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -443,6 +521,47 @@ const styles = StyleSheet.create({
   flotext: {
     bottom: 25,
     textAlign: 'center',
+  },
+  //루틴 리스트 스타일
+  roundedBox: {
+    //backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+  },
+  routinelist: {
+    backgroundColor: 'rgb(231,230,230)',
+    borderRadius: 10,
+    //padding: 10,
+    marginBottom: 10,
+    borderWidth: 1, // 테두리 두께
+    borderColor: 'black', // 테두리 색상
+  },
+
+  rtntext: {
+    marginLeft: 10, // 원하는 간격 크기로 조정
+  },
+
+  // Define styles for routine items
+  routineItem: {
+    backgroundColor: '#fff',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
+  routineName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+  routineTag: {
+    fontSize: 14,
+    color: '#888',
+  },
+  routineTime: {
+    fontSize: 14,
+    color: '#888',
   },
 });
 export default Main;
