@@ -118,7 +118,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
-          //tagsEnabled, // 태그
+          tagsEnabled, // 태그
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
