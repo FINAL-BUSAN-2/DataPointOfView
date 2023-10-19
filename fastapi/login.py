@@ -80,15 +80,15 @@ async def kakao_logout_callback(request: Request):
 
 @app.get("/naver/news/")
 def naver_news_crawling(search: str):
-    url = f'https://www.google.com/search?q={search}&sca_esv=574692167&tbs=qdr:d&tbm=nws&sxsrf=AM9HkKnHlOurdqHzndNWdjBE-1jwzi0B0w:1697689689501&source=lnt&sa=X&ved=2ahUKEwisoYb3ooGCAxWJZvUHHVHfDpYQpwV6BAgDECM&biw=1024&bih=747&dpr=1.25'
+    url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=0'
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
     news = requests.get(url,headers=headers)
     news_html = BeautifulSoup(news.text,"html.parser")
     news_list = []
     for i in range(5) :
-        title = news_html.select_one(f"#rso > div > div > div:nth-child({i+1}) > div > div > a > div > div.iRPxbe > div.n0jPhd.ynAwRc.MBeuO.nDgy9d").get_text()
-        href = news_html.select_one(f"#rso > div > div > div:nth-child({i+1}) > div > div > a")["href"]
-        img = news_html.select_one(f'#rso > div > div > div:nth-child({i+1}) > div > div > a > div > div.FAkayc > div > div > div > img')['src']
+        title = news_html.select_one(f"#sp_nws{i+1} > div > div > a").get_text()
+        href = news_html.select_one(f"#sp_nws{i+1} > div > div > a")["href"]
+        img = news_html.select_one(f'#sp_nws{i+1} > div > a > img')['src']
         news_list.append({'title':title,'href':href,'img':img})
     df = pd.DataFrame(news_list)
     
