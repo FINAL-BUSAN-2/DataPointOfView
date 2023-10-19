@@ -13,7 +13,7 @@ import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {addRoutine} from './api';
-
+import {Alert} from 'react-native';
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -91,19 +91,30 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     setTagsEnabled(category);
     console.log(`태그 ${category} 선택됨`);
   };
-  // 저장 핸들러
+
+  // 추가하기 핸들러
   const handleSubmit = () => {
-    addRoutine(
-      routineName, //루틴명
-      parseInt(set), //세트
-      parseInt(reps), //횟수
-      tagsEnabled, //태그
-      selectedDaysOfWeek, //반복요일
-      selectedDate, //날짜선택
-      selectedTime, //시간
-    );
+    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+      // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
+      Alert.alert('모든 항목을 작성해 주세요.');
+    } else {
+      // 모든 필수 항목이 입력되었으므로 루틴을 추가합니다.
+      addRoutine(
+        routineName,
+        parseInt(set),
+        parseInt(reps),
+        tagsEnabled,
+        selectedDaysOfWeek,
+        selectedDate,
+        selectedTime,
+      );
+
+      // 성공 메시지를 표시합니다.
+      Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+    }
   };
 
+  //
   return (
     <>
       <View style={styles.header}>
