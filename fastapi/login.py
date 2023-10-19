@@ -94,3 +94,41 @@ def naver_news_crawling(search: str):
     df = pd.DataFrame(news_list)
     
     return df.to_dict(orient='records')
+
+# DATABASE_URL = "mysql://root:dbdb@localhost/testdb"
+
+# engine = create_engine(DATABASE_URL)
+# SessionLocal = sessionmaker(bind=engine)
+
+# Base = declarative_base()
+
+# class User(Base):
+#     __tablename__ = "NEWS_DATA"
+#     index = Column(String(10), primary_key=True)
+#     news_cat = Column(String(30))
+#     news_title = Column(String(150))
+#     news_link = Column(String(200))
+#     news_img = Column(String(200))
+
+# class UserBase(BaseModel):
+#     index: str
+#     news_cat: str
+#     news_title: str
+#     news_link: str
+#     news_img: str
+
+# class UserInDB(UserBase):
+#     class Config:
+#         orm_mode = True
+    
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
+
+# @app.get("/naver/news/", response_model=List[UserInDB])
+# def get_search_news(db: Session = Depends(get_db), search: str = None):
+#     news = db.query(User).filter_by(news_cat=search).all()
+#     return news
