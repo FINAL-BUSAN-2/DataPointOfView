@@ -1,5 +1,12 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
@@ -25,12 +32,22 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
   };
 
   const newsInfo = async search => {
-    let response = await fetch(
-      `http://43.200.178.131:3344/naver/news/?search=${search}`,
-    );
-    let data = await response.json();
+    try {
+      let response = await fetch(
+        `http://43.200.178.131:3344/naver/news/?search=${search}`,
+      );
 
-    navigation.navigate('NewsInfo', {newsData: data});
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
+      let data = await response.json();
+      console.log(data);
+      navigation.navigate('NewsInfo', {newsData: data});
+    } catch (error) {
+      console.error('Error fetching the news:', error);
+      // 추가적인 에러 처리를 여기에 할 수 있습니다.
+    }
   };
 
   return (
@@ -100,32 +117,32 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
               onPress={() => newsInfo('건강기능식품')}>
               <Text style={styles.bestChallengeText}>건강기능식품</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('루틴')}>
+              <Text style={styles.bestChallengeText}>루틴</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('헬스케어')}>
+              <Text style={styles.bestChallengeText}>헬스케어</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.bestChallenge2}>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('건강')}>
+              <Text style={styles.bestChallengeText}>건강</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('운동')}>
+              <Text style={styles.bestChallengeText}>운동</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('박성호')}>
+              <Text style={styles.bestChallengeText}>박성호</Text>
             </TouchableOpacity>
           </View>
         </View>

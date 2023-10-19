@@ -2,7 +2,6 @@
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
-from tqdm import tqdm
 
 def makeUrl(search):
     url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=1'
