@@ -14,6 +14,9 @@ import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {addRoutine} from './api';
 
+//사용자 정보 유효성 검사
+import {Alert} from 'react-native';
+
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -103,17 +106,32 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     setTagsEnabled(tag);
   };
 
-  // 저장 핸들러
-  const handleSubmit = () => {
-    addRoutine(
-      routineName, //루틴명
-      parseInt(set), //세트
-      parseInt(reps), //횟수
-      tagsEnabled, //태그
-      selectedDaysOfWeek, //반복요일
-      selectedDate, //날짜선택
-      selectedTime, //시간
-    );
+  // 추가하기 핸들러
+  const handleSubmit = async () => {
+    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+      // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
+      Alert.alert('모든 항목을 작성해 주세요.');
+    } else {
+      // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
+      try {
+        await addRoutine(
+          routineName, // 루틴명
+          parseInt(set), // 세트
+          parseInt(reps), // 횟수
+          tagsEnabled, // 태그
+          selectedDaysOfWeek, // 반복요일
+          selectedDate, // 날짜선택
+          selectedTime, // 시간
+        );
+
+        // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
+        Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+      } catch (error) {
+        // 에러가 발생하면 에러 메시지를 표시할 수 있습니다.
+        Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+        console.error('루틴 추가 오류:', error);
+      }
+    }
   };
   //
 

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-
+import axios from 'axios';
 ////
 
 // 화면 관리
@@ -89,7 +89,6 @@ const Main: React.FC<MainProps> = ({
   // 소셜 페이지 이동 함수
   const movetest4 = () => {
     navigation.navigate('Social');
-
   };
 
   const goHplogSet = async () => {
