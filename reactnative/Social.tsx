@@ -114,35 +114,35 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
           <View style={styles.bestChallenge1}>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('박성호')}>
+              onPress={() => newsInfo('건강기능식품')}>
               <Text style={styles.bestChallengeText}>건강기능식품</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('루틴')}>
+              <Text style={styles.bestChallengeText}>루틴</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('헬스케어')}>
+              <Text style={styles.bestChallengeText}>헬스케어</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.bestChallenge2}>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('건강')}>
+              <Text style={styles.bestChallengeText}>건강</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('운동')}>
+              <Text style={styles.bestChallengeText}>운동</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bestChallengeButton}>
-              <Text style={styles.bestChallengeText}>
-                카테고리별 인기 챌린지
-              </Text>
+            <TouchableOpacity
+              style={styles.bestChallengeButton}
+              onPress={() => newsInfo('박성호')}>
+              <Text style={styles.bestChallengeText}>박성호</Text>
             </TouchableOpacity>
           </View>
         </View>
