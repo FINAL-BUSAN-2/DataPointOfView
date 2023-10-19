@@ -1,13 +1,32 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
-type NewsInfoProps = {
-  navigation: StackNavigationProp<RootStackPageList, 'NewsInfo'>;
+type NewsData = {
+  title: string;
+  href: string;
+  img: string;
 };
 
-const NewsInfo: React.FC<NewsInfoProps> = ({navigation}) => {
+type NewsInfoProps = {
+  navigation: StackNavigationProp<RootStackPageList, 'NewsInfo'>;
+  route: {
+    params: {
+      newsData: NewsData[];
+    };
+  };
+};
+
+const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
+  const {newsData} = route.params;
   const handleBackPress = () => {
     navigation.goBack();
   };
@@ -24,6 +43,10 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation}) => {
     navigation.navigate('hplogset');
   };
 
+  const openNews = url => {
+    Linking.openURL(url);
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -32,6 +55,14 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation}) => {
             <Text style={styles.backButton}>{'<'}</Text>
           </TouchableOpacity>
         </View>
+        {newsData &&
+          newsData.map((news, index) => (
+            <TouchableOpacity key={index} onPress={() => openNews(news.href)}>
+              <View style={styles.newstab}>
+                <Text key={index}>{news.title}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
         {/* 네비게이션바 */}
         <View style={styles.navBarContainer}>
           {/* 소셜 */}
@@ -155,6 +186,15 @@ const styles = StyleSheet.create({
   accIcon: {
     width: 35,
     height: 35,
+  },
+
+  newstab: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: 'black',
+    margin: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

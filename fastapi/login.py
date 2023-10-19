@@ -80,7 +80,7 @@ async def kakao_logout_callback(request: Request):
 
 @app.get("/naver/news/")
 def naver_news_crawling(search: str):
-    url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=1'
+    url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=0'
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
     news = requests.get(url,headers=headers)
     news_html = BeautifulSoup(news.text,"html.parser")

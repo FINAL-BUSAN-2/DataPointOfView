@@ -1,5 +1,12 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
@@ -25,12 +32,22 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
   };
 
   const newsInfo = async search => {
-    let response = await fetch(
-      `http://43.200.178.131:3344/naver/news/?search=${search}`,
-    );
-    let data = await response.json();
+    try {
+      let response = await fetch(
+        `http://43.200.178.131:3344/naver/news/?search=${search}`,
+      );
 
-    navigation.navigate('NewsInfo', {newsData: data});
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
+      let data = await response.json();
+      console.log(data);
+      navigation.navigate('NewsInfo', {newsData: data});
+    } catch (error) {
+      console.error('Error fetching the news:', error);
+      // 추가적인 에러 처리를 여기에 할 수 있습니다.
+    }
   };
 
   return (
@@ -97,7 +114,7 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
           <View style={styles.bestChallenge1}>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('건강기능식품')}>
+              onPress={() => newsInfo('박성호')}>
               <Text style={styles.bestChallengeText}>건강기능식품</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bestChallengeButton}>
