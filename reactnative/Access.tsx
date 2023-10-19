@@ -12,9 +12,6 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import daily from './daily';
-import monthly from './monthly';
 
 // 화면 관리
 type AccessProps = {
@@ -34,8 +31,6 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
   const navigation =
     useNavigation<StackNavigationProp<RootStackPageList, 'Access'>>();
-  // 탭 기반 인터페이스
-  const Tab = createMaterialTopTabNavigator();
   // 환경설정 페이지 이동 함수
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
@@ -60,6 +55,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
                 width: 45,
                 height: 45,
                 marginRight: 16,
+                marginLeft: 16,
               }}
             />
           </TouchableOpacity>
@@ -89,25 +85,61 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
         </View>
       </View>
 
-      {/* 탭 스크린 */}
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: {
-            width: '50%',
-            alignSelf: 'center',
-            backgroundColor: 'rgb(231,230,230)',
-            elevation: 0,
-          },
-          tabBarLabelStyle: {
-            fontSize: 16,
-          },
-          tabBarIndicatorStyle: {
-            backgroundColor: 'rgb(43,58,85)',
-          },
-        }}>
-        <Tab.Screen name="일별 통계" component={daily} />
-        <Tab.Screen name="월별 통계" component={monthly} />
-      </Tab.Navigator>
+      {/* 유저 정보 */}
+      <View style={styles.userinfo}>
+        <Text style={styles.usertext}>{userInfo}님의 오늘의 기록</Text>
+      </View>
+
+      {/* 바디 */}
+      <View style={styles.body}>
+        <Image
+          source={require('./android/app/src/img/staticbody.png')}
+          style={styles.bodyimg}
+        />
+      </View>
+
+      <View style={styles.line}></View>
+
+      {/* 통계 */}
+      <View style={styles.titlecontainer}>
+        <View style={styles.titlehealth}>
+          <Text style={styles.titletext}>운동 통계</Text>
+        </View>
+        <View style={styles.titlepill}>
+          <Text style={styles.titletext}>영양 통계</Text>
+        </View>
+        <View style={styles.titleetc}>
+          <Text style={styles.titletext}>건강 통계</Text>
+        </View>
+      </View>
+      <View style={styles.statistics}>
+        <View style={styles.chart}>
+          <Image
+            source={require('./android/app/src/img/cat.jpg')}
+            style={styles.chartimg}
+          />
+          <Image
+            source={require('./android/app/src/img/cat.jpg')}
+            style={styles.chartimg}
+          />
+          <Image
+            source={require('./android/app/src/img/cat.jpg')}
+            style={styles.chartimg}
+          />
+        </View>
+        <View style={styles.statisticstextbox}>
+          <Text style={styles.recotext}>
+            👍 : "비타민"을(를) 섭취하시는 걸 추천드려요
+          </Text>
+          <Text style={styles.recoproducttext}>
+            ㄴ추천 제품 : "레모나","아이셔","레몬"
+          </Text>
+          <Text style={styles.cautiontext}>
+            ❗ : "제품A"와 "제품B"같이 섭취 시
+          </Text>
+          <Text style={styles.cautiontext2}>부작용이 있을 수 있어요!</Text>
+        </View>
+      </View>
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -136,14 +168,24 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             <Text style={styles.homeText}>홈</Text>
           </View>
         </TouchableOpacity>
+
         {/* 개인 */}
-        <View style={styles.accTab}>
-          <Image
-            source={require('./android/app/src/img/accessibility.png')}
-            style={styles.accIcon}
-          />
-          <Text>개인</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            console.log('가자');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Access'}],
+            });
+          }}>
+          <View style={styles.accTab}>
+            <Image
+              source={require('./android/app/src/img/accessibility.png')}
+              style={styles.accIcon}
+            />
+            <Text>개인</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -152,12 +194,11 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: '#ffffff',
   },
   header: {
+    flex: 1.3,
     backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#fff',
     flexDirection: 'row',
@@ -168,26 +209,158 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  rightContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 80,
-  },
   // 앱 이름
   title: {
     fontSize: 23,
     fontWeight: 'bold',
   },
+  rightContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 80,
+    right: 20,
+  },
+  // user 정보
+  userinfo: {
+    flex: 1,
+  },
+  usertext: {
+    fontSize: 18,
+    alignSelf: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+  },
 
-  // 탭 스크린
-  tabcontainer: {},
-  // daily 스크린
-  tabdaily: {},
-  // daily 스크린
-  tabmonthly: {},
+  // 바디
+  body: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bodyimg: {
+    width: '65%',
+    height: '110%',
+    bottom: 10,
+  },
+
+  // 선
+  line: {
+    width: '80%',
+    height: 2,
+    backgroundColor: 'rgb(231,230,230)',
+    alignSelf: 'center',
+    top: 5,
+  },
+
+  // 통계제목 영역
+  titlecontainer: {
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    top: 10,
+  },
+  // 운동 타이틀
+  titlehealth: {
+    width: '25%',
+    height: '120%',
+    borderWidth: 4,
+    borderColor: 'rgb(231,230,230)',
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    right: 5,
+    zIndex: 2,
+  },
+  // 영양 타이틀
+  titlepill: {
+    width: '25%',
+    height: '120%',
+    borderWidth: 4,
+    borderColor: 'rgb(231,230,230)',
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    zIndex: 2,
+  },
+  // 건강 타이틀
+  titleetc: {
+    width: '25%',
+    height: '120%',
+    borderWidth: 4,
+    borderColor: 'rgb(231,230,230)',
+    borderRadius: 15,
+    left: 5,
+    backgroundColor: '#fff',
+    zIndex: 2,
+  },
+  // 타이틀 텍스트
+  titletext: {
+    fontSize: 16,
+    alignSelf: 'center',
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  // 통계 영역
+  statistics: {
+    flex: 5,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingBottom: '20%',
+    zIndex: 1,
+  },
+  // 차트 영역
+  chart: {
+    flex: 5,
+    width: '80%',
+    borderWidth: 5,
+    borderColor: 'rgb(231,230,230)',
+    borderRadius: 30,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  // 차트 이미지
+  chartimg: {
+    top: 20,
+    width: '28%',
+    height: '70%',
+    borderRadius: 20,
+  },
+
+  // 통계 텍스트 영역
+  statisticstextbox: {
+    flex: 5,
+    height: 100,
+    alignSelf: 'center',
+    paddingTop: 10,
+  },
+  recotext: {
+    fontSize: 15,
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  recoproducttext: {
+    fontSize: 13,
+    color: '#000',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  cautiontext: {
+    top: 5,
+    fontSize: 15,
+    color: '#000',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  cautiontext2: {
+    top: 5,
+    fontSize: 15,
+    color: '#000',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
 
   //네비게이션바
   navBarContainer: {
+    flex: 1.5,
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'absolute',
@@ -195,9 +368,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: '10%',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     alignItems: 'center',
     elevation: 50, // for Android
+    zIndex: 2,
   },
   // 추천
   upTab: {

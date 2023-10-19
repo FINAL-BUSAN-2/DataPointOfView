@@ -89,7 +89,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       parseInt(set),
       parseInt(reps),
       selectedDate,
-      selectedDaysOfWeek,
+      selectedDaysOfWeek.join(','),
       tagsEnabled,
     );
   };
