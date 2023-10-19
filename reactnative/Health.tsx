@@ -136,7 +136,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 style={styles.Routineinput}
                 value={routineName}
                 onChangeText={handleRoutineNameChange}
-                placeholder="루틴 이름을 설정해주세요"
+                placeholder="검색창 파워레그어쩌구"
               />
               {/* 카메라 아이콘 */}
               <TouchableOpacity
@@ -147,7 +147,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-            {/* 루틴 아이콘 */}
+            {/* 검색돋보기 */}
             <View style={styles.Routineicon}>
               <TouchableOpacity onPress={handleAddButtonClick}>
                 <Image
