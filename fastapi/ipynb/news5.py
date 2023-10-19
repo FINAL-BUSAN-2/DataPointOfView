@@ -15,7 +15,8 @@ def fetch_naver_news(search):
     for i in range(5) :
         title = news_html.select_one(f"#sp_nws{i+1} > div > div > a").get_text()
         href = news_html.select_one(f"#sp_nws{i+1} > div > div > a")["href"]
-        img = news_html.select_one(f'#sp_nws{i+1} > div > a > img')['src']
+        img_element = news_html.select_one(f'#sp_nws{i+1} > div > a > img')
+        img = img_element['src'] if img_element else None
         news_list.append({'title':title,'href':href,'img':img})
     df = pd.DataFrame(news_list)
     return(df)
