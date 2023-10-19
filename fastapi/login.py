@@ -81,7 +81,7 @@ async def kakao_logout_callback(request: Request):
 @app.get("/naver/news/")
 def naver_news_crawling(search: str):
     url = f'https://www.google.com/search?q={search}&sca_esv=574692167&tbs=qdr:d&tbm=nws&sxsrf=AM9HkKnHlOurdqHzndNWdjBE-1jwzi0B0w:1697689689501&source=lnt&sa=X&ved=2ahUKEwisoYb3ooGCAxWJZvUHHVHfDpYQpwV6BAgDECM&biw=1024&bih=747&dpr=1.25'
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102")}
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
     news = requests.get(url,headers=headers)
     news_html = BeautifulSoup(news.text,"html.parser")
     news_list = []
