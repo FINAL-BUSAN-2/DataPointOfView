@@ -121,12 +121,110 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   };
   //
   return (
+    /////////// 헤더
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
           <Text style={styles.backButton}>{'<'}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* 카메라 */}
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        {/* Camera Button */}
+        <View style={{flex: 1, alignItems: 'flex-start'}}>
+          <Text style={{marginTop: 10, paddingLeft: 10}}>운동인식</Text>
+          <TouchableOpacity
+            onPress={() => console.log('Camera button pressed')}>
+            <Image
+              source={require('./android/app/src/img/camera.png')}
+              style={styles.cameraicon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* "상체," "하체," "코어," "기타" Buttons */}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Upper Body')}
+            style={
+              tagsEnabled === 'Upper Body'
+                ? styles.selectedButton
+                : styles.button
+            }>
+            <Text>상체</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Lower Body')}
+            style={
+              tagsEnabled === 'Lower Body'
+                ? styles.selectedButton
+                : styles.button
+            }>
+            <Text>하체</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Core')}
+            style={
+              tagsEnabled === 'Core' ? styles.selectedButton : styles.button
+            }>
+            <Text>코어</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('etc')}
+            style={
+              tagsEnabled === 'etc' ? styles.selectedButton : styles.button
+            }>
+            <Text>기타</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* "유산소" and "스트레칭" Buttons in the Row Below */}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <View style={{flex: 1}}></View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            marginRight: '15%',
+            flexDirection: 'row',
+          }}>
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Stretching')}
+            style={
+              tagsEnabled === 'Stretching'
+                ? styles.selectedButton
+                : styles.button
+            }>
+            <Text>스트레칭</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handletagsEnabled('Cardio')}
+            style={
+              tagsEnabled === 'Cardio' ? styles.selectedButton : styles.button
+            }>
+            <Text>유산소</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/*  */}
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.healthheader}>
@@ -138,14 +236,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 onChangeText={handleRoutineNameChange}
                 placeholder="검색창 파워레그어쩌구"
               />
-              {/* 카메라 아이콘 */}
-              <TouchableOpacity
-                onPress={() => console.log('Camera button pressed')}>
-                <Image
-                  source={require('./android/app/src/img/camera.png')}
-                  style={styles.cameraicon}
-                />
-              </TouchableOpacity>
             </View>
             {/* 검색돋보기 */}
             <View style={styles.Routineicon}>
@@ -211,60 +301,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginLeft: '15%',
-            }}>
-            <Text>태그</Text>
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('Upper Body')}
-              style={
-                tagsEnabled === 'Upper Body'
-                  ? styles.selectedButton
-                  : styles.button
-              }>
-              <Text>상체</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('Lower Body')}
-              style={
-                tagsEnabled === 'Lower Body'
-                  ? styles.selectedButton
-                  : styles.button
-              }>
-              <Text>하체</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('Core')}
-              style={
-                tagsEnabled === 'Core' ? styles.selectedButton : styles.button
-              }>
-              <Text>코어</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('Cardio')}
-              style={
-                tagsEnabled === 'Cardio' ? styles.selectedButton : styles.button
-              }>
-              <Text>유산소</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('Stretching')}
-              style={
-                tagsEnabled === 'Stretching'
-                  ? styles.selectedButton
-                  : styles.button
-              }>
-              <Text>스트레칭</Text>
-            </TouchableOpacity>
-          </View>
           <Toggle
             label={'알림'}
             value={notificationEnabled}
