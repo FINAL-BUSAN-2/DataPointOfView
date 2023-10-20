@@ -25,9 +25,8 @@ type MainProps = {
 
 //DB에서 루틴정보받아오기
 interface RoutineData {
-  id: number; //임시로number해놓음
-  rtn_name: string;
   rtn_time: string;
+  rtn_name: string;
   rtn_tag: string;
 }
 
@@ -47,14 +46,11 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 엔드포인트를 수정해야 합니다.
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
 
       if (response.data) {
-        // 데이터 가져오고
         const data = response.data;
-        //rtn_time을 기준으로 오름차순 정렬
-        data.sort((a, b) => a.rtn_time.localeCompare(b.rtn_time));
-        //정렬된 데이터를설정함
+        // 정렬 없이 데이터를 설정함
         setData(data);
       } else {
         console.error('데이터가 없습니다.');
@@ -170,7 +166,6 @@ const Main: React.FC<MainProps> = ({
 
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.routineItem}>
             <Text style={styles.routineName}>
