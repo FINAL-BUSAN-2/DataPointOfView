@@ -168,11 +168,9 @@ const Main: React.FC<MainProps> = ({
         data={data}
         renderItem={({item}) => (
           <View style={styles.routineItem}>
-            <Text style={styles.routineName}>
-              Routine Name: {item.rtn_name}
+            <Text style={styles.routineInfo}>
+              {item.rtn_time} {item.rtn_tag} {item.rtn_name}
             </Text>
-            <Text style={styles.routineTag}>Tag: {item.rtn_tag}</Text>
-            <Text style={styles.routineTime}>Time: {item.rtn_time}</Text>
           </View>
         )}
       />
@@ -556,6 +554,10 @@ const styles = StyleSheet.create({
   routineTime: {
     fontSize: 14,
     color: '#888',
+  },
+  routineInfo: {
+    fontSize: 16,
+    color: 'black',
   },
 });
 export default Main;
