@@ -226,7 +226,22 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 태그없애기로함 */}
+          {/* 태그 선택 */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginLeft: '15%',
+            }}>
+            <Text>태그</Text>
+            <TouchableOpacity
+              onPress={() => handletagsEnabled('기타')}
+              style={
+                tagsEnabled === '기타' ? styles.selectedButton : styles.button
+              }>
+              <Text>기타</Text>
+            </TouchableOpacity>
+          </View>
 
           <Toggle
             label={'알림'}
