@@ -138,12 +138,12 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('운동')}>
-              <Text style={styles.bestChallengeText}>운동</Text>
+              onPress={() => newsInfo('운동법')}>
+              <Text style={styles.bestChallengeText}>운동법</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('간장계란밥')}>
+              onPress={() => newsInfo('박성호')}>
               <Text style={styles.bestChallengeText}>박성호</Text>
             </TouchableOpacity>
           </View>
