@@ -156,7 +156,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-DATABASE_URL = "mysql://root:dbdb@localhost/testdb"
+DATABASE_URL = "mysql://root:dbdb@localhost/dpv_db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
@@ -186,8 +186,8 @@ class RoutineCreate(BaseModel):
 
 
 class User(Base):
-    __tablename__ = "NEWS_DATA"
-    index = Column(String(10), primary_key=True)
+    __tablename__ = "news_data"
+    news_idx = Column(String(10), primary_key=True)
     news_cat = Column(String(30))
     news_title = Column(String(150))
     news_link = Column(String(200))
@@ -195,7 +195,7 @@ class User(Base):
 
 
 class UserBase(BaseModel):
-    index: str
+    news_idx: str
     news_cat: str
     news_title: str
     news_link: str

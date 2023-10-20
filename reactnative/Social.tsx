@@ -34,7 +34,9 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
   const newsInfo = async search => {
     try {
       let response = await fetch(
-        `http://43.200.178.131:3344/naver/news/?search=${search}`,
+        // 서버
+        // `http://43.200.178.131:3344/naver/news/?search=${search}`,
+        `http://172.16.10.179:3344/naver/news/?search=${search}`,
       );
 
       if (!response.ok) {
@@ -141,7 +143,7 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('박성호')}>
+              onPress={() => newsInfo('간장계란밥')}>
               <Text style={styles.bestChallengeText}>박성호</Text>
             </TouchableOpacity>
           </View>
