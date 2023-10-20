@@ -45,6 +45,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
+  const handleNotificationChange = (newValue: any) => {
+    setNotificationEnabled(newValue);
+    if (newValue) {
+      console.log('알림 on');
+    } else {
+      console.log('알림 off');
+    }
+  };
+
   // 반복 기능
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
@@ -108,6 +117,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
+          notificationEnabled, // 알림여부
         );
 
         // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
@@ -265,11 +275,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               <Text>스트레칭</Text>
             </TouchableOpacity>
           </View>
+
+          {/* 알림 설정 */}
           <Toggle
             label={'알림'}
             value={notificationEnabled}
-            onChange={setNotificationEnabled}
+            onChange={handleNotificationChange}
           />
+
           {/* 알림 설정 */}
           {/* <View style={styles.notificationcontainer}>
           <Text style={styles.notification}>알림</Text>

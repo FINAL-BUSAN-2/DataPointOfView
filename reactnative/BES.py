@@ -153,58 +153,44 @@ async def read_routines(request: Request):
     return merged_routines
 
 
-# class RoutineCreate(BaseModel):
-#     rtn_nm: str
-#     rtn_set: int
-#     rtn_reps: int
-#     rtn_tag: str
-#     rtn_day: str
-#     rtn_sdate: str
-#     rtn_time: str
+############################################ 루틴추가하기
 
 
-# @app.post("/routines", response_model=RoutineCreate)
-# def create_routine(routine: RoutineCreate):
-#     logger.info("Received data: %s", routine.json())
-#     try:
-#         # 로깅: 수신된 데이터를 로그에 출력
-#         logger.debug("Received data: %s", routine.dict())
-
-#         # SQLAlchemy session is used as a context manager to insert data
-#         with SessionLocal() as db:
-#             db_routine = Routine(
-#                 rtn_nm=routine.rtn_nm,
-#                 rtn_set=routine.rtn_set,
-#                 rtn_reps=routine.rtn_reps,
-#                 rtn_tag=routine.rtn_tag,
-#                 rtn_day=routine.rtn_day,
-#                 rtn_sdate=routine.rtn_sdate,
-#                 rtn_time=routine.rtn_time,
-#                 ##rtn_email=> 로그인정보에서 받아옴 request.session["user_email"] ,rtn_id => 메일아이디+0000001 이런형식
-#             )
-
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-
-#         return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         return {"error": "데이터 삽입 중 오류 발생"}
+class ERoutineCreate(BaseModel):
+    ertn_nm: str
+    ertn_set: int
+    ertn_reps: int
+    ertn_tag: str
+    ertn_day: str
+    ertn_sdate: str
+    ertn_time: str
 
 
-# 루틴 데이터를 반환하는 엔드포인트 정의
-# @app.get("/rtnlist", response_model=List[RoutineResponse])
-# async def read_routines(request: Request):
-#    routines = get_rtn_from_database()
-#    return {"routines": routines}
+@app.post("/e_routines", response_model=ERoutineCreate)
+def create_routine(routine: ERoutineCreate):
+    logger.info("Received data: %s", routine.json())
+    try:
+        # 로깅: 수신된 데이터를 로그에 출력
+        logger.debug("Received data: %s", routine.dict())
 
+        # SQLAlchemy session is used as a context manager to insert data
+        with SessionLocal() as db:
+            db_routine = ERoutine(
+                ertn_nm=routine.ertn_nm,
+                ertn_set=routine.ertn_set,
+                ertn_reps=routine.ertn_reps,
+                ertn_tag=routine.ertn_tag,
+                ertn_day=routine.ertn_day,
+                ertn_sdate=routine.ertn_sdate,
+                ertn_time=routine.ertn_time,
+            )
 
-# @app.get("/rtnlist", response_model=List[RoutineResponse])
-# async def read_routines(request: Request):
-#     routines = get_rtn_from_database()
-#     rtn_names = [routine.rtn_nm for routine in routines]
-#     rtn_tags = [routine.rtn_tag for routine in routines]
-#     rtn_times = [routine.rtn_time for routine in routines]
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
 
-#     return {"rtn_names": rtn_names, "rtn_tags": rtn_tags, "rtn_times": rtn_times}
+        return db_routine
+
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}

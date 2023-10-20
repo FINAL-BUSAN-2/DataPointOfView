@@ -9,6 +9,7 @@ export const addRoutine = async (
   rtn_day,
   rtn_sdate = selectedDate,
   rtn_time,
+  notificationEnabled = false,
 ) => {
   try {
     //유효성검사
@@ -24,6 +25,7 @@ export const addRoutine = async (
       rtn_day: String(rtn_day), //반복요일
       rtn_sdate: rtn_sdate, //날짜
       rtn_time: rtn_time, //시간
+      rtn_alram: notificationEnabled, // Pass 0 or 1
     };
 
     const response = await axios.post('http://10.0.2.2:8000/routines', data);
