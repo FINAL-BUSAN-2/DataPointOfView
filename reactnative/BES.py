@@ -166,7 +166,31 @@ class ERoutineCreate(BaseModel):
     ertn_time: str
 
 
-@app.post("/e_routines", response_model=ERoutineCreate)
+# @app.post("/routines", response_model=ERoutineCreate)
+# def create_routine(routine: ERoutineCreate):
+#     missing_fields = {
+#         field_name
+#         for field_name, field_value in routine.dict().items()
+#         if not field_value
+#     }
+
+#     if missing_fields:
+#         missing_fields_str = ", ".join(missing_fields)
+#         detail = f"The following fields are required: {missing_fields_str}"
+#         raise HTTPException(status_code=422, detail=detail)
+
+#     # FastAPI 모델로부터 데이터를 읽어와 데이터베이스에 저장
+#     db_routine = ERoutine(**routine.dict())
+
+#     with SessionLocal() as db:
+#         db.add(db_routine)
+#         db.commit()
+#         db.refresh(db_routine)
+
+#     return db_routine
+
+
+@app.post("/routines", response_model=ERoutineCreate)
 def create_routine(routine: ERoutineCreate):
     logger.info("Received data: %s", routine.json())
     try:
