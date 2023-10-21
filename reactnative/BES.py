@@ -7,7 +7,6 @@ from pydantic import BaseModel
 from sqlalchemy import ForeignKey
 from sqlalchemy import Date
 from datetime import date,datetime
-import time
 
 app = FastAPI()
 DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
@@ -337,3 +336,24 @@ async def rank_routines(request: Request):
             )
         )
     return response_data
+
+class Pill_func(Base):
+    __tablename__ = "pill_func"
+    func_cd = Column(String(10), primary_key=True)
+    func_nm = Column(String(60))
+    func_emoji = Column(String(90))
+
+
+class Pill_funcBase(BaseModel):
+    func_cd : str
+    func_nm : str
+    func_emoji : Optional[str] = None
+
+class Pill_funcInDB(Pill_funcBase):
+    class Config:
+        orm_mode = True
+
+@app.get("/pill_func/", response_model=List[Pill_funcInDB])
+def get_search_pill(db: Session = Depends(get_db)):
+    pill_func = db.query(Pill_func).all()
+    return pill_func

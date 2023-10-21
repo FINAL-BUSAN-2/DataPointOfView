@@ -36,7 +36,7 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
       let response = await fetch(
         // 서버
         // `http://43.200.178.131:3344/naver/news/?search=${search}`,
-        `http://172.16.10.179:3344/naver/news/?search=${search}`,
+        `http://43.200.178.131:3344/naver/news/?search=${search}`,
       );
 
       if (!response.ok) {

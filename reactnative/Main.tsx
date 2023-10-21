@@ -95,7 +95,7 @@ const Main: React.FC<MainProps> = ({
     navigation.navigate('hplogset');
   };
   const hello = async () => {
-    fetch('http://172.16.10.179:3344/login')
+    fetch('http://43.200.178.131:3344/login')
       .then(response => {
         if (response.ok) {
           // 서버에서 성공적인 응답을 받은 경우
