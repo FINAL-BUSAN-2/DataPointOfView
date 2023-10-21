@@ -10,8 +10,7 @@ from datetime import date,datetime
 import time
 
 app = FastAPI()
-
-DATABASE_URL = "mysql://root:dbdb@localhost/dpv_db"
+DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
@@ -308,4 +307,33 @@ def get_db_login(db: Session = Depends(get_db)):
         db.commit()
         db.refresh(new_user)
         return [new_user]
-        
+    
+
+@app.get(
+    "/rtnrank",
+    response_model=List[Union[ERoutineResponse, HRoutineResponse, PRoutineResponse]],
+)
+async def rank_routines(request: Request):
+    ertn_routines = get_routines_from_database("ertn")
+    hrtn_routines = get_routines_from_database("hrtn")
+    prtn_routines = get_routines_from_database("prtn")
+    response_data = []
+    for routine in ertn_routines:
+        response_data.append(
+            ERoutineResponse(
+                ertn_nm=routine.ertn_nm,
+            )
+        )
+    for routine in hrtn_routines:
+        response_data.append(
+            HRoutineResponse(
+                hrtn_nm=routine.hrtn_nm,
+            )
+        )
+    for routine in prtn_routines:
+        response_data.append(
+            PRoutineResponse(
+                prtn_nm=routine.prtn_nm,
+            )
+        )
+    return response_data
