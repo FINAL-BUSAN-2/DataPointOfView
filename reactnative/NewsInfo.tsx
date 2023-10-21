@@ -11,9 +11,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
 type NewsData = {
-  title: string;
-  href: string;
-  img: string;
+  // DB 이전
+  // title: string;
+  // href: string;
+  // img: string;
+  news_cat: string;
+  news_title: string;
+  news_link: string;
+  news_img: string;
 };
 
 type NewsInfoProps = {
@@ -57,9 +62,15 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
         </View>
         {newsData &&
           newsData.map((news, index) => (
-            <TouchableOpacity key={index} onPress={() => openNews(news.href)}>
+            // DB 이전
+            // <TouchableOpacity key={index} onPress={() => openNews(news.href)}>
+            //   <View style={styles.newstab}>
+            //     <Text key={index}>{news.title}</Text>
+            <TouchableOpacity
+              key={index}
+              onPress={() => openNews(news.news_link)}>
               <View style={styles.newstab}>
-                <Text key={index}>{news.title}</Text>
+                <Text key={index}>{news.news_title}</Text>
               </View>
             </TouchableOpacity>
           ))}

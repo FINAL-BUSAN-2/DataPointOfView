@@ -34,6 +34,8 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
   const newsInfo = async search => {
     try {
       let response = await fetch(
+        // 서버
+        // `http://43.200.178.131:3344/naver/news/?search=${search}`,
         `http://43.200.178.131:3344/naver/news/?search=${search}`,
       );
 
@@ -136,30 +138,13 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bestChallengeButton}
-              onPress={() => newsInfo('운동')}>
-              <Text style={styles.bestChallengeText}>운동</Text>
+              onPress={() => newsInfo('운동법')}>
+              <Text style={styles.bestChallengeText}>운동법</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bestChallengeButton}
               onPress={() => newsInfo('박성호')}>
               <Text style={styles.bestChallengeText}>박성호</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* 챌린지 랭크 */}
-        <View style={styles.challengeRank}>
-          <View style={styles.challengeRankTitle}>
-            <Text style={styles.challengeText}>인기 루틴 Top 3</Text>
-          </View>
-          <View style={styles.rankButtonGroup}>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>1위</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>2위</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>3위</Text>
             </TouchableOpacity>
           </View>
         </View>
