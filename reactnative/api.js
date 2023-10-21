@@ -2,13 +2,13 @@ import axios from 'axios';
 
 ///// 루틴페이지에서 입력된 값 DB로 전송하기
 export const addRoutine = async (
-  rtn_nm,
-  rtn_set,
-  rtn_reps,
-  rtn_tag,
-  rtn_day,
-  rtn_sdate = selectedDate,
-  rtn_time,
+  ertn_nm,
+  ertn_set,
+  ertn_reps,
+  ertn_tag,
+  ertn_day,
+  ertn_sdate = selectedDate,
+  ertn_time,
 ) => {
   try {
     //유효성검사
@@ -17,13 +17,17 @@ export const addRoutine = async (
     //}
 
     const data = {
-      rtn_nm: String(rtn_nm), // 루틴명
-      rtn_set: rtn_set, // 1일 반복 횟수
-      rtn_reps: rtn_reps, // 1일 반복 갯수
-      rtn_tag: String(rtn_tag), // 태그
-      rtn_day: String(rtn_day), //반복요일
-      rtn_sdate: rtn_sdate, //날짜
-      rtn_time: rtn_time, //시간
+      ertn_nm: String(ertn_nm), // 루틴명
+      ertn_set: ertn_set, // 1일 반복 횟수
+      ertn_reps: ertn_reps, // 1일 반복 갯수
+      ertn_tag: String(ertn_tag), // 태그
+      ertn_day: String(ertn_day), //반복요일
+      ertn_sdate: ertn_sdate, //날짜
+      ertn_time: ertn_time, //시간
+      ertn_mem: 'abc123@gmail.com',
+      ertn_id: 'abcd@sdfsf',
+      ertn_cat: 'aaa',
+      ertn_alram: 1,
     };
 
     const response = await axios.post('http://10.0.2.2:8000/routines', data);
