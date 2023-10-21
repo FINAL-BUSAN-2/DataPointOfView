@@ -22,7 +22,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
-DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
+# "mysql://root:dbdb@localhost:3306/dpv_db"
+DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
