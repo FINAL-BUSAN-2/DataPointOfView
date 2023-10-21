@@ -12,7 +12,7 @@ import {
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
-import {addRoutine} from './api';
+import {EaddRoutine} from './api';
 
 //사용자 정보 유효성 검사
 import {Alert} from 'react-native';
@@ -123,7 +123,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     } else {
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-        await addRoutine(
+        await EaddRoutine(
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수

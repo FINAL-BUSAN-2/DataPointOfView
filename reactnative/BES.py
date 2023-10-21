@@ -162,7 +162,7 @@ async def read_routines(request: Request):
     return merged_routines
 
 
-####### 루틴데이터추가하기
+####### 루틴데이터추가하기 (기타)
 class RoutineCreate(BaseModel):
     ertn_nm: str
     ertn_set: int
@@ -189,7 +189,7 @@ def create_routine(routine: RoutineCreate):
         with SessionLocal() as db:
             db_routine = ERoutine(
                 ertn_mem=routine.ertn_mem,
-                ertn_id="psh_light@google.com",
+                ertn_id="abdb@ge00012",
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
                 ertn_tag=routine.ertn_tag,
@@ -199,6 +199,56 @@ def create_routine(routine: RoutineCreate):
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
+            )
+
+            db.add(db_routine)
+            db.commit()
+            print("디버그")
+            db.refresh(db_routine)
+
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
+
+
+####### 루틴데이터추가하기 (영양)
+class PRoutineCreate(BaseModel):
+    prtn_nm: str
+    prtn_set: int
+    prtn_reps: int
+    prtn_tag: str
+    prtn_day: str
+    prtn_sdate: str
+    prtn_time: str
+    prtn_id: str
+    prtn_cat: str
+    prtn_alram: int
+    prtn_mem: str
+    prtn_edate: str
+
+
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: RoutineCreate):
+    try:
+        # 로깅: 수신된 데이터를 로그에 출력
+        # logger.debug("Received data: %s", routine.dict())
+        # print("디버그")
+        # SQLAlchemy session is used as a context manager to insert data
+
+        with SessionLocal() as db:
+            db_routine = ERoutine(
+                prtn_mem=routine.ertn_mem,
+                prtn_id="abdb@ge00012",
+                prtn_nm=routine.ertn_nm,
+                prtn_cat="기타",
+                prtn_tag=routine.ertn_tag,
+                prtn_set=routine.ertn_set,
+                prtn_reps=routine.ertn_reps,
+                prtn_sdate=routine.ertn_sdate,
+                prtn_time=routine.ertn_time,
+                prtn_alram=routine.ertn_alram,
+                prtn_day=routine.ertn_day,
             )
 
             db.add(db_routine)
