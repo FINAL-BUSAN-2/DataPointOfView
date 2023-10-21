@@ -148,23 +148,6 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
             </TouchableOpacity>
           </View>
         </View>
-        {/* 챌린지 랭크 */}
-        <View style={styles.challengeRank}>
-          <View style={styles.challengeRankTitle}>
-            <Text style={styles.challengeText}>인기 루틴 Top 3</Text>
-          </View>
-          <View style={styles.rankButtonGroup}>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>1위</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>2위</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rankButton}>
-              <Text style={styles.bestChallengeText}>3위</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
 
         {/* 네비게이션바 */}
         <View style={styles.navBarContainer}>

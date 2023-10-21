@@ -247,7 +247,7 @@ class News_DataBase(BaseModel):
     news_cat: str
     news_title: str
     news_link: str
-    news_img: str
+    news_img: Optional[str] = None
 
 class News_DataInDB(News_DataBase):
     class Config:
