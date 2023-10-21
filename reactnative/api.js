@@ -21,10 +21,11 @@ export const addRoutine = async (
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
       ertn_time: ertn_time, //시간
-      ertn_mem: 'abc123@gmail.com',
-      ertn_id: 'abcd@sdfsf',
-      ertn_cat: 'aaa',
+      ertn_mem: 'psh_light@google.com',
+      ertn_id: 'phs_light@ge0000001',
+      ertn_cat: '기타',
       ertn_alram: 1,
+      ertn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
     const response = await axios.post('http://10.0.2.2:8000/routines', data);

@@ -13,6 +13,8 @@ from typing import List
 from fastapi import Request
 from typing import Union, Optional
 
+# 루틴리스트관련import
+from datetime import datetime, timedelta
 
 app = FastAPI()
 
@@ -23,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 # "mysql://root:dbdb@localhost:3306/dpv_db"
-DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
+# "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
+DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -36,6 +39,7 @@ Base = declarative_base()
 
 
 # SQLAlchemy 모델 정의
+# aws maria는 테이블명 소문자
 class ERoutine(Base):
     __tablename__ = "ERTN_SETTING"
     ertn_mem = Column(String(50), nullable=True)
@@ -49,6 +53,7 @@ class ERoutine(Base):
     ertn_time = Column(String(50), nullable=True)
     ertn_alram = Column(Integer, nullable=True)
     ertn_day = Column(String(50), nullable=True)
+    ertn_edate = Column(String(10), nullable=True)  # 끝나는날짜추가
 
 
 class PRoutine(Base):
@@ -64,6 +69,7 @@ class PRoutine(Base):
     prtn_time = Column(String(50), nullable=False)
     prtn_alram = Column(Integer, nullable=False)
     prtn_day = Column(String(50))
+    prtn_edate = Column(String(10), nullable=True)  # 끝나는날짜추가
 
 
 class HRoutine(Base):
@@ -79,6 +85,7 @@ class HRoutine(Base):
     hrtn_time = Column(String(50), nullable=False)
     hrtn_alram = Column(Integer, nullable=False)
     hrtn_day = Column(String(50))
+    hrtn_edate = Column(String(10), nullable=True)  # 끝나는날짜추가
 
 
 #### 루틴데이터받아오기
@@ -109,11 +116,11 @@ class MergedRoutineResponse(BaseModel):
 
 # 데이터베이스에서 루틴 데이터 가져오는 함수
 def get_merged_routines_from_database():
+    today = datetime.now().date()
     with SessionLocal() as db:
-        e_routines = db.query(ERoutine).all()
-        p_routines = db.query(PRoutine).all()
-        h_routines = db.query(HRoutine).all()
-
+        e_routines = db.query(ERoutine).filter(ERoutine.ertn_sdate == today).all()
+        p_routines = db.query(PRoutine).filter(PRoutine.prtn_sdate == today).all()
+        h_routines = db.query(HRoutine).filter(HRoutine.hrtn_sdate == today).all()
         merged_routines = []
 
         for routine in e_routines:
@@ -155,9 +162,7 @@ async def read_routines(request: Request):
     return merged_routines
 
 
-#### 루틴데이터추가하기
-
-
+####### 루틴데이터추가하기
 class RoutineCreate(BaseModel):
     ertn_nm: str
     ertn_set: int
@@ -170,6 +175,7 @@ class RoutineCreate(BaseModel):
     ertn_cat: str
     ertn_alram: int
     ertn_mem: str
+    ertn_edate: str
 
 
 @app.post("/routines")  # , response_model=RoutineCreate)
@@ -183,9 +189,9 @@ def create_routine(routine: RoutineCreate):
         with SessionLocal() as db:
             db_routine = ERoutine(
                 ertn_mem=routine.ertn_mem,
-                ertn_id="abcd@sdfsf",
+                ertn_id="psh_light@google.com",
                 ertn_nm=routine.ertn_nm,
-                ertn_cat="aaa",
+                ertn_cat="기타",
                 ertn_tag=routine.ertn_tag,
                 ertn_set=routine.ertn_set,
                 ertn_reps=routine.ertn_reps,
