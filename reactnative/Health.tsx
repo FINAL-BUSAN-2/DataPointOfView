@@ -14,6 +14,10 @@ import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {addRoutine} from './api';
 import {Alert} from 'react-native';
+
+// hserch 파일을 import합니다.
+import HSearch from './h_serch';
+
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -23,8 +27,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const handleBackPress = () => {
     navigation.goBack();
   };
-  // 루틴명 입력
-  const [routineName, setRoutineName] = useState('');
   // 세트 입력
   const [set, setSet] = useState('');
   // 횟수 입력
@@ -54,6 +56,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
   const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
+  // 루틴명 입력
+  const [routineName, setRoutineName] = useState('');
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
     setRoutineName(text);
@@ -229,14 +233,21 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         <ScrollView>
           <View style={styles.healthheader}>
             {/* 루틴명 입력 */}
-            <View style={styles.Routinename}>
+            <HSearch
+              value={routineName}
+              onChangeText={handleRoutineNameChange}
+              placeholder="검색창 파워레그어쩌구"
+            />
+
+            {/* <View style={styles.Routinename}>
               <TextInput
                 style={styles.Routineinput}
                 value={routineName}
                 onChangeText={handleRoutineNameChange}
                 placeholder="검색창 파워레그어쩌구"
               />
-            </View>
+            </View> */}
+
             {/* 검색돋보기 */}
             <View style={styles.Routineicon}>
               <TouchableOpacity onPress={handleAddButtonClick}>
