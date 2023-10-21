@@ -11,7 +11,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from typing import List
 from fastapi import Request
-from typing import Union
+from typing import Union, Optional
+
 
 app = FastAPI()
 
@@ -21,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
-DATABASE_URL = "mysql://root:dbdb@localhost/dpv_db"
+DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -36,17 +37,17 @@ Base = declarative_base()
 # SQLAlchemy 모델 정의
 class ERoutine(Base):
     __tablename__ = "ERTN_SETTING"
-    ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
-    ertn_id = Column(String(50), primary_key=True)
-    ertn_nm = Column(String(100), nullable=False)
-    ertn_cat = Column(String(20), nullable=False)
-    ertn_tag = Column(String(60), nullable=False)
-    ertn_set = Column(Integer, nullable=False)
-    ertn_reps = Column(Integer, nullable=False)
-    ertn_sdate = Column(String(10), nullable=False)
-    ertn_time = Column(String(50), nullable=False)
-    ertn_alram = Column(Integer, nullable=False)
-    ertn_day = Column(String(50))
+    ertn_mem = Column(String(50), nullable=True)
+    ertn_id = Column(String(100), primary_key=True)
+    ertn_nm = Column(String(100), nullable=True)
+    ertn_cat = Column(String(20), nullable=True)
+    ertn_tag = Column(String(60), nullable=True)
+    ertn_set = Column(Integer, nullable=True)
+    ertn_reps = Column(Integer, nullable=True)
+    ertn_sdate = Column(String(10), nullable=True)
+    ertn_time = Column(String(50), nullable=True)
+    ertn_alram = Column(Integer, nullable=True)
+    ertn_day = Column(String(50), nullable=True)
 
 
 class PRoutine(Base):
@@ -153,10 +154,10 @@ async def read_routines(request: Request):
     return merged_routines
 
 
-############################################ 루틴추가하기
+#### 루틴데이터추가하기
 
 
-class ERoutineCreate(BaseModel):
+class RoutineCreate(BaseModel):
     ertn_nm: str
     ertn_set: int
     ertn_reps: int
@@ -164,57 +165,41 @@ class ERoutineCreate(BaseModel):
     ertn_day: str
     ertn_sdate: str
     ertn_time: str
+    ertn_id: str
+    ertn_cat: str
+    ertn_alram: int
+    ertn_mem: str
 
 
-# @app.post("/routines", response_model=ERoutineCreate)
-# def create_routine(routine: ERoutineCreate):
-#     missing_fields = {
-#         field_name
-#         for field_name, field_value in routine.dict().items()
-#         if not field_value
-#     }
-
-#     if missing_fields:
-#         missing_fields_str = ", ".join(missing_fields)
-#         detail = f"The following fields are required: {missing_fields_str}"
-#         raise HTTPException(status_code=422, detail=detail)
-
-#     # FastAPI 모델로부터 데이터를 읽어와 데이터베이스에 저장
-#     db_routine = ERoutine(**routine.dict())
-
-#     with SessionLocal() as db:
-#         db.add(db_routine)
-#         db.commit()
-#         db.refresh(db_routine)
-
-#     return db_routine
-
-
-@app.post("/routines", response_model=ERoutineCreate)
-def create_routine(routine: ERoutineCreate):
-    logger.info("Received data: %s", routine.json())
+@app.post("/routines")  # , response_model=RoutineCreate)
+def create_routine(routine: RoutineCreate):
     try:
         # 로깅: 수신된 데이터를 로그에 출력
-        logger.debug("Received data: %s", routine.dict())
-
+        # logger.debug("Received data: %s", routine.dict())
+        # print("디버그")
         # SQLAlchemy session is used as a context manager to insert data
+
         with SessionLocal() as db:
             db_routine = ERoutine(
+                ertn_mem=routine.ertn_mem,
+                ertn_id="abcd@sdfsf",
                 ertn_nm=routine.ertn_nm,
+                ertn_cat="aaa",
+                ertn_tag=routine.ertn_tag,
                 ertn_set=routine.ertn_set,
                 ertn_reps=routine.ertn_reps,
-                ertn_tag=routine.ertn_tag,
-                ertn_day=routine.ertn_day,
                 ertn_sdate=routine.ertn_sdate,
                 ertn_time=routine.ertn_time,
+                ertn_alram=routine.ertn_alram,
+                ertn_day=routine.ertn_day,
             )
 
             db.add(db_routine)
             db.commit()
+            print("디버그")
             db.refresh(db_routine)
 
         return db_routine
-
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-        return {"error": "데이터 삽입 중 오류 발생"}
+        # return {"error": "데이터 삽입 중 오류 발생"}
