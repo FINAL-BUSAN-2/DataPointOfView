@@ -318,8 +318,8 @@ def generate_unique_hrtn_id(hrtn_mem):
             else:
                 new_number = 1
 
-            # ertn_id를 생성
-            hrtn_id = f"{first_part}@{first_char_after_at}e{new_number:07}"
+            # hrtn_id 생성
+            hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
     else:
         raise ValueError("Invalid ertn_mem format")
 
@@ -395,8 +395,8 @@ def generate_unique_prtn_id(prtn_mem):
             else:
                 new_number = 1
 
-            # ertn_id를 생성
-            prtn_id = f"{first_part}@{first_char_after_at}e{new_number:07}"
+            # prtn_id 생성
+            prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
     else:
         raise ValueError("Invalid ertn_mem format")
 
