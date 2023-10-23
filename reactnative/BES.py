@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 # "mysql://root:dbdb@localhost:3306/dpv_db"
 # "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
-DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
+DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -42,7 +42,7 @@ Base = declarative_base()
 # SQLAlchemy 모델 정의
 # aws maria는 테이블명 소문자
 class ERoutine(Base):
-    __tablename__ = "ERTN_SETTING"
+    __tablename__ = "ertn_setting"
     ertn_mem = Column(String(50), nullable=True)
     ertn_id = Column(String(100), primary_key=True)
     ertn_nm = Column(String(100), nullable=True)
@@ -58,7 +58,7 @@ class ERoutine(Base):
 
 
 class PRoutine(Base):
-    __tablename__ = "PRTN_SETTING"
+    __tablename__ = "prtn_setting"
     prtn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     prtn_id = Column(String(50), primary_key=True)
     prtn_nm = Column(String(100), nullable=False)
@@ -74,7 +74,7 @@ class PRoutine(Base):
 
 
 class HRoutine(Base):
-    __tablename__ = "HRTN_SETTING"
+    __tablename__ = "hrtn_setting"
     hrtn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     hrtn_id = Column(String(50), primary_key=True)
     hrtn_nm = Column(String(100), nullable=False)
@@ -197,7 +197,7 @@ def get_merged_routines_from_database():
 
         for routine in p_routines:
             routine_start_date = datetime.strptime(
-                routine.ertn_sdate, "%Y-%m-%d"
+                routine.prtn_sdate, "%Y-%m-%d"
             ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
             # print(f"루틴 시작 날짜: {routine_start_date}")
             if today >= routine_start_date:
