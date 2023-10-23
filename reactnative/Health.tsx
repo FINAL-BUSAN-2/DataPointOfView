@@ -380,7 +380,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       {isCameraOpen && device !== null ? (
         <TouchableOpacity style={styles.addContainer}>
           <View style={styles.addTab}>
-            <Text style={styles.addtext}>찰칵</Text>
+            <Text style={styles.addtext}>찰칵찰칵</Text>
           </View>
         </TouchableOpacity>
       ) : (
