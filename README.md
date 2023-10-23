@@ -117,4 +117,4 @@ Team.DPV 가 고민한 것들은 모두가 간편하게 사용할 수 있어야 
 
 <br><br>
 
-jenkins test
+jen test
