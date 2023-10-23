@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-///// 건강-입력된 값 DB로 전송
+////건강-입력된 값 DB로 전송
 export const HaddRoutine = async (
   hrtn_nm,
   hrtn_set,

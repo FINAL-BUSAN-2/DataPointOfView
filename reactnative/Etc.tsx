@@ -90,7 +90,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     setReps(numericValue);
     console.log(`입력된 몇회: ${numericValue}`);
   };
-  // 달력 호출 및 선택 핸들러
+  ///달력 호출 및 선택 핸들러
   const handleDateSelect = (date: any) => {
     setSelectedDate(date.dateString);
     setShowCalendar(false);

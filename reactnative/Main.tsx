@@ -36,7 +36,7 @@ const Main: React.FC<MainProps> = ({
   setLogin,
   setUserInfo,
 }) => {
-  ///추가된루틴데이터가져오기
+  /////추가된루틴데이터가져오기
   //const [routineData, setRoutineData] = useState<RoutineData[]>([]);
   //const [data, setData] = useState([]);
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
