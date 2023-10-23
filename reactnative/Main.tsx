@@ -12,9 +12,6 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import axios from 'axios';
-////
-
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
@@ -47,7 +44,7 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
+      const response = await fetch('http://43.200.178.131:3344/rtnlist'); // 엔드포인트를 수정해야 합니다.
 
       if (response.data) {
         const data = response.data;
@@ -179,21 +176,6 @@ const Main: React.FC<MainProps> = ({
           </View>
         )}
       />
-      {/* 
-      <View>
-        {data.map(item => (
-          <View key={item.id} style={styles.roundedBox}>
-            <Text style={styles.rtntext}>{item.rtn_time}</Text>
-
-            <View style={styles.routinelist}>
-              <Text>
-                {' '}
-                {item.rtn_tag} {item.rtn_name}
-              </Text>
-            </View>
-          </View>
-        ))}
-      </View> */}
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -442,7 +424,7 @@ const styles = StyleSheet.create({
   },
   // 홈
   homeTab: {
-    bottom: 20,
+    bottom: 15,
     width: 90,
     height: 90,
     borderRadius: 45,
