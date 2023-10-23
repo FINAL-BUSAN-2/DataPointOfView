@@ -88,7 +88,9 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   // 차트 데이터를 가져오는 비동기 함수 정의
   const healthPieChartData = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/health_piechartdata');
+      const response = await fetch(
+        'http://43.200.178.131:3344/health_piechartdata',
+      );
       // const response = await fetch('http://54.180.91.68:3306');
       if (!response.ok) {
         // throw new Error('Failed to fetch chart data');
@@ -105,7 +107,9 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const pillPieChartData = async () => {
     try {
       // console.log('debug');
-      const response = await fetch('http://10.0.2.2:8000/pill_piechartdata');
+      const response = await fetch(
+        'http://43.200.178.131:3344/pill_piechartdata',
+      );
 
       if (!response.ok) {
         // throw new Error('Failed to fetch chart data');
@@ -124,7 +128,9 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   // 차트 데이터를 가져오는 비동기 함수 정의
   const healthlistData = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/health_listdata');
+      const response = await fetch(
+        'http://43.200.178.131:3344/health_listdata',
+      );
       // const response = await fetch('http://54.180.91.68:3306');
       if (!response.ok) {
         // throw new Error('Failed to fetch chart data');
@@ -140,7 +146,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   // 차트 데이터를 가져오는 비동기 함수 정의
   const pilllistData = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/pill_listdata');
+      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
       // const response = await fetch('http://54.180.91.68:3306');
       if (!response.ok) {
         // throw new Error('Failed to fetch chart data');

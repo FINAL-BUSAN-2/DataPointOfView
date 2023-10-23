@@ -25,8 +25,8 @@ export const HaddRoutine = async (
       hrtn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await fetch('http://10.0.2.2:8000/h_routines', data);
-    // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
+    const response = await fetch('http://43.200.178.131:3344/h_routines', data);
+    // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지
@@ -62,8 +62,8 @@ export const PaddRoutine = async (
       prtn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await fetch('http://10.0.2.2:8000/p_routines', data);
-    // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
+    const response = await fetch('http://43.200.178.131:3344/p_routines', data);
+    // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지
@@ -99,8 +99,8 @@ export const EaddRoutine = async (
       ertn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await fetch('http://10.0.2.2:8000/routines', data);
-    // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
+    const response = await fetch('http://43.200.178.131:3344/routines', data);
+    // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지
@@ -112,7 +112,9 @@ export const EaddRoutine = async (
 
 export async function healthPieChartData() {
   try {
-    const response = await fetch('http://10.0.2.2:8000/health_piechartdata');
+    const response = await fetch(
+      'http://43.200.178.131:3344/health_piechartdata',
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -128,7 +130,7 @@ export async function healthPieChartData() {
 
 export async function healthlistData() {
   try {
-    const response = await fetch('http://10.0.2.2:8000/health_listdata');
+    const response = await fetch('http://43.200.178.131:3344/health_listdata');
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -144,7 +146,9 @@ export async function healthlistData() {
 
 export async function pillPieChartData() {
   try {
-    const response = await fetch('http://10.0.2.2:8000/pill_piechartdata');
+    const response = await fetch(
+      'http://43.200.178.131:3344/pill_piechartdata',
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -160,7 +164,7 @@ export async function pillPieChartData() {
 
 export async function pilllistData() {
   try {
-    const response = await fetch('http://10.0.2.2:8000/pill_listdata');
+    const response = await fetch('http://43.200.178.131:3344/pill_listdata');
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
