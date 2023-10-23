@@ -47,7 +47,7 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
+      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
 
       if (response.data) {
         const data = response.data;
@@ -57,7 +57,7 @@ const Main: React.FC<MainProps> = ({
         console.error('데이터가 없습니다.');
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      console.error(error);
     }
   };
 
@@ -91,21 +91,6 @@ const Main: React.FC<MainProps> = ({
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
   };
-  const hello = async () => {
-    fetch('http://43.200.178.131:3344/login')
-      .then(response => {
-        if (response.ok) {
-          // 서버에서 성공적인 응답을 받은 경우
-          console.log('사용자 정보가 성공적으로 저장되었습니다.');
-        } else {
-          // 서버에서 오류 응답을 받은 경우
-          console.error('사용자 정보 저장에 실패했습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('오류 발생: ', error);
-      });
-  };
 
   return (
     <View style={styles.container}>
@@ -134,7 +119,7 @@ const Main: React.FC<MainProps> = ({
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
           {/* 알림 아이콘 */}
-          <TouchableOpacity onPress={hello}>
+          <TouchableOpacity>
             <Image
               source={require('./android/app/src/img/notification.png')}
               style={{
