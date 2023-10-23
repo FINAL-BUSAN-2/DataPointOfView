@@ -117,7 +117,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
-          tagsEnabled, // 태그
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
@@ -138,7 +137,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'<'}</Text>
+          <Text style={styles.backButton}>{'<  운동루틴추가하기'}</Text>
         </TouchableOpacity>
       </View>
 
@@ -518,7 +517,7 @@ const styles = StyleSheet.create({
     height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(231,230,230)',
+    // backgroundColor: 'rgb(231,230,230)',
     width: '100%',
   },
   header: {
@@ -527,16 +526,16 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    // backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },
 
   backButton: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
-    color: 'rgb(231,230,230)',
+    color: 'black',
   },
   scrollView: {},
   healthheader: {

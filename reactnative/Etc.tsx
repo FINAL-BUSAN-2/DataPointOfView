@@ -150,7 +150,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'<'}</Text>
+          <Text style={styles.backButton}>{'< 기타루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(231,230,230)',
+    // backgroundColor: 'rgb(231,230,230)',
     width: '100%',
   },
   scrollView: {},
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -604,15 +604,16 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    // backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },
 
   backButton: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
+    color: 'black',
   },
 });
 

@@ -5,7 +5,6 @@ export const HaddRoutine = async (
   hrtn_nm,
   hrtn_set,
   hrtn_reps,
-  hrtn_tag,
   hrtn_day,
   hrtn_sdate = selectedDate,
   hrtn_time = selectedTime,
@@ -16,7 +15,7 @@ export const HaddRoutine = async (
       hrtn_nm: String(hrtn_nm), // 루틴명
       hrtn_set: hrtn_set, // 1일 반복 횟수
       hrtn_reps: hrtn_reps, // 1일 반복 갯수
-      hrtn_tag: String(hrtn_tag), // 태그
+      hrtn_tag: '', // 태그
       hrtn_day: String(hrtn_day), //반복요일
       hrtn_sdate: hrtn_sdate, //날짜
       hrtn_time: hrtn_time, //시간
@@ -43,7 +42,6 @@ export const PaddRoutine = async (
   prtn_nm,
   prtn_set,
   prtn_reps,
-  prtn_tag,
   prtn_day,
   prtn_sdate = selectedDate,
   prtn_time = selectedTime,
@@ -54,7 +52,7 @@ export const PaddRoutine = async (
       prtn_nm: String(prtn_nm), // 루틴명
       prtn_set: prtn_set, // 1일 반복 횟수
       prtn_reps: prtn_reps, // 1일 반복 갯수
-      prtn_tag: String(prtn_tag), // 태그
+      prtn_tag: '', // 태그
       prtn_day: String(prtn_day), //반복요일
       prtn_sdate: prtn_sdate, //날짜
       prtn_time: prtn_time, //시간
@@ -91,7 +89,7 @@ export const EaddRoutine = async (
       ertn_nm: String(ertn_nm), // 루틴명
       ertn_set: ertn_set, // 1일 반복 횟수
       ertn_reps: ertn_reps, // 1일 반복 갯수
-      ertn_tag: '기타', // 태그 String(ertn_tag)
+      ertn_tag: '', // 태그 String(ertn_tag)
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
       ertn_time: ertn_time, //시간

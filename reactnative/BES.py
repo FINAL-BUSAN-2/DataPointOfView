@@ -5,7 +5,7 @@ from pydantic import BaseModel, validator
 # sqlalchemy
 from sqlalchemy import ForeignKey, desc
 from sqlalchemy import create_engine
-from sqlalchemy import Column, MetaData, Table, Integer, String, or_
+from sqlalchemy import Column, MetaData, Table, Integer, String, or_, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -87,6 +87,38 @@ class HRoutine(Base):
     hrtn_alram = Column(Integer, nullable=False)
     hrtn_day = Column(String(50))
     hrtn_edate = Column(String(10), nullable=True)  # 끝나는날짜추가
+
+
+## mem_detail테이블
+class MemDetail(Base):
+    __tablename__ = "mem_detail"
+    mem_email = Column(String, primary_key=True)
+    mem_name = Column(String)
+    mem_gen = Column(String)
+    mem_age = Column(String)
+    mem_sday = Column(Date)
+    mem_delete = Column(Integer)
+    mem_dday = Column(Date)
+
+
+############################################### mem_detail 정보 받아오기
+# FastAPI 엔드포인트
+@app.get("/get_mem_name")
+def get_mem_name(email: str = "aaa123@gmail.com"):
+    db = SessionLocal()
+    mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
+    if mem_detail:
+        mem_name = mem_detail.mem_name
+        logging.info(f"Received mem_name: {mem_name}")
+        return {"mem_name": mem_name}
+    logging.warning(f"No data found for email: {email}")
+    return {"mem_name": "No data found for email: {email}"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 ####################################################### 루틴리스트 받아오기
