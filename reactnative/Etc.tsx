@@ -62,9 +62,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
 
-  //태그 설정
-  // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
-  const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // //태그 설정
+  // // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
+  // const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -110,15 +110,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
 
-  // 태그 설정 핸들러
-  const handletagsEnabled = (tag: string) => {
-    console.log(`태그 ${tag} 선택됨`);
-    setTagsEnabled(tag);
-  };
+  // // 태그 설정 핸들러
+  // const handletagsEnabled = (tag: string) => {
+  //   console.log(`태그 ${tag} 선택됨`);
+  //   setTagsEnabled(tag);
+  // };
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+    if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 항목을 작성해 주세요.');
     } else {
@@ -128,7 +128,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
-          tagsEnabled, // 태그
+          // tagsEnabled, // 태그
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
@@ -237,7 +237,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 */}
+          {/* 태그 선택
           <View
             style={{
               flexDirection: 'row',
@@ -252,7 +252,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               }>
               <Text>기타</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           {/* 알림 설정 */}
           <Toggle
             label={'알림'}

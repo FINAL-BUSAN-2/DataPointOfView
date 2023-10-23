@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 ## SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 # "mysql://root:dbdb@localhost:3306/dpv_db"
 # "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
-DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
+DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -492,7 +492,7 @@ def create_routine(routine: RoutineCreate):
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
-                ertn_tag=routine.ertn_tag,
+                ertn_tag="기타",
                 ertn_set=routine.ertn_set,
                 ertn_reps=routine.ertn_reps,
                 ertn_sdate=routine.ertn_sdate,
