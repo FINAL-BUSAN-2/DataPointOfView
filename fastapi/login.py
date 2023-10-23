@@ -266,6 +266,7 @@ def create_routine(routine: ERoutineCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_routine)
     return db_routine
+
 # 루틴추가_건강
 @app.post("/hroutines", response_model=HRoutineCreate)
 def create_routine(routine: HRoutineCreate, db: Session = Depends(get_db)):
@@ -286,6 +287,7 @@ def create_routine(routine: HRoutineCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_routine)
     return db_routine
+
 # 루틴추가_영양
 @app.post("/proutines", response_model=PRoutineCreate)
 def create_routine(routine: PRoutineCreate, db: Session = Depends(get_db)):
@@ -415,7 +417,7 @@ def get_merged_routines_from_database():
 
         for routine in p_routines:
             routine_start_date = datetime.strptime(
-                routine.ertn_sdate, "%Y-%m-%d"
+                routine.prtn_sdate, "%Y-%m-%d"
             ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
             # print(f"루틴 시작 날짜: {routine_start_date}")
             if today >= routine_start_date:
@@ -486,7 +488,6 @@ def get_merged_routines_from_database():
         # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
 
     return merged_routines
-
 
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])

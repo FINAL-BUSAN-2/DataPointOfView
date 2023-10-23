@@ -47,20 +47,17 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131:3344/rtnlist'); // 엔드포인트를 수정해야 합니다.
+      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
 
       if (response.data) {
-        // 데이터 가져오고
         const data = response.data;
-        //rtn_time을 기준으로 오름차순 정렬
-        data.sort((a, b) => a.rtn_time.localeCompare(b.rtn_time));
-        //정렬된 데이터를설정함
+        // 정렬 없이 데이터를 설정함
         setData(data);
       } else {
         console.error('데이터가 없습니다.');
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      console.error(error);
     }
   };
 
@@ -94,21 +91,6 @@ const Main: React.FC<MainProps> = ({
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
   };
-  const hello = async () => {
-    fetch('http://43.200.178.131:3344/login')
-      .then(response => {
-        if (response.ok) {
-          // 서버에서 성공적인 응답을 받은 경우
-          console.log('사용자 정보가 성공적으로 저장되었습니다.');
-        } else {
-          // 서버에서 오류 응답을 받은 경우
-          console.error('사용자 정보 저장에 실패했습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('오류 발생: ', error);
-      });
-  };
 
   return (
     <View style={styles.container}>
@@ -137,7 +119,7 @@ const Main: React.FC<MainProps> = ({
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
           {/* 알림 아이콘 */}
-          <TouchableOpacity onPress={hello}>
+          <TouchableOpacity>
             <Image
               source={require('./android/app/src/img/notification.png')}
               style={{
@@ -187,7 +169,6 @@ const Main: React.FC<MainProps> = ({
 
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.routineItem}>
             <Text style={styles.routineName}>
