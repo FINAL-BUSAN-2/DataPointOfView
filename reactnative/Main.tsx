@@ -47,7 +47,7 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/rtnlist'); // 엔드포인트를 수정해야 합니다.
+      const response = await axios.get('http://43.200.178.131:3344/rtnlist'); // 엔드포인트를 수정해야 합니다.
 
       if (response.data) {
         // 데이터 가져오고
