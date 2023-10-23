@@ -137,6 +137,131 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           <Text style={styles.backButton}>{'<'}</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={{flex: 3}}>
+        {/* 큰틀1 */}
+        <View style={{flex: 3}}>
+          {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            {/* 왼쪽 공간 */}
+            <View style={{flex: 1, borderWidth: 1, borderColor: 'red'}}>
+              {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
+              <View style={{flex: 5, flexDirection: 'column'}}>
+                {/* 위쪽 공간 */}
+                <View style={{flex: 1, borderWidth: 1, borderColor: 'green'}}>
+                  {/* 위쪽 컨텐츠 */}
+                  <Text>운동인식</Text>
+                </View>
+                {/* 아래쪽 공간 */}
+                <View style={{flex: 1, borderWidth: 1, borderColor: 'blue'}}>
+                  {/* 아래쪽 컨텐츠 */}
+                  {/* <Text>카메라</Text> */}
+                  {/* 카메라 아이콘 */}
+                  <TouchableOpacity
+                    onPress={() => console.log('Camera button pressed')}>
+                    <Image
+                      source={require('./android/app/src/img/camera.png')}
+                      style={styles.cameraicon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            {/* 오른쪽 공간 */}
+            <View style={{flex: 3, borderWidth: 1, borderColor: 'orange'}}>
+              {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
+              <View style={{flex: 1, flexDirection: 'column'}}>
+                {/* 위쪽 공간 (오른쪽 위) */}
+                <View style={{flex: 1, borderWidth: 1, borderColor: 'purple'}}>
+                  {/* 위쪽 컨텐츠 (오른쪽 위) */}
+                  {/* <Text>태그4</Text> */}
+
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('Upper Body')}
+                      style={
+                        tagsEnabled === 'Upper Body'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>상체</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('Lower Body')}
+                      style={
+                        tagsEnabled === 'Lower Body'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>하체</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('Core')}
+                      style={
+                        tagsEnabled === 'Core'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>코어</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('etc')}
+                      style={
+                        tagsEnabled === 'etc'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>기타</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {/* 아래쪽 공간 (오른쪽 아래) */}
+                <View style={{flex: 1, borderWidth: 1, borderColor: 'pink'}}>
+                  {/* 아래쪽 컨텐츠 (오른쪽 아래) */}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    {/* <Text>태그3</Text> */}
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('Stretching')}
+                      style={
+                        tagsEnabled === 'Stretching'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>스트레칭</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => handletagsEnabled('Cardio')}
+                      style={
+                        tagsEnabled === 'Cardio'
+                          ? styles.selectedButton
+                          : styles.button
+                      }>
+                      <Text>유산소</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.healthheader}>
@@ -148,14 +273,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 onChangeText={handleRoutineNameChange}
                 placeholder="루틴 이름을 설정해주세요"
               />
-              {/* 카메라 아이콘 */}
+              {/* 카메라 아이콘
               <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
                 <Image
                   source={require('./android/app/src/img/camera.png')}
                   style={styles.cameraicon}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {/* 루틴 아이콘 */}
             <View style={styles.Routineicon}>
@@ -221,7 +346,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 */}
+          {/* 태그 선택
           <View
             style={{
               flexDirection: 'row',
@@ -274,7 +399,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               }>
               <Text>스트레칭</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           {/* 알림 설정 */}
           <Toggle
