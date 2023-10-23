@@ -20,14 +20,17 @@ export const HaddRoutine = async (
       hrtn_day: String(hrtn_day), //반복요일
       hrtn_sdate: hrtn_sdate, //날짜
       hrtn_time: hrtn_time, //시간
-      hrtn_mem: 'abc123@gmail.com',
+      hrtn_mem: '', //로그안아이디필요
       hrtn_id: '',
       hrtn_cat: '건강',
       hrtn_alram: 1,
       hrtn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await axios.post('http://10.0.2.2:8000/h_routines', data);
+    const response = await axios.post(
+      'http://43.200.178.131:3344/h_routines',
+      data,
+    );
     // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
@@ -58,14 +61,17 @@ export const PaddRoutine = async (
       prtn_day: String(prtn_day), //반복요일
       prtn_sdate: prtn_sdate, //날짜
       prtn_time: prtn_time, //시간
-      prtn_mem: 'abc123@gmail.com',
+      prtn_mem: '', //로그안아이디필요
       prtn_id: '',
       prtn_cat: '영양',
       prtn_alram: 1,
       prtn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await axios.post('http://10.0.2.2:8000/p_routines', data);
+    const response = await axios.post(
+      'http://43.200.178.131:3344/p_routines',
+      data,
+    );
     // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
@@ -96,14 +102,17 @@ export const EaddRoutine = async (
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
       ertn_time: ertn_time, //시간
-      ertn_mem: 'lei4le123h@naver.com',
+      ertn_mem: '', //로그안아이디필요
       ertn_id: '',
       ertn_cat: '기타',
       ertn_alram: ertn_alram,
       ertn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await axios.post('http://10.0.2.2:8000/routines', data);
+    const response = await axios.post(
+      'http://43.200.178.131:3344/routines',
+      data,
+    );
     // http://10.0.2.2:8000 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {

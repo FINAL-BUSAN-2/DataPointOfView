@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 # SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 # "mysql://root:dbdb@localhost:3306/dpv_db"
 # "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
-DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
+DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -331,8 +331,8 @@ def create_routine(routine: HRoutineCreate):
     try:
         with SessionLocal() as db:
             db_routine = HRoutine(
-                hrtn_mem=routine.hrtn_mem,
-                hrtn_id="abdb@ge00016",
+                hrtn_mem=routine.hrtn_mem,  # 로그인아이디필요
+                hrtn_id="",
                 hrtn_nm=routine.hrtn_nm,
                 hrtn_cat="건강",
                 hrtn_tag=routine.hrtn_tag,
@@ -408,8 +408,8 @@ def create_routine(routine: PRoutineCreate):
     try:
         with SessionLocal() as db:
             db_routine = PRoutine(
-                prtn_mem=routine.prtn_mem,
-                prtn_id="abdb@gh0000001",
+                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_id="",
                 prtn_nm=routine.prtn_nm,
                 prtn_cat="영양",
                 prtn_tag=routine.prtn_tag,
@@ -488,8 +488,8 @@ def create_routine(routine: RoutineCreate):
 
         with SessionLocal() as db:
             db_routine = ERoutine(
-                ertn_mem=routine.ertn_mem,
-                ertn_id=ertn_id,  # Use the generated ertn_id
+                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
+                ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
                 ertn_tag=routine.ertn_tag,
