@@ -16,6 +16,7 @@ from pydantic import BaseModel
 from sqlalchemy import ForeignKey
 from sqlalchemy import Date
 from datetime import date,datetime
+from enum import Enum
 
 
 app = FastAPI()
@@ -305,70 +306,193 @@ def create_routine(routine: PRoutineCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_routine)
     return db_routine
-########
-#####
+
+####################################################### 루틴리스트 받아오기
 #### 루틴데이터받아오기
 class ERoutineResponse(BaseModel):
-    ertn_id: str
     ertn_time: str
     ertn_name: str
     ertn_tag: str
-class HRoutineResponse(BaseModel):
-    hrtn_id: str
-    hrtn_time: str
-    hrtn_name: str
-    hrtn_tag: str
+    ertn_sdate: str
+    ertn_day: str
+
+
 class PRoutineResponse(BaseModel):
-    prtn_id: str
     prtn_time: str
     prtn_name: str
     prtn_tag: str
-def get_routines_from_database(routine_type):
+    prtn_sdate: str
+    prtn_day: str
+
+
+class HRoutineResponse(BaseModel):
+    hrtn_time: str
+    hrtn_name: str
+    hrtn_tag: str
+    hrtn_sdate: str
+    hrtn_day: str
+
+
+# 루틴3가지 통합 모델 정의
+class MergedRoutineResponse(BaseModel):
+    rtn_time: str
+    rtn_name: str
+    rtn_tag: str
+    rtn_sdate: str
+    rtn_day: str
+
+
+# 데이터베이스에서 루틴 데이터 가져오는 함수
+class Weekday(Enum):
+    월 = 0
+    화 = 1
+    수 = 2
+    목 = 3
+    금 = 4
+    토 = 5
+    일 = 6
+
+
+# Define a mapping from English to Korean day names
+day_name_mapping = {
+    "MONDAY": Weekday.월,
+    "TUESDAY": Weekday.화,
+    "WEDNESDAY": Weekday.수,
+    "THURSDAY": Weekday.목,
+    "FRIDAY": Weekday.금,
+    "SATURDAY": Weekday.토,
+    "SUNDAY": Weekday.일,
+}
+
+
+# 데이터베이스에서 루틴 데이터 가져오는 함수
+def get_merged_routines_from_database():
+    # 현재 날짜와 요일을 가져옵니다.
+    now = datetime.now()
+    today = now.date()
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    # print(f"오늘 날짜: {today}, 요일: {current_day}")
+
     with SessionLocal() as db:
-        if routine_type == "ertn":
-            routines = db.query(ERoutine).all()
-        elif routine_type == "hrtn":
-            routines = db.query(HRoutine).all()
-        elif routine_type == "prtn":
-            routines = db.query(PRoutine).all()
-        return routines
-@app.get(
-    "/rtnlist",
-    response_model=List[Union[ERoutineResponse, HRoutineResponse, PRoutineResponse]],
-)
+        e_routines = db.query(ERoutine).all()
+        p_routines = db.query(PRoutine).all()
+        h_routines = db.query(HRoutine).all()
+
+        merged_routines = []
+
+        for routine in e_routines:
+            routine_start_date = datetime.strptime(
+                routine.ertn_sdate, "%Y-%m-%d"
+            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
+            # print(f"루틴 시작 날짜: {routine_start_date}")
+            if today >= routine_start_date:
+                if routine.ertn_day:
+                    # 반복 요일 문자열을 파싱합니다.
+                    repeat_days = [day.strip() for day in routine.ertn_day.split(",")]
+                    # print(f"반복 요일: {repeat_days}")
+                    if current_day in repeat_days or today == routine_start_date:
+                        merged_routines.append(
+                            MergedRoutineResponse(
+                                rtn_time=routine.ertn_time,
+                                rtn_name=routine.ertn_nm,
+                                rtn_tag=routine.ertn_tag,
+                                rtn_sdate=routine.ertn_sdate,
+                                rtn_day=routine.ertn_day,
+                            )
+                        )
+                        # 루틴 정보 출력
+                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.ertn_nm}")
+                elif today == routine_start_date:
+                    merged_routines.append(
+                        MergedRoutineResponse(
+                            rtn_time=routine.ertn_time,
+                            rtn_name=routine.ertn_nm,
+                            rtn_tag=routine.ertn_tag,
+                            rtn_sdate=routine.ertn_sdate,
+                            rtn_day=routine.ertn_day,
+                        )
+                    )
+
+        for routine in p_routines:
+            routine_start_date = datetime.strptime(
+                routine.ertn_sdate, "%Y-%m-%d"
+            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
+            # print(f"루틴 시작 날짜: {routine_start_date}")
+            if today >= routine_start_date:
+                if routine.prtn_day:
+                    # 반복 요일 문자열을 파싱합니다.
+                    repeat_days = [day.strip() for day in routine.prtn_day.split(",")]
+                    # print(f"반복 요일: {repeat_days}")
+                    if current_day in repeat_days or today == routine_start_date:
+                        merged_routines.append(
+                            MergedRoutineResponse(
+                                rtn_time=routine.prtn_time,
+                                rtn_name=routine.prtn_nm,
+                                rtn_tag=routine.prtn_tag,
+                                rtn_sdate=routine.prtn_sdate,
+                                rtn_day=routine.prtn_day,
+                            )
+                        )
+                        # 루틴 정보 출력
+                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.prtn_nm}")
+                elif today == routine_start_date:
+                    merged_routines.append(
+                        MergedRoutineResponse(
+                            rtn_time=routine.prtn_time,
+                            rtn_name=routine.prtn_nm,
+                            rtn_tag=routine.prtn_tag,
+                            rtn_sdate=routine.prtn_sdate,
+                            rtn_day=routine.prtn_day,
+                        )
+                    )
+
+        for routine in h_routines:
+            routine_start_date = datetime.strptime(
+                routine.hrtn_sdate, "%Y-%m-%d"
+            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
+            # print(f"루틴 시작 날짜: {routine_start_date}")
+            if today >= routine_start_date:
+                if routine.hrtn_day:
+                    # 반복 요일 문자열을 파싱합니다.
+                    repeat_days = [day.strip() for day in routine.hrtn_day.split(",")]
+                    # print(f"반복 요일: {repeat_days}")
+                    if current_day in repeat_days or today == routine_start_date:
+                        merged_routines.append(
+                            MergedRoutineResponse(
+                                rtn_time=routine.hrtn_time,
+                                rtn_name=routine.hrtn_nm,
+                                rtn_tag=routine.hrtn_tag,
+                                rtn_sdate=routine.hrtn_sdate,
+                                rtn_day=routine.hrtn_day,
+                            )
+                        )
+                        # 루틴 정보 출력
+                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
+                elif today == routine_start_date:
+                    merged_routines.append(
+                        MergedRoutineResponse(
+                            rtn_time=routine.hrtn_time,
+                            rtn_name=routine.hrtn_nm,
+                            rtn_tag=routine.hrtn_tag,
+                            rtn_sdate=routine.hrtn_sdate,
+                            rtn_day=routine.hrtn_day,
+                        )
+                    )
+
+                    # 루틴 정보 출력
+                    # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
+
+        merged_routines.sort(key=lambda x: (x.rtn_sdate, x.rtn_time))
+        # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
+
+    return merged_routines
+
+
+# 루틴 데이터 가져오는 엔드포인트
+@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
 async def read_routines(request: Request):
-    ertn_routines = get_routines_from_database("ertn")
-    hrtn_routines = get_routines_from_database("hrtn")
-    prtn_routines = get_routines_from_database("prtn")
-    response_data = []
-    for routine in ertn_routines:
-        response_data.append(
-            ERoutineResponse(
-                ertn_id=routine.ertn_id,
-                ertn_nm=routine.ertn_nm,
-                ertn_tag=routine.ertn_tag,
-                ertn_time=routine.ertn_time,
-            )
-        )
-    for routine in hrtn_routines:
-        response_data.append(
-            HRoutineResponse(
-                hrtn_id=routine.hrtn_id,
-                hrtn_nm=routine.hrtn_nm,
-                hrtn_tag=routine.hrtn_tag,
-                hrtn_time=routine.hrtn_time,
-            )
-        )
-    for routine in prtn_routines:
-        response_data.append(
-            PRoutineResponse(
-                prtn_id=routine.prtn_id,
-                prtn_nm=routine.prtn_nm,
-                prtn_tag=routine.prtn_tag,
-                prtn_time=routine.prtn_time,
-            )
-        )
-    return response_data
+    merged_routines = get_merged_routines_from_database()
+    return merged_routines
 
 class News_Data(Base):
     __tablename__ = "news_data"
@@ -423,3 +547,4 @@ async def rank_routines(request: Request):
             )
         )
     return response_data
+
