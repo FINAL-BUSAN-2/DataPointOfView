@@ -47,14 +47,11 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131:3344/rtnlist'); // 엔드포인트를 수정해야 합니다.
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
 
       if (response.data) {
-        // 데이터 가져오고
         const data = response.data;
-        //rtn_time을 기준으로 오름차순 정렬
-        data.sort((a, b) => a.rtn_time.localeCompare(b.rtn_time));
-        //정렬된 데이터를설정함
+        // 정렬 없이 데이터를 설정함
         setData(data);
       } else {
         console.error('데이터가 없습니다.');
