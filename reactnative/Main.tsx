@@ -184,7 +184,6 @@ const Main: React.FC<MainProps> = ({
 
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.routineItem}>
             <Text style={styles.routineName}>
