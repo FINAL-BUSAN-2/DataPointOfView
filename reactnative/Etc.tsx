@@ -68,6 +68,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
+    console.log(`입력된 루틴명: ${text}`);
     setRoutineName(text);
   };
   // 아이콘 추가 핸들러
@@ -80,14 +81,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     //숫자가 아닌 문자가 입력될 경우 입력x (숫자가아닌문자는빈문자열로바꿈)
     const numericValue = text.replace(/[^0-9]/g, '');
     setSet(numericValue);
-    console.log(`입력된 몇회: ${numericValue}`);
+    console.log(`입력된 일: ${numericValue}`);
   };
   // 몇정 입력 핸들러
   const handleRepsChange = (text: string) => {
     //숫자가 아닌 문자가 입력될 경우 입력x (숫자가아닌문자는빈문자열로바꿈)
     const numericValue = text.replace(/[^0-9]/g, '');
     setReps(numericValue);
-    console.log(`입력된 몇정: ${numericValue}`);
+    console.log(`입력된 몇회: ${numericValue}`);
   };
   // 달력 호출 및 선택 핸들러
   const handleDateSelect = (date: any) => {
