@@ -120,6 +120,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
+          tagsEnabled, //태그
           notificationEnabled, // 알림여부
         );
 

@@ -8,6 +8,7 @@ export const HaddRoutine = async (
   hrtn_day,
   hrtn_sdate = selectedDate,
   hrtn_time = selectedTime,
+  tagsEnabled,
   hrtn_alram = notificationEnabled,
 ) => {
   try {
@@ -15,7 +16,7 @@ export const HaddRoutine = async (
       hrtn_nm: String(hrtn_nm), // 루틴명
       hrtn_set: hrtn_set, // 1일 반복 횟수
       hrtn_reps: hrtn_reps, // 1일 반복 갯수
-      hrtn_tag: '', // 태그
+      hrtn_tag: hrtn_tag, // 태그
       hrtn_day: String(hrtn_day), //반복요일
       hrtn_sdate: hrtn_sdate, //날짜
       hrtn_time: hrtn_time, //시간
