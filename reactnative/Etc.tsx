@@ -12,9 +12,8 @@ import {
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
-import {addRoutine} from './api';
+import {EaddRoutine} from './api';
 
-//사용자 정보 유효성 검사
 import {Alert} from 'react-native';
 
 interface RoutineAddProps {
@@ -48,6 +47,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
+  const handleNotificationChange = (newValue: any) => {
+    setNotificationEnabled(newValue);
+    if (newValue) {
+      console.log('알림 on');
+    } else {
+      console.log('알림 off');
+    }
+  };
+
   // 반복 기능
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
@@ -55,7 +63,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   //태그 설정
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
-  const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -100,15 +108,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
 
-  // 태그 설정 핸들러
-  const handletagsEnabled = (tag: string) => {
-    console.log(`태그 ${tag} 선택됨`);
-    setTagsEnabled(tag);
-  };
+  // // 태그 설정 핸들러
+  // const handletagsEnabled = (tag: string) => {
+  //   console.log(`태그 ${tag} 선택됨`);
+  //   setTagsEnabled(tag);
+  // };
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+    if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 항목을 작성해 주세요.');
     } else {
@@ -118,7 +126,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
-          tagsEnabled, // 태그
+          //tagsEnabled, // 태그
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
@@ -139,7 +147,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'<'}</Text>
+          <Text style={styles.backButton}>{'< 기타루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -340,7 +348,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(231,230,230)',
+    //backgroundColor: 'rgb(231,230,230)',
     width: '100%',
   },
   scrollView: {},
@@ -563,7 +571,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -578,7 +586,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    // backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },
@@ -587,6 +595,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginRight: 10,
+    color: 'black',
   },
 });
 

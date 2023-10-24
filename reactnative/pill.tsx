@@ -12,7 +12,7 @@ import {
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
-import {addRoutine} from './api';
+import {PaddRoutine} from './api';
 import {Alert} from 'react-native';
 
 interface RoutineAddProps {
@@ -46,6 +46,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // 알림 기능
   const [notificationEnabled, setNotificationEnabled] =
     useState<boolean>(false);
+  const handleNotificationChange = (newValue: any) => {
+    setNotificationEnabled(newValue);
+    if (newValue) {
+      console.log('알림 on');
+    } else {
+      console.log('알림 off');
+    }
+  };
+
   // 반복 기능
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
@@ -53,7 +62,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   //태그 설정
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
-  const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  //const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   //////////핸들러
   // 루틴명 입력 핸들러
@@ -102,10 +111,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   };
 
   // 태그 선택 핸들러
-  const handletagsEnabled = (tag: string) => {
-    console.log(`태그 ${tag} 선택됨`);
-    setTagsEnabled(tag);
-  };
+  // const handletagsEnabled = (tag: string) => {
+  //   console.log(`태그 ${tag} 선택됨`);
+  //   setTagsEnabled(tag);
+  // };
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
@@ -119,10 +128,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
-          tagsEnabled, // 태그
+          //tagsEnabled, // 태그
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
+          notificationEnabled, // 알림여부
         );
 
         // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
@@ -140,7 +150,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'<'}</Text>
+          <Text style={styles.backButton}>{'< 영양 루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -154,14 +164,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 onChangeText={handleRoutineNameChange}
                 placeholder="건강기능식품명을 입력해 주세요!"
               />
-              {/* 카메라 아이콘 */}
+              {/* 카메라 아이콘
               <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
                 <Image
                   source={require('./android/app/src/img/camera.png')}
                   style={styles.cameraicon}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {/* 루틴 아이콘 */}
             <View style={styles.Routineicon}>
@@ -226,7 +236,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택 */}
+          {/* 태그 선택
           <View
             style={{
               flexDirection: 'row',
@@ -257,7 +267,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               }>
               <Text>기타</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <Toggle
             label={'알림'}
@@ -371,7 +381,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(231,230,230)',
+    //backgroundColor: 'rgb(231,230,230)',
   },
   scrollView: {},
   pillheader: {
@@ -607,7 +617,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    //backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },
