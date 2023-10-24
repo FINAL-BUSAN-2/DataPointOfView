@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useAppState} from '@react-native-community/hooks';
-import {useIsFocused} from '@react-navigation/native';
 import {
   View,
   ScrollView,
@@ -29,9 +27,6 @@ interface RoutineAddProps {
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const devices = useCameraDevices();
   const device = useCameraDevice('back');
-  const isFocused = useIsFocused();
-  const appState = useAppState();
-  const isActive = isFocused && appState === 'active';
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   // 카메라 아이콘 클릭 핸들러
@@ -161,9 +156,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
+
       {isCameraOpen && device !== null ? (
                     <View style={styles.cameraContainer}>
-                      <Camera style={styles.camera} device={device} isActive={isActive} />
+                      <Camera style={styles.camera} device={device}/>
                     </View>
                   ) : (   
     <ScrollView>        
