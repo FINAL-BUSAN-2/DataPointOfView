@@ -14,13 +14,18 @@ import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {addRoutine} from './api';
 import {Alert} from 'react-native';
-import {Camera, useCameraDevice} from 'react-native-vision-camera';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraDevices,
+} from 'react-native-vision-camera';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+  const devices = useCameraDevices();
   const device = useCameraDevice('back');
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -142,6 +147,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <Camera style={styles.camera} device={device} />
           </View>
         ) : (
+          // <View>
+          //   <Text>사용 가능한 카메라 장치:</Text>
+          //   {devices.map((device, index) => (
+          //     <Text key={index}>{device.name}</Text>
+          //   ))}
+          // </View>
           <ScrollView>
             <View style={styles.healthheader}>
               {/* 루틴명 입력 */}
@@ -632,6 +643,8 @@ const styles = StyleSheet.create({
 
   camera: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
 

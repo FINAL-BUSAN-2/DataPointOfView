@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,11 +7,10 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
-  Linking,
-  ScrollView,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
+import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
@@ -40,6 +39,18 @@ const Main: React.FC<MainProps> = ({
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
+
+    const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
+
+    const requestCameraPermission = async () => {
+      try {
+        const result = await request(platformPermissions);
+      } catch (err) {
+        Alert.alert('Camera permission err');
+        console.warn(err);
+      }
+    };
+    requestCameraPermission();
   }, []);
 
   const fetchData = async () => {
