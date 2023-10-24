@@ -43,7 +43,7 @@ Base = declarative_base()
 # aws maria는 테이블명 소문자
 class ERoutine(Base):
     __tablename__ = "ertn_setting"
-    ertn_mem = Column(String(50), nullable=True)
+    ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     ertn_id = Column(String(100), primary_key=True)
     ertn_nm = Column(String(100), nullable=True)
     ertn_cat = Column(String(20), nullable=True)
@@ -106,7 +106,7 @@ class MemDetail(Base):
 @app.get("/get_mem_name")
 def get_mem_name():
     db = SessionLocal()
-    email = ""  # 여기에서 사용할 이메일을 지정
+    email = "aaa123@gmail.com"  # 여기에서 사용할 이메일을 지정(로그인된사람)
     mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
     if mem_detail:
         mem_name = mem_detail.mem_name

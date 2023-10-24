@@ -42,7 +42,7 @@ const Main: React.FC<MainProps> = ({
   useEffect(() => {
     // FastAPI로부터 mem_name 가져오기
     axios
-      .get('http://43.200.178.131:3344/get_mem_name')
+      .get('http://10.0.2.2:8000/get_mem_name')
       .then(response => {
         const data = response.data;
         if (data.mem_name) {
@@ -64,7 +64,8 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
+      //http://43.200.178.131:3344
 
       if (response.data) {
         const data = response.data;
