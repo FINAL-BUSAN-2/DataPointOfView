@@ -14,17 +14,18 @@ const PSearch: React.FC = () => {
     CustomAutocompleteItem[]
   >([]);
 
-  const getSuggestions = (text: string) => {
+  const fetchSuggestions = (text: string) => {
     setSearchText(text);
-    // 모든 검색어에 대해 예시 항목 설정
-    //if (text.length > 0) {
-    if (text.startsWith('가')) {
-      const suggestions: CustomAutocompleteItem[] = [
-        {id: '1', title: '가방', value: '가방'},
-        {id: '2', title: '가구', value: '가구'},
-        {id: '3', title: '가격', value: ' 가격'},
-      ];
-      setSuggestionsList(suggestions);
+    // 모든 검색어에 대해 서버에서 데이터 가져오기
+    if (text.length > 0) {
+      fetch('http://10.0.2.2:8000/get_pill_info' + text)
+        .then(response => response.json())
+        .then(data => {
+          setSuggestionsList(data); // 서버에서 가져온 데이터로 업데이트
+        })
+        .catch(error => {
+          console.error('Error fetching suggestions:', error);
+        });
     } else {
       setSuggestionsList([]);
     }
@@ -34,12 +35,12 @@ const PSearch: React.FC = () => {
     <View style={{flex: 1}}>
       <AutocompleteDropdown
         dataSet={suggestionsList}
-        onChangeText={getSuggestions}
+        onChangeText={fetchSuggestions}
         textInputProps={{
           placeholder: '검색',
         }}
       />
-      <Text>Selected item:{searchText}</Text>
+      <Text>Selected item: {searchText}</Text>
     </View>
   );
 };

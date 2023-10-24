@@ -2,6 +2,9 @@ import logging
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator
 
+# 추가됨(영양테이블검색창관련)
+from sqlalchemy import Float
+
 # sqlalchemy
 from sqlalchemy import ForeignKey, desc
 from sqlalchemy import create_engine
@@ -536,3 +539,37 @@ def create_routine(routine: RoutineCreate):
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         return {"error": "데이터 삽입 중 오류 발생"}
+
+
+# (추가)
+## 영양 검색어 pill_prod 테이블 가져오기
+class PillProd(Base):
+    __tablename__ = "PILL_PROD"
+    pill_cd = Column(String, primary_key=True, index=True)
+    pill_nm = Column(String, index=True)
+    pill_mnf = Column(String)
+    pill_rv = Column(Float)
+    pill_rvnum = Column(Integer)
+    pill_info = Column(String)
+
+
+class PillInfo(BaseModel):
+    pill_nm: str
+
+
+@app.post("/get_pill_info")
+def get_pill_info(pill_info: PillInfo):
+    db = SessionLocal()
+    pill_info = db.query(PillProd).filter(PillProd.pill_nm == pill_info.pill_nm).first()
+    db.close()
+    if pill_info:
+        return {
+            "pill_cd": pill_info.pill_cd,
+            "pill_nm": pill_info.pill_nm,
+            "pill_mnf": pill_info.pill_mnf,
+            "pill_rv": pill_info.pill_rv,
+            "pill_rvnum": pill_info.pill_rvnum,
+            "pill_info": pill_info.pill_info,
+        }
+    else:
+        return {"error": "Pill not found"}
