@@ -8,22 +8,26 @@ import httpx
 # from bs4 import BeautifulSoup
 # import requests
 
-from sqlalchemy import create_engine, Column, String, Integer, func
-from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date
+from sqlalchemy import create_engine, Column, String, Integer, func, or_
+from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from typing import List, Union, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import date,datetime
 from enum import Enum
-
+import logging
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='bce5bcfe36455290d51dd4258cfb2737e54b79188d9d51aa162f6ed9e6e706f3')
 
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 DATABASE_URL = "mysql+pymysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 local_host = 'http://43.200.178.131:3344'
@@ -185,6 +189,8 @@ class ERTN_SETTING(Base):
     ertn_time = Column(String(50), nullable=False)
     ertn_alram = Column(Integer, nullable=False)
     ertn_day = Column(String(50))
+    ertn_edate = Column(String(10), nullable=True)
+    
 # 루틴추가_건강
 class HRTN_SETTING(Base):
     __tablename__ = "HRTN_SETTING"
@@ -199,6 +205,8 @@ class HRTN_SETTING(Base):
     hrtn_time = Column(String(50), nullable=False)
     hrtn_alram = Column(Integer, nullable=False)
     hrtn_day = Column(String(50))
+    hrtn_edate = Column(String(10), nullable=True)
+    
 # 루틴추가_영양
 class PRTN_SETTING(Base):
     __tablename__ = "PRTN_SETTING"
@@ -213,6 +221,7 @@ class PRTN_SETTING(Base):
     prtn_time = Column(String(50), nullable=False)
     prtn_alram = Column(Integer, nullable=False)
     prtn_day = Column(String(50))
+    prtn_edate = Column(String(10), nullable=True)
     
 class HEALTH(Base):
     __tablename__ = "HEALTH"
@@ -283,6 +292,38 @@ class ERoutineCreate(BaseModel):
     ertn_time: str
     ertn_alram: int
     ertn_day: str
+    ertn_edate: str
+    
+def generate_unique_ertn_id(ertn_mem):
+    at_index = ertn_mem.find("@")
+
+    if at_index != -1:
+        first_part = ertn_mem[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = ertn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+        with SessionLocal() as db:
+            max_ertn_id = (
+                db.query(ERTN_SETTING.ertn_id)
+                .filter(ERTN_SETTING.ertn_mem == ertn_mem)
+                .order_by(desc(ERTN_SETTING.ertn_id))
+                .first()
+            )
+            if max_ertn_id:
+                max_number = int(
+                    max_ertn_id[0][len(first_part) + 1 + 1 + 1 :]
+                )  # "@" 이후부터 숫자 부분 추출
+                new_number = max_number + 1
+            else:
+                new_number = 1
+
+            # ertn_id를 생성
+            ertn_id = f"{first_part}@{first_char_after_at}e{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
+    return ertn_id
+    
 # 루틴추가_건강
 class HRoutineCreate(BaseModel):
     hrtn_mem : str
@@ -296,87 +337,173 @@ class HRoutineCreate(BaseModel):
     hrtn_time : str
     hrtn_alram : int
     hrtn_day : str
+    hrtn_edate: str
+    
+# hrtn_id 생성
+def generate_unique_hrtn_id(hrtn_mem):
+    at_index = hrtn_mem.find("@")
+
+    if at_index != -1:
+        first_part = hrtn_mem[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = hrtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+        with SessionLocal() as db:
+            max_prtn_id = (
+                db.query(HRTN_SETTING.hrtn_id)
+                .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
+                .order_by(desc(HRTN_SETTING.hrtn_id))
+                .first()
+            )
+            if max_prtn_id:
+                max_number = int(
+                    max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                )  # "@" 이후부터 숫자 부분 추출
+                new_number = max_number + 1
+            else:
+                new_number = 1
+
+            # hrtn_id 생성
+            hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
+    return hrtn_id
+    
 # 루틴추가_영양
 class PRoutineCreate(BaseModel):
-    prtn_mem : str
-    prtn_id : str
-    prtn_nm : str
-    prtn_cat : str
-    prtn_tag : str
-    prtn_set : int
-    prtn_reps : int
-    prtn_sdate : str
-    prtn_time : str
-    prtn_alram : int
-    prtn_day : str
+    prtn_nm: str
+    prtn_set: int
+    prtn_reps: int
+    prtn_tag: str
+    prtn_day: str
+    prtn_sdate: str
+    prtn_time: str
+    prtn_id: str
+    prtn_cat: str
+    prtn_alram: int
+    prtn_mem: str
+    prtn_edate: str
     
+# prtn_id 생성
+def generate_unique_prtn_id(prtn_mem):
+    at_index = prtn_mem.find("@")
 
+    if at_index != -1:
+        first_part = prtn_mem[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = prtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+        with SessionLocal() as db:
+            max_prtn_id = (
+                db.query(PRTN_SETTING.prtn_id)
+                .filter(PRTN_SETTING.prtn_mem == prtn_mem)
+                .order_by(desc(PRTN_SETTING.prtn_id))
+                .first()
+            )
+            if max_prtn_id:
+                max_number = int(
+                    max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                )  # "@" 이후부터 숫자 부분 추출
+                new_number = max_number + 1
+            else:
+                new_number = 1
+
+            # prtn_id 생성
+            prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
+    return prtn_id
 
     
 ##########
 ###################
 # 루틴추가_기타
-@app.post("/eroutines", response_model=ERoutineCreate)
-def create_routine(routine: ERoutineCreate, db: Session = Depends(get_db)):
-    db_routine = ERTN_SETTING(
-        ertn_mem=routine.ertn_mem,
-        ertn_id=routine.ertn_id,
-        ertn_nm=routine.ertn_nm,
-        ertn_cat=routine.ertn_cat,
-        ertn_tag=routine.ertn_tag,
-        ertn_set=routine.ertn_set,
-        ertn_reps=routine.ertn_reps,
-        ertn_sdate=routine.ertn_sdate,
-        ertn_time=routine.ertn_time,
-        ertn_alram=routine.ertn_alram,
-        ertn_day=routine.ertn_day,
-    )
-    db.add(db_routine)
-    db.commit()
-    db.refresh(db_routine)
-    return db_routine
+@app.post("/eroutines")
+def create_routine(routine: ERoutineCreate):
+    try:
+        # Create a unique ertn_id
+        ertn_id = generate_unique_ertn_id(routine.ertn_mem)
+
+        with SessionLocal() as db:
+            db_routine = ERTN_SETTING(
+                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
+                ertn_id=ertn_id,
+                ertn_nm=routine.ertn_nm,
+                ertn_cat="기타",
+                ertn_tag="기타",
+                ertn_set=routine.ertn_set,
+                ertn_reps=routine.ertn_reps,
+                ertn_sdate=routine.ertn_sdate,
+                ertn_time=routine.ertn_time,
+                ertn_alram=routine.ertn_alram,
+                ertn_day=routine.ertn_day,
+            )
+
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}
+
 
 # 루틴추가_건강
-@app.post("/hroutines", response_model=HRoutineCreate)
-def create_routine(routine: HRoutineCreate, db: Session = Depends(get_db)):
-    db_routine = HRTN_SETTING(
-        hrtn_mem=routine.hrtn_mem,
-        hrtn_id=routine.hrtn_id,
-        hrtn_nm=routine.hrtn_nm,
-        hrtn_cat=routine.hrtn_cat,
-        hrtn_tag=routine.hrtn_tag,
-        hrtn_set=routine.hrtn_set,
-        hrtn_reps=routine.hrtn_reps,
-        hrtn_sdate=routine.hrtn_sdate,
-        hrtn_time=routine.hrtn_time,
-        hrtn_alram=routine.hrtn_alram,
-        hrtn_day=routine.hrtn_day,
-    )
-    db.add(db_routine)
-    db.commit()
-    db.refresh(db_routine)
-    return db_routine
+@app.post("/h_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: HRoutineCreate):
+    try:
+        with SessionLocal() as db:
+            db_routine = HRTN_SETTING(
+                hrtn_mem=routine.hrtn_mem,
+                hrtn_id="",  # 로그인아이디필요
+                hrtn_nm=routine.hrtn_nm,
+                hrtn_cat="건강",
+                hrtn_tag=routine.hrtn_tag,
+                hrtn_set=routine.hrtn_set,
+                hrtn_reps=routine.hrtn_reps,
+                hrtn_sdate=routine.hrtn_sdate,
+                hrtn_time=routine.hrtn_time,
+                hrtn_alram=routine.hrtn_alram,
+                hrtn_day=routine.hrtn_day,
+            )
+            
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+            return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
 
 # 루틴추가_영양
-@app.post("/proutines", response_model=PRoutineCreate)
-def create_routine(routine: PRoutineCreate, db: Session = Depends(get_db)):
-    db_routine = PRTN_SETTING(
-        prtn_mem=routine.prtn_mem,
-        prtn_id=routine.prtn_id,
-        prtn_nm=routine.prtn_nm,
-        prtn_cat=routine.prtn_cat,
-        prtn_tag=routine.prtn_tag,
-        prtn_set=routine.prtn_set,
-        prtn_reps=routine.prtn_reps,
-        prtn_sdate=routine.prtn_sdate,
-        prtn_time=routine.prtn_time,
-        prtn_alram=routine.prtn_alram,
-        prtn_day=routine.prtn_day,
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: PRoutineCreate):
+    try:
+        with SessionLocal() as db:
+            db_routine = PRTN_SETTING(
+                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_id="",
+                prtn_nm=routine.prtn_nm,
+                prtn_cat="영양",
+                prtn_tag=routine.prtn_tag,
+                prtn_set=routine.prtn_set,
+                prtn_reps=routine.prtn_reps,
+                prtn_sdate=routine.prtn_sdate,
+                prtn_time=routine.prtn_time,
+                prtn_alram=routine.prtn_alram,
+                prtn_day=routine.prtn_day,
     )
-    db.add(db_routine)
-    db.commit()
-    db.refresh(db_routine)
-    return db_routine
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
+
 
 ####################################################### 루틴리스트 받아오기
 #### 루틴데이터받아오기
@@ -772,3 +899,15 @@ def get_pill_list_data(db: Session = Depends(get_db)):
     ]
 
     return pill_list_data
+
+@app.get("/get_mem_name")
+def get_mem_name():
+    db = SessionLocal()
+    email = "aaa123@gmail.com"  # 여기에서 사용할 이메일을 지정(로그인된사람)
+    mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
+    if mem_detail:
+        mem_name = mem_detail.mem_name
+        logging.info(f"Received mem_name: {mem_name}")
+        return {"mem_name": mem_name}
+    logging.warning(f"No data found for email: {email}")
+    return {"mem_name": "No data found for email: {email}"}
