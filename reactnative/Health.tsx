@@ -184,8 +184,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                         {/* 아래쪽 컨텐츠 */}
                         {/* <Text>카메라</Text> */}
                         {/* 카메라 아이콘 */}
-                        <TouchableOpacity
-                          onPress={() => handleCameraButtonClick}>
+                        <TouchableOpacity onPress={() => setIsCameraOpen(true)}>
                           <Image
                             source={require('./android/app/src/img/camera.png')}
                             style={styles.cameraicon}
