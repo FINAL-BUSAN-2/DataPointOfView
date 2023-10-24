@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,10 +7,14 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import axios from 'axios';
+
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
@@ -36,8 +40,22 @@ const Main: React.FC<MainProps> = ({
   ///추가된루틴데이터가져오기
   //const [routineData, setRoutineData] = useState<RoutineData[]>([]);
   //const [data, setData] = useState([]);
+  const [memName, setMemName] = useState(''); // 초기값은 빈 문자열
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   useEffect(() => {
+    axios
+      .get('http://43.200.178.131:3344/get_mem_name')
+      .then(response => {
+        const data = response.data;
+        if (data.mem_name) {
+          setMemName(data.mem_name);
+        } else {
+          console.error('데이터가 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      });
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
@@ -154,36 +172,48 @@ const Main: React.FC<MainProps> = ({
 
       <View style={{marginTop: 30}}></View>
 
-      {/* 즐겨찾기 */}
-      <View style={styles.favoritesbox}>
-        <Text style={styles.favoritestext}>즐겨찾기</Text>
+      {/* 실선 */}
+      <View
+        style={{
+          borderTopWidth: 1,
+          borderTopColor: 'rgb(175, 171, 171)',
+          width: '100%',
+        }}
+      />
+
+      {/* 회원명*/}
+      <View style={styles.memTextContainer}>
+        <Text style={styles.memtex}>{memName}님 Daily routine</Text>
       </View>
 
-      {/* 즐겨찾기 이모지 자리 */}
-      <View style={styles.ovalContainer}>
-        <View style={[styles.oval, styles.marginRight]}></View>
-        <View style={[styles.oval, styles.marginRight]}></View>
-        <View style={[styles.oval, styles.marginRight]}></View>
-        <View style={styles.oval}></View>
-      </View>
-      <View style={styles.line}></View>
-
-      {/* 편집 */}
-      <View style={styles.orderbox}>
-        <Text style={styles.ordertext}>순서변경/즐겨찾기</Text>
-      </View>
-
-      {/* 루틴DB에서 값 받아오기 필요한 컬럼 => 시간,루틴명,태그 */}
-
+      {/* 루틴리스트 */}
       <FlatList
         data={data}
         renderItem={({item}) => (
-          <View style={styles.routineItem}>
-            <Text style={styles.routineName}>
-              Routine Name: {item.rtn_name}
-            </Text>
-            <Text style={styles.routineTag}>Tag: {item.rtn_tag}</Text>
-            <Text style={styles.routineTime}>Time: {item.rtn_time}</Text>
+          <View style={styles.routineItem2}>
+            <View style={styles.routineItemSection}>
+              <Text style={[styles.routineInfo, {color: 'black'}]}>
+                {item.rtn_time}
+              </Text>
+            </View>
+
+            <View style={styles.routineItemSection}>
+              <View style={styles.tagContainer}>
+                <Text style={[styles.routineInfo, {color: 'white'}]}>
+                  {item.rtn_tag}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.routineItemSection}>
+              <Text style={[styles.routineInfo, {color: 'black'}]}>
+                {item.rtn_name}
+              </Text>
+            </View>
+
+            <View style={styles.routineItemSection}>
+              <Text style={styles.routineInfo}>😀</Text>
+            </View>
           </View>
         )}
       />
@@ -197,7 +227,7 @@ const Main: React.FC<MainProps> = ({
               source={require('./android/app/src/img/thumb_up.png')}
               style={styles.upIcon}
             />
-            <Text>소셜</Text>
+            <Text>아티클</Text>
           </View>
         </TouchableOpacity>
         {/* 홈 */}
@@ -301,7 +331,7 @@ const TimelineBar: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: 'white',
   },
   header: {
     backgroundColor: '#fff',
@@ -340,6 +370,7 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     overflow: 'visible',
     position: 'relative',
+    zindex: 1,
   },
   // 타임라인바 텍스트
   timeText: {
@@ -407,6 +438,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     backgroundColor: '#888',
+    zIndex: 2,
   },
 
   //네비게이션바
@@ -435,7 +467,7 @@ const styles = StyleSheet.create({
   },
   // 홈
   homeTab: {
-    bottom: 15,
+    bottom: 20,
     width: 90,
     height: 90,
     borderRadius: 45,
@@ -445,8 +477,8 @@ const styles = StyleSheet.create({
   },
   // 홈 아이콘
   homeIcon: {
-    width: 60,
-    height: 60,
+    width: 35,
+    height: 35,
   },
   // 홈 텍스트
   homeText: {
@@ -472,7 +504,7 @@ const styles = StyleSheet.create({
     bottom: 90,
     width: 60,
     height: 60, // 변경된 부분 (원의 크기)
-    backgroundColor: 'rgba(43,58,85,0.85)',
+    backgroundColor: 'rgb(206,119,119)',
     borderRadius: 30, // 변경된 부분 (원의 반지름)
     alignItems: 'center',
     justifyContent: 'center',
@@ -490,7 +522,7 @@ const styles = StyleSheet.create({
     bottom: 90,
     width: 60,
     height: 260, // 변경된 부분 (원의 크기)
-    backgroundColor: 'rgba(43,58,85,0.2)',
+    backgroundColor: 'rgb(239,175,175)',
     borderBottomLeftRadius: 35, // 원의 하단 왼쪽 반지름
     borderBottomRightRadius: 35, // 원의 하단 오른쪽 반지름
     borderRadius: 35, // 원의 상단 반지름
@@ -544,6 +576,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   routineTag: {
     fontSize: 14,
@@ -552,6 +586,56 @@ const styles = StyleSheet.create({
   routineTime: {
     fontSize: 14,
     color: '#888',
+  },
+  //회원명
+  memTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  memtex: {
+    fontSize: 17, // Adjust the font size as needed
+    fontWeight: 'bold',
+    color: '#000000',
+    textAlign: 'center',
+  },
+  //루틴리스트
+  routineItem2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    marginVertical: 5,
+  },
+  routineItemSection: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  routineInfo: {
+    textAlign: 'center',
+    fontSize: 16,
+    // borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    // Add any other styles you need
+  },
+  tagContainer: {
+    // borderWidth: 1,
+    borderColor: 'rgb(175, 171, 171)',
+    backgroundColor: 'rgb(43,58,85)',
+    padding: 0, // Adjust the padding as needed
+    borderRadius: 8,
+  },
+
+  routineInfoWithEmoji: {
+    backgroundColor: 'white', // Background color of the circular container
+    width: 30, // Adjust the size as needed
+    height: 30, // Adjust the size as needed
+    borderRadius: 15, // Make it a circle by setting border radius to half the width/height
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default Main;
