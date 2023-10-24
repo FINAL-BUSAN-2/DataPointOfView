@@ -420,15 +420,16 @@ def generate_unique_prtn_id(prtn_mem):
 ##########
 ###################
 # 루틴추가_기타
-@app.post("/eroutines")
-def create_routine(routine: ERoutineCreate):
+@app.post("/routines")
+def create_routine(routine: ERoutineCreate,request:Request):
+    email = request.session["user_email"]
     try:
         # Create a unique ertn_id
-        ertn_id = generate_unique_ertn_id(routine.ertn_mem)
+        ertn_id = generate_unique_ertn_id(email)
 
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
+                ertn_mem=email,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
@@ -453,12 +454,13 @@ def create_routine(routine: ERoutineCreate):
 
 # 루틴추가_건강
 @app.post("/h_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: HRoutineCreate):
+def create_routine(routine: HRoutineCreate, request:Request):
+    email = request.session['user_email']
     try:
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
-                hrtn_mem=routine.hrtn_mem,
-                hrtn_id="",  # 로그인아이디필요
+                hrtn_mem=email,
+                hrtn_id=generate_unique_hrtn_id(request.session['user_email']),  # 로그인아이디필요
                 hrtn_nm=routine.hrtn_nm,
                 hrtn_cat="건강",
                 hrtn_tag=routine.hrtn_tag,
@@ -900,14 +902,3 @@ def get_pill_list_data(db: Session = Depends(get_db)):
 
     return pill_list_data
 
-@app.get("/get_mem_name")
-def get_mem_name():
-    db = SessionLocal()
-    email = "aaa123@gmail.com"  # 여기에서 사용할 이메일을 지정(로그인된사람)
-    mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
-    if mem_detail:
-        mem_name = mem_detail.mem_name
-        logging.info(f"Received mem_name: {mem_name}")
-        return {"mem_name": mem_name}
-    logging.warning(f"No data found for email: {email}")
-    return {"mem_name": "No data found for email: {email}"}
