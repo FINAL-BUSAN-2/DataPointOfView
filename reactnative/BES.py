@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 ## SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 # "mysql://root:dbdb@localhost:3306/dpv_db"
 # "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
-DATABASE_URL = "mysql://root:dbdb@localhost:3306/dpv_db"
+DATABASE_URL = "mysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 ##나중에 dpv_webserver주소변경 db server로
 engine = create_engine(DATABASE_URL)
 
@@ -104,8 +104,9 @@ class MemDetail(Base):
 ############################################### mem_detail 정보 받아오기
 # FastAPI 엔드포인트
 @app.get("/get_mem_name")
-def get_mem_name(email: str = "aaa123@gmail.com"):
+def get_mem_name():
     db = SessionLocal()
+    email = ""  # 여기에서 사용할 이메일을 지정
     mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
     if mem_detail:
         mem_name = mem_detail.mem_name
@@ -113,12 +114,6 @@ def get_mem_name(email: str = "aaa123@gmail.com"):
         return {"mem_name": mem_name}
     logging.warning(f"No data found for email: {email}")
     return {"mem_name": "No data found for email: {email}"}
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 ####################################################### 루틴리스트 받아오기

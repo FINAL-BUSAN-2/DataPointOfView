@@ -42,7 +42,7 @@ const Main: React.FC<MainProps> = ({
   useEffect(() => {
     // FastAPI로부터 mem_name 가져오기
     axios
-      .get('http://10.0.2.2:8000/get_mem_name')
+      .get('http://43.200.178.131:3344/get_mem_name')
       .then(response => {
         const data = response.data;
         if (data.mem_name) {
@@ -64,7 +64,7 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
+      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
 
       if (response.data) {
         const data = response.data;
@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     overflow: 'visible',
     position: 'relative',
+    zindex: 1,
   },
   // 타임라인바 텍스트
   timeText: {
@@ -427,6 +428,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     backgroundColor: '#888',
+    zIndex: 2,
   },
 
   //네비게이션바
