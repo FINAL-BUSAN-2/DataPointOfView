@@ -124,7 +124,7 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     existing_user = db.query(Mem_Detail).filter_by(mem_email=user_info["kakao_account"]['email']).first()
     # mem_sday = datetime.strptime(sday, "%Y-%m-%d")
     
-    # request.session["access_token"] = token_data["access_token"]
+    request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]['email']
     request.session["user_name"] = user_info["kakao_account"]['profile']["nickname"]
     request.session["user_age"] = user_info["kakao_account"]['age_range']
@@ -154,6 +154,8 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_email", None)
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
+    request.session.pop("user_age", None)
+    request.session.pop("user_gender", None)
     return {"message": "로그아웃 되었습니다."}
 
 # @app.get("/naver/news/")
