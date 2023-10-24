@@ -36,7 +36,7 @@ def get_db():
         db.close()
 
 # Kakao API 설정
-KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
+KAKAO_CLIENT_ID = "d6799c7299b2afb51d1b5a38205b8a58"
 KAKAO_REDIRECT_URI = f"{local_host}/kakao/callback"
 LOGOUT_REDIRECT_URI = f"{local_host}/kakao/logout_callback"
 
@@ -88,7 +88,13 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
 
     async with httpx.AsyncClient() as client:
         response = await client.post(token_endpoint, data=data)
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=400, detail="Error requesting access token from Kakao")
+
         token_data = response.json()
+        if "error" in token_data:
+            raise HTTPException(status_code=400, detail=token_data["error_description"])
 
     # Kakao 사용자 정보 요청
     user_info_endpoint = "https://kapi.kakao.com/v2/user/me"
@@ -98,7 +104,13 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
 
     async with httpx.AsyncClient() as client:
         response = await client.get(user_info_endpoint, headers=headers)
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=400, detail="Error requesting user information from Kakao")
+
         user_info = response.json()
+        if "error" in user_info:
+            raise HTTPException(status_code=400, detail=user_info["error_description"])
     
     now = datetime.now()
     sday = now.date()

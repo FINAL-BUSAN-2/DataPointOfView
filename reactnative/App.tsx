@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Linking} from 'react-native';
+import {Linking} from 'react-native';
 import LogoComponent from './logo'; // ./logo.js 파일을 가져옴
 import LoginComponent from './login'; // ./login.js 파일을 가져옴
 import {NavigationContainer} from '@react-navigation/native';
@@ -8,7 +8,6 @@ import Main from './Main';
 import Health from './Health';
 import pill from './pill';
 import Etc from './Etc';
-
 import HplogSet from './hplogset';
 import Access from './Access';
 import Social from './Social';

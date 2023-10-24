@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import {useAppState} from '@react-native-community/hooks';
+import {useIsFocused} from '@react-navigation/native';
 import {
   View,
   ScrollView,
@@ -8,20 +10,28 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {addRoutine} from './api';
-import {Alert} from 'react-native';
-import {Camera, useCameraDevice} from 'react-native-vision-camera';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraDevices,
+} from 'react-native-vision-camera';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+  const devices = useCameraDevices();
   const device = useCameraDevice('back');
+  const isFocused = useIsFocused();
+  const appState = useAppState();
+  const isActive = isFocused && appState === 'active';
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   // 카메라 아이콘 클릭 핸들러
@@ -139,9 +149,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       <View style={styles.container}>
         {isCameraOpen && device !== null ? (
           <View style={styles.cameraContainer}>
-            <Camera style={styles.camera} device={device} />
+            <Camera style={styles.camera} device={device} isActive={isActive} />
           </View>
         ) : (
+          // <View>
+          //   <Text>사용 가능한 카메라 장치:</Text>
+          //   {devices.map((device, index) => (
+          //     <Text key={index}>{device.name}</Text>
+          //   ))}
+          // </View>
           <ScrollView>
             <View style={styles.healthheader}>
               {/* 루틴명 입력 */}
@@ -632,6 +648,8 @@ const styles = StyleSheet.create({
 
   camera: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
 
