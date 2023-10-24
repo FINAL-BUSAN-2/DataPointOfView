@@ -36,7 +36,7 @@ def get_db():
         db.close()
 
 # Kakao API 설정
-KAKAO_CLIENT_ID = "d5f43a85be784fb7ca46330a217f6d9c"
+KAKAO_CLIENT_ID = "d6799c7299b2afb51d1b5a38205b8a58"
 KAKAO_REDIRECT_URI = f"{local_host}/kakao/callback"
 LOGOUT_REDIRECT_URI = f"{local_host}/kakao/logout_callback"
 
