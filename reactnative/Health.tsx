@@ -191,6 +191,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           />
                         </TouchableOpacity>
                       </View>
+
                     </View>
                   </View>
                   {/* 오른쪽 공간 */}
