@@ -90,6 +90,8 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         response = await client.post(token_endpoint, data=data)
 
         if response.status_code != 200:
+            print(response.status_code)  # 출력 상태 코드
+            print(response.text)         # 출력 응답 본문
             raise HTTPException(status_code=400, detail="Error requesting access token from Kakao")
 
         token_data = response.json()
@@ -118,7 +120,7 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     existing_user = db.query(Mem_Detail).filter_by(mem_email=user_info["kakao_account"]['email']).first()
     # mem_sday = datetime.strptime(sday, "%Y-%m-%d")
     
-    request.session["access_token"] = token_data["access_token"]
+    # request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]['email']
     request.session["user_name"] = user_info["kakao_account"]['profile']["nickname"]
     request.session["user_age"] = user_info["kakao_account"]['age_range']
