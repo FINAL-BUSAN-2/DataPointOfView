@@ -39,12 +39,13 @@ const Main: React.FC<MainProps> = ({
   setUserInfo,
 }) => {
   ///추가된루틴데이터가져오기
-  const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
+  const [rtndata, rtnsetData] = useState<RoutineData[]>([]); // 데이터상태추가
+
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
+    //카메라
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
-
     const requestCameraPermission = async () => {
       try {
         const result = await request(platformPermissions);
@@ -58,18 +59,28 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('ttp://43.200.178.131:3344/rtnlist');
-      //http://43.200.178.131:3344
+      const fetchedData = await rtn_list(); //
+      rtnsetData(fetchedData);
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+    }
+  };
 
-      if (response.data) {
-        const data = response.data;
+  const rtn_list = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/rtnlist');
+      if (response.ok) {
+        const data = await response.json();
         // 정렬 없이 데이터를 설정함
-        setData(data);
+        return data;
       } else {
-        console.error('데이터가 없습니다.');
+        console.error(
+          '데이터를 가져오는데 실패했습니다. 상태 코드:',
+          response.status,
+        );
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      console.error('데이터를 가져오는 동안 오류가 발생했습니다:', error);
     }
   };
 
@@ -174,7 +185,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 루틴리스트 */}
       <FlatList
-        data={data}
+        data={rtndata}
         renderItem={({item}) => (
           <View style={styles.routineItem2}>
             <View style={styles.routineItemSection}>

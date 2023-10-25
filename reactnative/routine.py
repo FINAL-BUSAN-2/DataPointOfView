@@ -27,10 +27,10 @@ from fastapi import Depends, HTTPException, APIRouter
 
 
 # app = FastAPI()
-router1 = APIRouter()
-router2 = APIRouter()
-router3 = APIRouter()
-router4 = APIRouter()
+router6 = APIRouter()
+router7 = APIRouter()
+router8 = APIRouter()
+router9 = APIRouter()
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -104,7 +104,7 @@ class HRTN_SETTING(Base):
 
 
 ## mem_detail테이블
-class MemDetail(Base):
+class Mem_Detail(Base):
     __tablename__ = "mem_detail"
     mem_email = Column(String, primary_key=True)
     mem_name = Column(String)
@@ -127,11 +127,17 @@ class Pill_prod(Base):
 
 
 ## Pill_cmb테이블
-class Pill_cmb(Base):
+class Pill_Cmb(Base):
     __tablename__ = "pill_cmb"
-    cmb_nutr = Column(String(10))
-    cmb_func = Column(String(10))
-    cbm_pill = Column(String(20))
+    cmb_nutr = Column(
+        String(10), ForeignKey("pill_nutr.nutr_cd"), primary_key=True, nullable=False
+    )
+    cmb_func = Column(
+        String(10), ForeignKey("pill_func.func_cd"), primary_key=True, nullable=False
+    )
+    cmb_pill = Column(
+        String(20), ForeignKey("pill_prod.pill_cd"), primary_key=True, nullable=False
+    )
 
 
 ## Pill_func테이블
@@ -395,7 +401,7 @@ def get_merged_routines_from_database():
 
 
 # 루틴 데이터 가져오는 엔드포인트
-@router1.get("/rtnlist", response_model=List[MergedRoutineResponse])
+@router6.get("/rtnlist", response_model=List[MergedRoutineResponse])
 async def read_routines(
     request: Request, user_email: str = Depends(get_current_user_email)
 ):
@@ -437,7 +443,7 @@ def generate_unique_hrtn_id(hrtn_mem):
     return hrtn_id
 
 
-@router2.post("/h_routines")  # , response_model=RoutineCreate)
+@router7.post("/h_routines")  # , response_model=RoutineCreate)
 def create_routine(
     routine: HRoutineCreate,
     user_email: str = Depends(get_current_user_email),
@@ -502,7 +508,7 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-@router3.post("/p_routines")  # , response_model=RoutineCreate)
+@router8.post("/p_routines")  # , response_model=RoutineCreate)
 def create_routine(
     routine: PRoutineCreate,
     user_email: str = Depends(get_current_user_email),
@@ -567,7 +573,7 @@ def generate_unique_ertn_id(ertn_mem):
     return ertn_id
 
 
-@router4.post("/routines")
+@router9.post("/routines")
 def create_routine(
     routine: ERoutineCreate,
     user_email: str = Depends(get_current_user_email),
