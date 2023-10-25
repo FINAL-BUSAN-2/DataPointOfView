@@ -157,14 +157,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          <View style={styles.pillheader}>
-            {/* 루틴명 입력 */}
-            <View style={styles.Routinename}>
-              <Serch />
-            </View>
+          {/* <View style={styles.pillheader}> */}
+          {/* 루틴명 입력 */}
+          <View>
+            <Serch />
+          </View>
 
-            {/* 루틴 아이콘 */}
-            <View style={styles.Routineicon}>
+          {/* 루틴 아이콘 */}
+          {/* <View style={styles.Routineicon}>
               <TouchableOpacity onPress={handleAddButtonClick}>
                 <Image
                   source={require('./android/app/src/img/flo_ex.png')}
@@ -172,7 +172,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
 
           {/*몇회&몇정 입력 박스 */}
           <View style={styles.setreps}>

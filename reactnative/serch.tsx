@@ -91,7 +91,7 @@ function Serch() {
 
 const styles = StyleSheet.create({
   container: {
-    //width: 400,
+    width: 350,
     height: 60, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     borderWidth: 1,
@@ -100,12 +100,13 @@ const styles = StyleSheet.create({
   search: {
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: 'yellow',
-    //width: '100%',
+    backgroundColor: 'yellow', //검색창 색상
+    width: '100%',
     height: '100%', // 전체 부모 컨테이너의 높이를 차지하게 설정
-    color: '#333',
+    color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
     paddingVertical: 10, // paddingVertical 값을 조절
+    borderRadius: 10, // 라운드 모서리 추가
   },
   searchIcon: {
     position: 'absolute',
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   autoSearchContainer: {
     position: 'absolute',
     top: 50,
-    height: '50%',
+    maxHeight: 200, // 높이를 제한
     width: 400,
     backgroundColor: '#fff',
     padding: 15,
