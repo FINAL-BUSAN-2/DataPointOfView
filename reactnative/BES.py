@@ -175,7 +175,7 @@ def get_db():
 ##########
 ###################
 # 루틴추가_기타
-@app.post("/eroutines", response_model=ERoutineCreate)
+@app.post("/routines", response_model=ERoutineCreate)
 def create_routine(routine: ERoutineCreate, db: Session = Depends(get_db)):
     db_routine = ERTN_SETTING(
         ertn_mem=routine.ertn_mem,

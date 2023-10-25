@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -611,6 +611,7 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
   header: {
     flexDirection: 'row',
@@ -623,9 +624,10 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
+    color: 'black',
   },
 });
 

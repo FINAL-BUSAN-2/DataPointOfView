@@ -130,6 +130,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           selectedDaysOfWeek, // 반복요일
           selectedDate, // 날짜선택
           selectedTime, // 시간
+          notificationEnabled, //알림
         );
 
         // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
@@ -147,7 +148,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'< 기타루틴 추가하기'}</Text>
+          <Text style={styles.backButton}>{'< 기타 루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -579,6 +580,7 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
 
   header: {
@@ -592,7 +594,7 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
     color: 'black',
