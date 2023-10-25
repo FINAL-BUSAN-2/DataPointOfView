@@ -1,17 +1,20 @@
-import logging
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, validator
-
-# sqlalchemy
-from sqlalchemy import ForeignKey, desc
-from sqlalchemy import create_engine
-from sqlalchemy import Column, MetaData, Table, Integer, String, or_, Date
-from sqlalchemy.orm import sessionmaker, Session
+from fastapi import FastAPI
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from fastapi import FastAPI, Request, Depends, HTTPException
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.responses import RedirectResponse
+from urllib.parse import quote
+import httpx
+from sqlalchemy import create_engine, Column, String, Integer, func, or_
+from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
-
-from typing import List
-from fastapi import Request
-from typing import Union, Optional
+from sqlalchemy.orm import sessionmaker, Session
+from typing import List, Union, Optional
+from pydantic import BaseModel, validator
+from datetime import date, datetime
+from enum import Enum
+import logging
 
 # 루틴리스트관련import
 from datetime import datetime, timedelta
@@ -22,25 +25,37 @@ from enum import Enum
 from starlette.requests import Request
 from fastapi import Depends, HTTPException, APIRouter
 
-app = FastAPI()
 
+# app = FastAPI()
+
+router6 = APIRouter()
+router7 = APIRouter()
+router8 = APIRouter()
+router9 = APIRouter()
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-## SQLAlchemy 엔진 생성 (MySQL 데이터베이스와 연결)
 DATABASE_URL = "mysql+pymysql://mobile:Data1q2w3e4r!!@54.180.91.68:3306/dw"
 engine = create_engine(DATABASE_URL)
-
-# 세션 생성
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
+local_host = "http://43.200.178.131:3344"
 
-# SQLAlchemy 모델 정의
-# aws maria는 테이블명 소문자
+
+def get_db():
+    try:
+        db = SessionLocal()
+        print("Database connected successfully")
+        yield db
+    except Exception as e:
+        print("Error while connecting to the database: ", e)
+    finally:
+        db.close()
+
+
 class ERTN_SETTING(Base):
     __tablename__ = "ertn_setting"
     ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
@@ -90,7 +105,7 @@ class HRTN_SETTING(Base):
 
 
 ## mem_detail테이블
-class MemDetail(Base):
+class Mem_Detail(Base):
     __tablename__ = "mem_detail"
     mem_email = Column(String, primary_key=True)
     mem_name = Column(String)
@@ -101,30 +116,54 @@ class MemDetail(Base):
     mem_dday = Column(Date)
 
 
-### 로그인정보
-def get_current_user_email(request: Request):
-    user_email = request.session.get("user_email")
-    if not user_email:
-        raise HTTPException(status_code=400, detail="User not logged in")
-    return user_email
+## Pill_prod테이블
+class Pill_prod(Base):
+    __tablename__ = "pill_prod"
+    pill_cd = Column(String, primary_key=True)
+    pill_nm = Column(String)
+    pill_mnf = Column(String)
+    pill_rv = Column(Float)
+    pill_rvnum = Column(Integer)
+    pill_info = Column(String)
 
 
-############################################### mem_detail 정보 받아오기
-# # FastAPI 엔드포인트
-# @app.get("/get_mem_name")
-# def get_mem_name():
-#     db = SessionLocal()
-#     email = "aaa123@gmail.com"  # 여기에서 사용할 이메일을 지정(로그인된사람)
-#     mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
-#     if mem_detail:
-#         mem_name = mem_detail.mem_name
-#         logging.info(f"Received mem_name: {mem_name}")
-#         return {"mem_name": mem_name}
-#     logging.warning(f"No data found for email: {email}")
-#     return {"mem_name": "No data found for email: {email}"}
+## Pill_cmb테이블
+class Pill_Cmb(Base):
+    __tablename__ = "pill_cmb"
+    cmb_nutr = Column(
+        String(10), ForeignKey("pill_nutr.nutr_cd"), primary_key=True, nullable=False
+    )
+    cmb_func = Column(
+        String(10), ForeignKey("pill_func.func_cd"), primary_key=True, nullable=False
+    )
+    cmb_pill = Column(
+        String(20), ForeignKey("pill_prod.pill_cd"), primary_key=True, nullable=False
+    )
 
 
-####################################################### 루틴리스트 받아오기
+## Pill_func테이블
+class Pill_func(Base):
+    __tablename__ = "pill_func"
+    func_cd = Column(String(10), primary_key=True)
+    func_nm = Column(String(60))
+    func_emoji = Column(String(90))
+
+
+## Pill_Nutr테이블
+class Pill_Nutr(Base):
+    __tablename__ = "pill_nutr"
+    nutr_cd = Column(String(10), primary_key=True)
+    nutr_nm = Column(String(60), nullable=False)
+
+
+## health테이블
+class Health(Base):
+    __tablename__ = "health"
+    health_nm = Column(String(100), primary_key=True)
+    health_tag = Column(String(60), primary_key=True)
+    health_emoji = Column(String(90), nullable=False)
+
+
 #### 루틴데이터받아오기
 class ERoutineResponse(BaseModel):
     ertn_time: str
@@ -182,6 +221,63 @@ day_name_mapping = {
 }
 
 
+####### 루틴데이터추가( 건강)
+class HRoutineCreate(BaseModel):
+    hrtn_nm: str
+    hrtn_set: int
+    hrtn_reps: int
+    hrtn_tag: str
+    hrtn_day: str
+    hrtn_sdate: str
+    hrtn_time: str
+    hrtn_id: str
+    hrtn_cat: str
+    hrtn_alram: int
+    hrtn_mem: str
+    hrtn_edate: str
+
+
+####### 루틴데이터추가하기 (영양)
+class PRoutineCreate(BaseModel):
+    prtn_nm: str
+    prtn_set: int
+    prtn_reps: int
+    prtn_tag: str
+    prtn_day: str
+    prtn_sdate: str
+    prtn_time: str
+    prtn_id: str
+    prtn_cat: str
+    prtn_alram: int
+    prtn_mem: str
+    prtn_edate: str
+
+
+####### 루틴데이터추가(기타)
+class ERoutineCreate(BaseModel):
+    ertn_nm: str
+    ertn_set: int
+    ertn_reps: int
+    ertn_tag: str
+    ertn_day: str
+    ertn_sdate: str
+    ertn_time: str
+    ertn_id: str
+    ertn_cat: str
+    ertn_alram: int
+    ertn_mem: str
+    ertn_edate: str
+
+
+##### 로그인정보 (이메일)
+def get_current_user_email(request: Request):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        raise HTTPException(status_code=400, detail="User not logged in")
+    return user_email
+
+
+##########루틴리스트
 # 데이터베이스에서 루틴 데이터 가져오는 함수
 def get_merged_routines_from_database():
     # 현재 날짜와 요일을 가져옵니다.
@@ -306,7 +402,7 @@ def get_merged_routines_from_database():
 
 
 # 루틴 데이터 가져오는 엔드포인트
-@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
+@router6.get("/rtnlist", response_model=List[MergedRoutineResponse])
 async def read_routines(
     request: Request, user_email: str = Depends(get_current_user_email)
 ):
@@ -314,32 +410,8 @@ async def read_routines(
     return merged_routines
 
 
-#############################################################루틴추가하기
-####### 루틴데이터추가( 건강)
-class HRoutineCreate(BaseModel):
-    hrtn_nm: str
-    hrtn_set: int
-    hrtn_reps: int
-    hrtn_tag: str
-    hrtn_day: str
-    hrtn_sdate: str
-    hrtn_time: str
-    hrtn_id: str
-    hrtn_cat: str
-    hrtn_alram: int
-    hrtn_mem: str
-    hrtn_edate: str
-
-
-# 데이터베이스 세션을 얻기 위한 함수
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
+################################
+## 루틴추가
 # hrtn_id 생성
 def generate_unique_hrtn_id(hrtn_mem):
     at_index = hrtn_mem.find("@")
@@ -372,7 +444,7 @@ def generate_unique_hrtn_id(hrtn_mem):
     return hrtn_id
 
 
-@app.post("/h_routines")  # , response_model=RoutineCreate)
+@router7.post("/h_routines")  # , response_model=RoutineCreate)
 def create_routine(
     routine: HRoutineCreate,
     user_email: str = Depends(get_current_user_email),
@@ -403,22 +475,6 @@ def create_routine(
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         # return {"error": "데이터 삽입 중 오류 발생"}
-
-
-####### 루틴데이터추가하기 (영양)
-class PRoutineCreate(BaseModel):
-    prtn_nm: str
-    prtn_set: int
-    prtn_reps: int
-    prtn_tag: str
-    prtn_day: str
-    prtn_sdate: str
-    prtn_time: str
-    prtn_id: str
-    prtn_cat: str
-    prtn_alram: int
-    prtn_mem: str
-    prtn_edate: str
 
 
 # prtn_id 생성
@@ -453,7 +509,7 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-@app.post("/p_routines")  # , response_model=RoutineCreate)
+@router8.post("/p_routines")  # , response_model=RoutineCreate)
 def create_routine(
     routine: PRoutineCreate,
     user_email: str = Depends(get_current_user_email),
@@ -484,22 +540,6 @@ def create_routine(
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         # return {"error": "데이터 삽입 중 오류 발생"}
-
-
-####### 루틴데이터추가(기타)
-class ERoutineCreate(BaseModel):
-    ertn_nm: str
-    ertn_set: int
-    ertn_reps: int
-    ertn_tag: str
-    ertn_day: str
-    ertn_sdate: str
-    ertn_time: str
-    ertn_id: str
-    ertn_cat: str
-    ertn_alram: int
-    ertn_mem: str
-    ertn_edate: str
 
 
 # ertn_id 생성
@@ -534,7 +574,7 @@ def generate_unique_ertn_id(ertn_mem):
     return ertn_id
 
 
-@app.post("/routines")
+@router9.post("/routines")
 def create_routine(
     routine: ERoutineCreate,
     user_email: str = Depends(get_current_user_email),
