@@ -427,15 +427,15 @@ def create_routine(routine: ERoutineCreate,request:Request):
     email = request.session["user_email"]
     try:
         # Create a unique ertn_id
-        ertn_id = generate_unique_ertn_id(email)
+        ertn_id = generate_unique_ertn_id("email")
 
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=email,  # 로그인아이디필요
+                ertn_mem="email",  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
-                ertn_cat=routine.ertn_cat,
-                ertn_tag=routine.ertn_tag,
+                ertn_cat="기타",
+                ertn_tag="기타",
                 ertn_set=routine.ertn_set,
                 ertn_reps=routine.ertn_reps,
                 ertn_sdate=routine.ertn_sdate,
