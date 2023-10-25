@@ -1,3 +1,4 @@
+import axios from 'axios';
 ///// 건강-입력된 값 DB로 전송
 export const HaddRoutine = async (
   hrtn_nm,
@@ -99,7 +100,10 @@ export const EaddRoutine = async (
       ertn_edate: '',
     };
     // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await fetch('http://43.200.178.131:3344/routines', data);
+    const response = await axios.post(
+      'http://43.200.178.131:3344/routines',
+      data,
+    );
     // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
     console.log(response.data);
   } catch (error) {
