@@ -14,7 +14,7 @@ import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {PaddRoutine} from './api';
 import {Alert} from 'react-native';
-import Serch from './serch';
+import {useRoute} from '@react-navigation/native';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -157,10 +157,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          {/* <View style={styles.pillheader}> */}
           {/* 루틴명 입력 */}
-          <View>
-            <Serch />
+          <View style={styles.Routinename}>
+            <TextInput
+              style={styles.Routineinput}
+              value={routineName}
+              onChangeText={handleRoutineNameChange}
+              placeholder="루틴명을 입력해 주세요!"
+              onFocus={() => navigation.navigate('Search')}
+            />
           </View>
 
           {/* 루틴 아이콘 */}
@@ -172,7 +177,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View> */}
+            </View>
 
           {/*몇회&몇정 입력 박스 */}
           <View style={styles.setreps}>
@@ -531,6 +536,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 10,
     color: 'black',
+  },
+
+  etcheader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
 });
 

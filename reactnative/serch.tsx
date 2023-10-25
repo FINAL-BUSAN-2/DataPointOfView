@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 // import PropTypes from 'prop-types';
+import {useNavigation} from '@react-navigation/native';
 
 interface autoDatas {
   city: string;
@@ -20,8 +21,8 @@ interface autoDatas {
   rank: string;
   state: string;
 }
-
-function Serch() {
+function Search() {
+  const navigation = useNavigation();
   const [keyword, setKeyword] = useState<string>('');
   const [keyItems, setKeyItems] = useState<autoDatas[]>([]);
 
@@ -55,16 +56,13 @@ function Serch() {
   }, [keyword]);
 
   return (
+    // 검색창
     <View style={styles.container}>
       <TextInput
         value={keyword}
         onChange={onChangeData}
         style={styles.search}
       />
-      {/* <Image
-        source={require('./assets/imgs/search.svg')}
-        style={styles.searchIcon}
-      /> */}
 
       {keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
@@ -100,8 +98,8 @@ const styles = StyleSheet.create({
   search: {
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: 'yellow', //검색창 색상
-    width: '100%',
+    backgroundColor: '#eaeaea', //검색창 색상
+    width: '90%',
     height: '100%', // 전체 부모 컨테이너의 높이를 차지하게 설정
     color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
@@ -134,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Serch;
+export default Search;

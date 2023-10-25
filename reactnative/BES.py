@@ -26,7 +26,7 @@ from starlette.requests import Request
 from fastapi import Depends, HTTPException, APIRouter
 
 
-# app = FastAPI()
+app = FastAPI()
 
 router6 = APIRouter()
 router7 = APIRouter()
