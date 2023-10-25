@@ -565,7 +565,7 @@ day_name_mapping = {
 
 
 # 데이터베이스에서 루틴 데이터 가져오는 함수
-def get_merged_routines_from_database():
+def get_merged_routines_from_database(email):
     # 현재 날짜와 요일을 가져옵니다.
     now = datetime.now()
     today = now.date()
@@ -573,9 +573,9 @@ def get_merged_routines_from_database():
     # print(f"오늘 날짜: {today}, 요일: {current_day}")
 
     with SessionLocal() as db:
-        e_routines = db.query(ERTN_SETTING).all()
-        p_routines = db.query(PRTN_SETTING).all()
-        h_routines = db.query(HRTN_SETTING).all()
+        e_routines = db.query(ERTN_SETTING).filter_by(ertn_mem=email).all()
+        p_routines = db.query(PRTN_SETTING).filter_by(ertn_mem=email).all()
+        h_routines = db.query(HRTN_SETTING).filter_by(ertn_mem=email).all()
 
         merged_routines = []
 
@@ -689,8 +689,12 @@ def get_merged_routines_from_database():
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
 async def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database()
+    merged_routines = get_merged_routines_from_database(request.session["mem_email"])
     return merged_routines
+# @app.get("/naver/news/", response_model=List[News_DataInDB])
+# def get_search_news(db: Session = Depends(get_db), search: str = None):
+#     news = db.query(News_Data).filter_by(news_cat=search).all()
+#     return news
 
 class News_Data(Base):
     __tablename__ = "news_data"
