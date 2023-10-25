@@ -434,15 +434,15 @@ def create_routine(routine: ERoutineCreate,request:Request):
                 ertn_mem=email,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
-                ertn_cat="기타",
-                ertn_tag="기타",
+                ertn_cat=routine.ertn_cat,
+                ertn_tag=routine.ertn_tag,
                 ertn_set=routine.ertn_set,
                 ertn_reps=routine.ertn_reps,
                 ertn_sdate=routine.ertn_sdate,
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
-                ertn_edate=None
+                ertn_edate=routine.ertn_edate,
             )
 
             db.add(db_routine)
