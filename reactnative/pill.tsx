@@ -14,6 +14,7 @@ import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {PaddRoutine} from './api';
 import {Alert} from 'react-native';
+import Serch from './serch';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -124,9 +125,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     } else {
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-
         await PaddRoutine(
-
           routineName, // 루틴명
           parseInt(set), // 세트
           parseInt(reps), // 횟수
@@ -155,26 +154,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           <Text style={styles.backButton}>{'< 영양 루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.pillheader}>
             {/* 루틴명 입력 */}
             <View style={styles.Routinename}>
-              <TextInput
-                style={styles.Routineinput}
-                value={routineName}
-                onChangeText={handleRoutineNameChange}
-                placeholder="건강기능식품명을 입력해 주세요!"
-              />
-              {/* 카메라 아이콘
-              <TouchableOpacity
-                onPress={() => console.log('Camera button pressed')}>
-                <Image
-                  source={require('./android/app/src/img/camera.png')}
-                  style={styles.cameraicon}
-                />
-              </TouchableOpacity> */}
+              <Serch />
             </View>
+
             {/* 루틴 아이콘 */}
             <View style={styles.Routineicon}>
               <TouchableOpacity onPress={handleAddButtonClick}>
@@ -238,56 +226,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
 
-          {/* 태그 선택
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginLeft: '15%',
-            }}>
-            <Text>태그</Text>
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('비타민')}
-              style={
-                tagsEnabled === '비타민' ? styles.selectedButton : styles.button
-              }>
-              <Text>비타민</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('무기질')}
-              style={
-                tagsEnabled === '무기질' ? styles.selectedButton : styles.button
-              }>
-              <Text>무기질</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handletagsEnabled('기타')}
-              style={
-                tagsEnabled === '기타' ? styles.selectedButton : styles.button
-              }>
-              <Text>기타</Text>
-            </TouchableOpacity>
-          </View> */}
-
           <Toggle
             label={'알림'}
             value={notificationEnabled}
             onChange={setNotificationEnabled}
           />
-          {/* 알림 설정 */}
-          {/* <View style={styles.notificationcontainer}>
-          <Text style={styles.notification}>알림</Text>
-          알림 설정 스위치
-          <View style={styles.notificationswitch}>
-            <Switch
-              value={notificationEnabled}
-              onValueChange={value => setNotificationEnabled(value)}
-              style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
-            />
-          </View>
-        </View> */}
 
           {/* 반복 설정 */}
           <Toggle
@@ -323,48 +266,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               </>
             )}
           </Toggle>
-
-          {/* 반복 설정 */}
-          {/* <View style={styles.repeatcontainer}>
-          <Text style={styles.repeat}>반복</Text> */}
-          {/* 반복 설정 스위치 */}
-          {/* <View style={styles.repeatswitch}>
-            <Switch
-              value={repeatEnabled}
-              onValueChange={value => setRepeatEnabled(value)}
-              style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
-            />
-          </View>
-        </View> */}
-          {/* 요일 선택 */}
-          {/* {repeatEnabled && (
-          <>
-            <View style={styles.dayPickerContainer}>
-              <View style={styles.dayButtonRow}>
-                {['월', '화', '수', '목', '금', '토', '일'].map(day => (
-                  <TouchableOpacity
-                    key={`day-${day}`}
-                    onPress={() => handleDayOfWeekToggle(day)}
-                    style={[
-                      styles.dayButton,
-                      selectedDaysOfWeek.includes(day) &&
-                        styles.selectedDayButton,
-                    ]}>
-                    <Text
-                      key={`text-${day}`}
-                      style={[
-                        styles.dayButtonText,
-                        selectedDaysOfWeek.includes(day) &&
-                          styles.selectedDayButtonText,
-                      ]}>
-                      {day}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          </>
-        )} */}
         </ScrollView>
 
         {/* 추가하기 */}
