@@ -811,14 +811,14 @@ def get_health_list_data(db: Session = Depends(get_db)):
     )
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    pie_list_data = [
-        {
-            "name": health_name[0],
-        }
-        for health_name in health_names
-    ]
+    # pie_list_data = [
+    #     {
+    #         "name": health_name[0],
+    #     }
+    #     for health_name in health_names
+    # ]
 
-    return pie_list_data
+    return health_names
 
 
 @app.get("/pill_piechartdata")
