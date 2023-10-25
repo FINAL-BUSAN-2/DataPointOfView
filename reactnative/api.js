@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 ///// 건강-입력된 값 DB로 전송
 export const HaddRoutine = async (
   hrtn_nm,
@@ -19,7 +20,7 @@ export const HaddRoutine = async (
       hrtn_day: String(hrtn_day), //반복요일
       hrtn_sdate: hrtn_sdate, //날짜
       hrtn_time: hrtn_time, //시간
-      hrtn_mem: 'abc123@gmail.com',
+      hrtn_mem: '',
       hrtn_id: '',
       hrtn_cat: '건강',
       hrtn_alram: 1,
@@ -78,7 +79,7 @@ export const EaddRoutine = async (
   ertn_nm,
   ertn_set,
   ertn_reps,
-  ertn_tag,
+  //ertn_tag,
   ertn_day,
   ertn_sdate = selectedDate,
   selectedTime,
@@ -89,7 +90,7 @@ export const EaddRoutine = async (
       ertn_nm: String(ertn_nm), // 루틴명
       ertn_set: ertn_set, // 1일 반복 횟수
       ertn_reps: ertn_reps, // 1일 반복 갯수
-      ertn_tag: String(ertn_tag), // 태그
+      ertn_tag: '기타', // 태그
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
       ertn_time: selectedTime, //시간
@@ -99,7 +100,7 @@ export const EaddRoutine = async (
       ertn_alram: notificationEnabled,
       ertn_edate: '',
     };
-    // ertn_alram: ertn_alram, // Pass 0 or 1
+
     const response = await axios.post(
       'http://43.200.178.131:3344/routines',
       data,
