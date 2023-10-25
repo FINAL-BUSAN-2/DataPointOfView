@@ -424,7 +424,7 @@ def generate_unique_prtn_id(prtn_mem):
 # 루틴추가_기타
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate,request:Request):
-    email = request.session["user_email"]
+    email = 'aaa@aaa.com'
     try:
         # Create a unique ertn_id
         ertn_id = generate_unique_ertn_id(email)
@@ -442,7 +442,7 @@ def create_routine(routine: ERoutineCreate,request:Request):
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
-                ertn_edate=None
+                ertn_edate=routine.ertn_edate,
             )
 
             db.add(db_routine)
