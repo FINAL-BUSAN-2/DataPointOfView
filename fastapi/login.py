@@ -294,7 +294,7 @@ class ERoutineCreate(BaseModel):
     ertn_time: str
     ertn_alram: int
     ertn_day: str
-    ertn_edate: str
+    ertn_edate: Optional[str] = None
     
 def generate_unique_ertn_id(ertn_mem):
     at_index = ertn_mem.find("@")
