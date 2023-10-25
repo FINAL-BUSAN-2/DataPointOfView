@@ -292,7 +292,7 @@ class ERoutineCreate(BaseModel):
     ertn_reps: int
     ertn_sdate: Optional[str] = None
     ertn_time: Optional[str] = None
-    ertn_alram: int
+    ertn_alram: Optional[int] = None
     ertn_day: Optional[str] = None
     ertn_edate: Optional[str] = None
     
