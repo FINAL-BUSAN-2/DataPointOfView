@@ -716,14 +716,9 @@ class News_DataInDB(News_DataBase):
     class Config:
         orm_mode = True
 
-# @app.get("/naver/news/", response_model=List[News_DataInDB])
-# def get_search_news(db: Session = Depends(get_db), search: str = None):
-#     news = db.query(News_Data).filter_by(news_cat=search).all()
-#     return news
-
-@app.get("/naver/news/", response_model=List[Mem_Detail])
-def get_search_news(db: Session = Depends(get_db)):
-    news = db.query(Mem_Detail).all()
+@app.get("/naver/news/", response_model=List[News_DataInDB])
+def get_search_news(db: Session = Depends(get_db), search: str = None):
+    news = db.query(News_Data).filter_by(news_cat=search).all()
     return news
 
 class Pill_func(Base):
