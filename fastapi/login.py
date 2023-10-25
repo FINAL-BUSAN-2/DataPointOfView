@@ -283,16 +283,16 @@ class PRTN_FIN(Base):
 #####################
 # 루틴추가_기타
 class ERoutineCreate(BaseModel):
-    ertn_mem: Optional[str] = None
+    ertn_mem: str
     ertn_id: str
-    ertn_nm: Optional[str] = None
-    ertn_cat: Optional[str] = None
-    ertn_tag: Optional[str] = None
-    ertn_set: Optional[int] = None
-    ertn_reps: Optional[int] = None
+    ertn_nm: str
+    ertn_cat: str
+    ertn_tag: str
+    ertn_set: int
+    ertn_reps: int
     ertn_sdate: Optional[str] = None
     ertn_time: Optional[str] = None
-    ertn_alram: Optional[int] = None
+    ertn_alram: int
     ertn_day: Optional[str] = None
     ertn_edate: Optional[str] = None
     
