@@ -72,7 +72,10 @@ function Search() {
             renderItem={({item}) => (
               <TouchableOpacity
                 style={styles.item}
-                onPress={() => setKeyword(item.city)}>
+                onPress={() => {
+                  setKeyword(item.city);
+                  setKeyItems([]);
+                }}>
                 <Text>{item.city}</Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
@@ -88,19 +91,21 @@ function Search() {
 }
 
 const styles = StyleSheet.create({
+  //검색창박스
   container: {
-    width: 350,
+    width: 300,
     height: 60, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#eaeaea',
+    borderColor: 'black',
   },
+  //검색창
   search: {
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: '#eaeaea', //검색창 색상
-    width: '90%',
-    height: '100%', // 전체 부모 컨테이너의 높이를 차지하게 설정
+    backgroundColor: 'pink', //검색창 색상
+    width: 300,
+    height: 60, // 전체 부모 컨테이너의 높이를 차지하게 설정
     color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
     paddingVertical: 10, // paddingVertical 값을 조절
@@ -111,11 +116,12 @@ const styles = StyleSheet.create({
     right: 10,
     top: 20, // 아이콘의 수직 위치 조절
   },
+  //연관검색창
   autoSearchContainer: {
     position: 'absolute',
     top: 50,
     maxHeight: 200, // 높이를 제한
-    width: 400,
+    width: 300,
     backgroundColor: '#fff',
     padding: 15,
     borderWidth: 2,
