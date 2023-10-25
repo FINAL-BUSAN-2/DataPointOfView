@@ -3,10 +3,6 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
-# ### 뉴스크롤링에 사용할 라이브러리
-# import pandas as pd
-# from bs4 import BeautifulSoup
-# import requests
 
 from sqlalchemy import create_engine, Column, String, Integer, func, or_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
