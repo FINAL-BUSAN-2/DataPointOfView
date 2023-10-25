@@ -905,3 +905,8 @@ def get_pill_list_data(db: Session = Depends(get_db)):
 
     return pill_list_data
 
+@app.get("/test")
+def test(db: Session = Depends(get_db)):
+    testdata = db.query(News_Data).all()
+    return testdata
+
