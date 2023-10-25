@@ -13,7 +13,6 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import axios from 'axios';
 
 // 화면 관리
 type MainProps = {
@@ -43,19 +42,6 @@ const Main: React.FC<MainProps> = ({
   const [memName, setMemName] = useState(''); // 초기값은 빈 문자열
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   useEffect(() => {
-    axios
-      .get('http://43.200.178.131:3344/get_mem_name')
-      .then(response => {
-        const data = response.data;
-        if (data.mem_name) {
-          setMemName(data.mem_name);
-        } else {
-          console.error('데이터가 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
-      });
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
@@ -80,7 +66,7 @@ const Main: React.FC<MainProps> = ({
         // 정렬 없이 데이터를 설정함
         setData(data);
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
       }
     } catch (error) {
       console.error(error);
@@ -183,7 +169,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
-        <Text style={styles.memtex}>{memName}님 Daily routine</Text>
+        <Text style={styles.memtex}>{userInfo}님 Daily routine</Text>
       </View>
 
       {/* 루틴리스트 */}

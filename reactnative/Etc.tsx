@@ -120,6 +120,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 항목을 작성해 주세요.');
     } else {
+      Alert.alert(selectedTime);
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
         await EaddRoutine(

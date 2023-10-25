@@ -124,7 +124,7 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     existing_user = db.query(Mem_Detail).filter_by(mem_email=user_info["kakao_account"]['email']).first()
     # mem_sday = datetime.strptime(sday, "%Y-%m-%d")
     
-    # request.session["access_token"] = token_data["access_token"]
+    request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]['email']
     request.session["user_name"] = user_info["kakao_account"]['profile']["nickname"]
     request.session["user_age"] = user_info["kakao_account"]['age_range']
@@ -154,6 +154,8 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_email", None)
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
+    request.session.pop("user_age", None)
+    request.session.pop("user_gender", None)
     return {"message": "로그아웃 되었습니다."}
 
 # @app.get("/naver/news/")
@@ -281,18 +283,18 @@ class PRTN_FIN(Base):
 #####################
 # 루틴추가_기타
 class ERoutineCreate(BaseModel):
-    ertn_mem: str
+    ertn_mem: Optional[str] = None
     ertn_id: str
-    ertn_nm: str
-    ertn_cat: str
-    ertn_tag: str
-    ertn_set: int
-    ertn_reps: int
-    ertn_sdate: str
-    ertn_time: str
-    ertn_alram: int
-    ertn_day: str
-    ertn_edate: str
+    ertn_nm: Optional[str] = None
+    ertn_cat: Optional[str] = None
+    ertn_tag: Optional[str] = None
+    ertn_set: Optional[int] = None
+    ertn_reps: Optional[int] = None
+    ertn_sdate: Optional[str] = None
+    ertn_time: Optional[str] = None
+    ertn_alram: Optional[int] = None
+    ertn_day: Optional[str] = None
+    ertn_edate: Optional[str] = None
     
 def generate_unique_ertn_id(ertn_mem):
     at_index = ertn_mem.find("@")
@@ -420,15 +422,16 @@ def generate_unique_prtn_id(prtn_mem):
 ##########
 ###################
 # 루틴추가_기타
-@app.post("/eroutines")
-def create_routine(routine: ERoutineCreate):
+@app.post("/routines")
+def create_routine(routine: ERoutineCreate,request:Request):
+    email = request.session["user_email"]
     try:
         # Create a unique ertn_id
-        ertn_id = generate_unique_ertn_id(routine.ertn_mem)
+        ertn_id = generate_unique_ertn_id(email)
 
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
+                ertn_mem=email,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
@@ -439,6 +442,7 @@ def create_routine(routine: ERoutineCreate):
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
+                ertn_edate=routine.ertn_edate,
             )
 
             db.add(db_routine)
@@ -453,12 +457,13 @@ def create_routine(routine: ERoutineCreate):
 
 # 루틴추가_건강
 @app.post("/h_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: HRoutineCreate):
+def create_routine(routine: HRoutineCreate, request:Request):
+    email = request.session['user_email']
     try:
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
-                hrtn_mem=routine.hrtn_mem,
-                hrtn_id="",  # 로그인아이디필요
+                hrtn_mem=email,
+                hrtn_id=generate_unique_hrtn_id(request.session['user_email']),  # 로그인아이디필요
                 hrtn_nm=routine.hrtn_nm,
                 hrtn_cat="건강",
                 hrtn_tag=routine.hrtn_tag,
@@ -900,14 +905,3 @@ def get_pill_list_data(db: Session = Depends(get_db)):
 
     return pill_list_data
 
-@app.get("/get_mem_name")
-def get_mem_name():
-    db = SessionLocal()
-    email = "aaa123@gmail.com"  # 여기에서 사용할 이메일을 지정(로그인된사람)
-    mem_detail = db.query(MemDetail).filter(MemDetail.mem_email == email).first()
-    if mem_detail:
-        mem_name = mem_detail.mem_name
-        logging.info(f"Received mem_name: {mem_name}")
-        return {"mem_name": mem_name}
-    logging.warning(f"No data found for email: {email}")
-    return {"mem_name": "No data found for email: {email}"}

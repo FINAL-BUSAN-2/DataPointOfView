@@ -82,8 +82,8 @@ export const EaddRoutine = async (
   //ertn_tag,
   ertn_day,
   ertn_sdate = selectedDate,
-  ertn_time = selectedTime,
-  ertn_alram = notificationEnabled,
+  selectedTime,
+  notificationEnabled,
 ) => {
   try {
     const data = {
@@ -93,19 +93,20 @@ export const EaddRoutine = async (
       ertn_tag: '기타', // 태그
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
-      ertn_time: ertn_time, //시간
-      ertn_mem: 'hhh@xxxx.com',
+      ertn_time: selectedTime, //시간
+      ertn_mem: 'qwert0175@naver.com',
       ertn_id: '',
       ertn_cat: '기타',
-      ertn_alram: ertn_alram,
+      ertn_alram: notificationEnabled,
       ertn_edate: '',
     };
+
     const response = await axios.post(
       'http://43.200.178.131:3344/routines',
       data,
     );
     // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
-    console.log(response.data);
+    console.log(response.data, data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지
     if (error.response) {

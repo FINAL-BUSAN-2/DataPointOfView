@@ -1,34 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-
 interface TimePickerProps {
   onTimeChange: (newTime: string) => void;
 }
-
 const TimePicker = ({onTimeChange}: TimePickerProps) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(true);
-
-  useEffect(() => {
-    const currentDateTime = new Date();
-    setDate(currentDateTime);
-    onTimeChange(formatTime(currentDateTime));
-  }, []);
-
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
+      const hours = selectedDate.getHours().toString().padStart(2, '0');
+      const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+      const selectedTime = `${hours}:${minutes}`;
+      console.log(`Selected Time: ${selectedTime}`);
       setDate(selectedDate);
-      onTimeChange(formatTime(selectedDate));
+      onTimeChange(selectedTime); // 선택한 시간을 부모 컴포넌트로 전달
     }
   };
-
-  const formatTime = (time: Date) => {
-    const hours = time.getHours().toString().padStart(2, '0');
-    const minutes = time.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
   return (
     <View>
       {showDatePicker ? (
@@ -46,5 +34,4 @@ const TimePicker = ({onTimeChange}: TimePickerProps) => {
     </View>
   );
 };
-
 export default TimePicker;
