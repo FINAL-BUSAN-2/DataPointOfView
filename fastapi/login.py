@@ -460,13 +460,14 @@ def generate_unique_prtn_id(prtn_mem):
 # 루틴추가_기타
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
-    email = request.session["user_email"]
+    # logger.log(f"111111111111111111111111111111")
+    # email = request.session["user_email"]
     # 라우터에 전달된 데이터 출력
-    print(f"Received routine data: {routine}")
+    logger.log(f"222222222222222222222")
     try:
         # Create a unique ertn_id
         ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
-
+        logger.log(f"33333333333333333333333333")
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
                 # ertn_mem=email,  # 로그인아이디필요
@@ -494,11 +495,13 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 ertn_day="수요일",
                 ertn_edate=None,
             )
-
+            logger.log(f"44444444444444444444444444444444")
             db.add(db_routine)
+            logger.log(f"5555555555555555555555555555")
             db.commit()
+            logger.log(f"6666666666666666666666666")
             db.refresh(db_routine)
-            print('11111111111111111111111111111111')
+            print("7777777777777777777777777")
         return db_routine
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
