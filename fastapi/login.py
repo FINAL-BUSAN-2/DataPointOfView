@@ -802,7 +802,7 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         .filter(
             and_(
                 HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                HRTN_SETTING.hrtn_mem == request.session["user_email"],
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
             )
         )
         .group_by(HEALTH.health_tag)
