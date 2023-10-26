@@ -278,6 +278,7 @@ class PILL_FUNC(Base):
     func_nm = Column(String(60))
     func_emoji = Column(String(90))
 
+
 class PILL_NUTR(Base):
     __tablename__ = "pill_nutr"
     nutr_cd = Column(String(10), primary_key=True)
@@ -327,6 +328,7 @@ class ERoutineCreate(BaseModel):
     ertn_day: Optional[str] = None
     ertn_edate: Optional[str] = None
 
+
 # ertn_id 생성
 def generate_unique_ertn_id(ertn_mem):
     at_index = ertn_mem.find("@")
@@ -350,7 +352,14 @@ def generate_unique_ertn_id(ertn_mem):
                 new_number = max_number + 1
             else:
                 new_number = 1
+
+            # ertn_id를 생성
+            ertn_id = f"{first_part}@{first_char_after_at}e{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
     return ertn_id
+
 
 # 루틴추가_건강
 class HRoutineCreate(BaseModel):
@@ -366,6 +375,7 @@ class HRoutineCreate(BaseModel):
     hrtn_alram: int
     hrtn_day: str
     hrtn_edate: str
+
 
 # hrtn_id 생성
 def generate_unique_hrtn_id(hrtn_mem):
@@ -414,6 +424,7 @@ class PRoutineCreate(BaseModel):
     prtn_mem: str
     prtn_edate: str
 
+
 # prtn_id 생성
 def generate_unique_prtn_id(prtn_mem):
     at_index = prtn_mem.find("@")
@@ -444,7 +455,8 @@ def generate_unique_prtn_id(prtn_mem):
         raise ValueError("Invalid ertn_mem format")
 
     return prtn_id
-  
+
+
 ###################
 # 루틴추가_기타
 @app.post("/routines")
@@ -478,8 +490,6 @@ def create_routine(routine: ERoutineCreate, request: Request):
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         return {"error": "데이터 삽입 중 오류 발생"}
-
-
 
 
 # 루틴추가_건강
@@ -765,8 +775,6 @@ def get_search_news(db: Session = Depends(get_db), search: str = None):
     return news
 
 
-
-
 class Pill_funcBase(BaseModel):
     func_cd: str
     func_nm: str
@@ -780,8 +788,7 @@ class Pill_funcInDB(Pill_funcBase):
 
 @app.get("/pill_func/", response_model=List[Pill_funcInDB])
 def get_search_pill(db: Session = Depends(get_db)):
-    pill_func = db.query(PILL_FUNC(Base):
-).all()
+    pill_func = db.query(PILL_FUNC(Base)).all()
     return pill_func
 
 
