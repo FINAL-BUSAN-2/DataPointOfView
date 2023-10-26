@@ -211,7 +211,7 @@ class ERTN_SETTING(Base):
     ertn_sdate = Column(String(10), nullable=False)
     ertn_time = Column(String(50), nullable=False)
     ertn_alram = Column(Integer, nullable=False)
-    ertn_day = Column(String(50))
+    ertn_day = Column(String(50), nullable=False)
     ertn_edate = Column(String(10), nullable=True)
 
 
@@ -228,7 +228,7 @@ class HRTN_SETTING(Base):
     hrtn_sdate = Column(String(10), nullable=False)
     hrtn_time = Column(String(50), nullable=False)
     hrtn_alram = Column(Integer, nullable=False)
-    hrtn_day = Column(String(50))
+    hrtn_day = Column(String(50), nullable=False)
     hrtn_edate = Column(String(10), nullable=True)
 
 
@@ -245,7 +245,7 @@ class PRTN_SETTING(Base):
     prtn_sdate = Column(String(10), nullable=False)
     prtn_time = Column(String(50), nullable=False)
     prtn_alram = Column(Integer, nullable=False)
-    prtn_day = Column(String(50))
+    prtn_day = Column(String(50), nullable=False)
     prtn_edate = Column(String(10), nullable=True)
 
 
