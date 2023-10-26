@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   ScrollView,
@@ -27,6 +27,7 @@ interface RoutineAddProps {
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const devices = useCameraDevices();
   const device = useCameraDevice('back');
+  const camera = React.useRef(null);
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   // 카메라 아이콘 클릭 핸들러
@@ -147,7 +148,17 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       }
     }
   };
-  //
+  // 사진찍기
+  const onPressButton = async () => {
+    if (!camera.current) return;
+    const photo = await camera.current.takePhoto({
+      flash: 'off',
+      qualityPrioritization: 'speed',
+    });
+
+    Alert.alert(photo.path);
+  };
+
   return (
     <>
       <View style={styles.header}>
@@ -158,7 +169,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
       {isCameraOpen && device !== null ? (
         <View style={styles.cameraContainer}>
-          <Camera style={styles.camera} device={device} />
+          <Camera
+            style={styles.camera}
+            device={device}
+            photo={true}
+            isActive={true}
+            ref={camera}
+          />
         </View>
       ) : (
         <View style={styles.container}>
@@ -191,7 +208,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                         {/* 아래쪽 컨텐츠 */}
                         {/* <Text>카메라</Text> */}
                         {/* 카메라 아이콘 */}
-                        <TouchableOpacity onPress={() => setIsCameraOpen(true)}>
+                        <TouchableOpacity
+                          onPress={() => handleCameraButtonClick()}>
                           <Image
                             source={require('./android/app/src/img/camera.png')}
                             style={styles.cameraicon}
@@ -428,7 +446,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         </View>
       )}
       {isCameraOpen && device !== null ? (
-        <TouchableOpacity style={styles.addContainer}>
+        <TouchableOpacity onPress={onPressButton} style={styles.addContainer}>
           <View style={styles.addTab}>
             <Text style={styles.addtext}>찰칵찰칵</Text>
           </View>

@@ -910,3 +910,7 @@ def test(db: Session = Depends(get_db)):
     testdata = db.query(News_Data).all()
     return testdata
 
+@app.get("/test2")
+def test(db: Session = Depends(get_db)):
+    testdata = db.query(HRTN_SETTING).all()
+    return testdata
