@@ -272,6 +272,12 @@ class PILL_PROD(Base):
     pill_info = Column(String(255))
 
 
+class PILL_FUNC(Base):
+    __tablename__ = "pill_func"
+    func_cd = Column(String(10), primary_key=True)
+    func_nm = Column(String(60))
+    func_emoji = Column(String(90))
+
 class PILL_NUTR(Base):
     __tablename__ = "pill_nutr"
     nutr_cd = Column(String(10), primary_key=True)
@@ -297,7 +303,15 @@ class PRTN_FIN(Base):
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
-#####################
+##### 로그인정보 (이메일)
+def get_current_user_email(request: Request):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        raise HTTPException(status_code=400, detail="User not logged in")
+    return user_email
+
+
+############################################# 루틴추가
 # 루틴추가_기타
 class ERoutineCreate(BaseModel):
     ertn_mem: str
@@ -313,7 +327,7 @@ class ERoutineCreate(BaseModel):
     ertn_day: Optional[str] = None
     ertn_edate: Optional[str] = None
 
-
+# ertn_id 생성
 def generate_unique_ertn_id(ertn_mem):
     at_index = ertn_mem.find("@")
 
@@ -336,14 +350,7 @@ def generate_unique_ertn_id(ertn_mem):
                 new_number = max_number + 1
             else:
                 new_number = 1
-
-            # ertn_id를 생성
-            ertn_id = f"{first_part}@{first_char_after_at}e{new_number:07}"
-    else:
-        raise ValueError("Invalid ertn_mem format")
-
     return ertn_id
-
 
 # 루틴추가_건강
 class HRoutineCreate(BaseModel):
@@ -360,7 +367,6 @@ class HRoutineCreate(BaseModel):
     hrtn_day: str
     hrtn_edate: str
 
-
 # hrtn_id 생성
 def generate_unique_hrtn_id(hrtn_mem):
     at_index = hrtn_mem.find("@")
@@ -371,15 +377,15 @@ def generate_unique_hrtn_id(hrtn_mem):
 
         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
         with SessionLocal() as db:
-            max_prtn_id = (
+            max_hrtn_id = (
                 db.query(HRTN_SETTING.hrtn_id)
                 .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
                 .order_by(desc(HRTN_SETTING.hrtn_id))
                 .first()
             )
-            if max_prtn_id:
+            if max_hrtn_id:
                 max_number = int(
-                    max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                    max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
                 )  # "@" 이후부터 숫자 부분 추출
                 new_number = max_number + 1
             else:
@@ -407,7 +413,6 @@ class PRoutineCreate(BaseModel):
     prtn_alram: int
     prtn_mem: str
     prtn_edate: str
-
 
 # prtn_id 생성
 def generate_unique_prtn_id(prtn_mem):
@@ -439,9 +444,7 @@ def generate_unique_prtn_id(prtn_mem):
         raise ValueError("Invalid ertn_mem format")
 
     return prtn_id
-
-
-##########
+  
 ###################
 # 루틴추가_기타
 @app.post("/routines")
@@ -477,11 +480,14 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
+
+
 # 루틴추가_건강
 @app.post("/h_routines")  # , response_model=RoutineCreate)
 def create_routine(routine: HRoutineCreate, request: Request):
     email = request.session["user_email"]
     try:
+        hrtn_id = generate_unique_hrtn_id(email)
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
                 hrtn_mem=email,
@@ -510,15 +516,17 @@ def create_routine(routine: HRoutineCreate, request: Request):
 
 # 루틴추가_영양
 @app.post("/p_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: PRoutineCreate):
+def create_routine(routine: PRoutineCreate, request: Request):
+    email = request.session["user_email"]
     try:
+        prtn_id = generate_unique_prtn_id(email)
         with SessionLocal() as db:
             db_routine = PRTN_SETTING(
-                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_mem=email,  # 로그인아이디필요
                 prtn_id="",
                 prtn_nm=routine.prtn_nm,
                 prtn_cat="영양",
-                prtn_tag=routine.prtn_tag,
+                prtn_tag="영양",
                 prtn_set=routine.prtn_set,
                 prtn_reps=routine.prtn_reps,
                 prtn_sdate=routine.prtn_sdate,
@@ -755,6 +763,7 @@ class News_DataInDB(News_DataBase):
 def get_search_news(db: Session = Depends(get_db), search: str = None):
     news = db.query(News_Data).filter_by(news_cat=search).all()
     return news
+
 
 
 class PILL_FUNC(Base):
