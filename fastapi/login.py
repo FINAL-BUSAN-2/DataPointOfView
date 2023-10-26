@@ -322,11 +322,11 @@ class ERoutineCreate(BaseModel):
     ertn_tag: str
     ertn_set: int
     ertn_reps: int
-    ertn_sdate: str  # Optional[str] = None
-    ertn_time: str  # Optional[str] = None
-    ertn_alram: int  # Optional[int] = 0
-    ertn_day: str  # Optional[str] = None
-    ertn_edate: str  # Optional[str] = None
+    ertn_sdate: Optional[str] = None
+    ertn_time: Optional[str] = None
+    ertn_alram: Optional[int] = 0
+    ertn_day: Optional[str] = None
+    ertn_edate: Optional[str] = None
 
 
 # ertn_id 생성
