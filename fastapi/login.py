@@ -935,10 +935,7 @@ def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
         db.query(PILL_PROD.pill_nm)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(
-            and_(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))),
-            PRTN_SETTING.prtn_mem == request.session["user_email"],
-        )
+        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
         .distinct()
         .all()
     )

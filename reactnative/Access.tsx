@@ -80,15 +80,34 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     }
   };
 
+  // 차트 데이터를 가져오는 비동기 함수 정의
+  const pilllistData = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
+      // const response = await fetch('http://54.180.91.68:3306');
+      if (!response.ok) {
+        // throw new Error('Failed to fetch chart data');
+      }
+      const data4 = await response.json();
+      console.log(data4);
+      console.log(chartData4);
+      return data4;
+    } catch (error) {
+      throw new Error(`Error accessing chart data: ${error.message}`);
+    }
+  };
+
   const fetchData4 = async () => {
     try {
       const data4 = await pilllistData(); // getChartData() 호출하여 데이터 가져오기
       setChartData4(data4);
       console.log(data4);
+      console.log(chartData4);
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
   };
+
   const fetchData5 = async () => {
     try {
       const data5 = await testapi(); // getChartData() 호출하여 데이터 가져오기
@@ -162,22 +181,6 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       const data3 = await response.json();
       // console.log(data3);
       return data3;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const pilllistData = async () => {
-    try {
-      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
-      // const response = await fetch('http://54.180.91.68:3306');
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-      }
-      const data4 = await response.json();
-      // console.log(data4);
-      return data4;
     } catch (error) {
       throw new Error(`Error accessing chart data: ${error.message}`);
     }
@@ -315,7 +318,10 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             <ScrollView>
               <Text style={styles.statictext}>💊 섭취한 영양 {'\n'}</Text>
               {chartData4.map((dataPoint, index) => (
-                <Text key={index}>ㆍ{dataPoint.name}</Text>
+                <Text key={index}>
+                  ㆍ{dataPoint.name}
+                  {dataPoint.email}
+                </Text>
               ))}
             </ScrollView>
           </Balloon>
