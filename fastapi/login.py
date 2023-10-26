@@ -139,8 +139,6 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
-    request.session["user_age"] = user_info["kakao_account"]["age_range"]
-    request.session["user_gender"] = user_info["kakao_account"]["gender"]
 
     encoded_user_info = quote(str(request.session["user_name"]))
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
@@ -175,8 +173,6 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_email", None)
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
-    request.session.pop("user_age", None)
-    request.session.pop("user_gender", None)
     return {"message": "로그아웃 되었습니다."}
 
 
