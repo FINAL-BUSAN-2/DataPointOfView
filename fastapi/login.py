@@ -464,13 +464,13 @@ def create_routine(routine: ERoutineCreate, request: Request):
     # logger.log(f"111111111111111111111111111111")
     # email = request.session["user_email"]
     # 라우터에 전달된 데이터 출력
-    logging.info(f"Received: {Request}")
+    logging.error(f"Received: {Request}")
     try:
         # Create a unique ertn_id
-        logging.info(f"Received routine: {routine}")
+        logging.error(f"Received routine: {routine}")
         ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
-        logger.log(f"33333333333333333333333333")
-        logging.info(f"Received routine: {routine}")
+        logger.error(f"33333333333333333333333333")
+        logging.error(f"Received routine: {routine}")
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
                 # ertn_mem=email,  # 로그인아이디필요
@@ -498,15 +498,15 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 ertn_day="수요일",
                 ertn_edate=None,
             )
-            logging.info(f"Received routine: {routine}")
-            logging.info(f"Routine to add: {db_routine}")
-            logger.log(f"44444444444444444444444444444444")
+            logging.error(f"Received routine: {routine}")
+            logging.error(f"Routine to add: {db_routine}")
+            logger.error(f"44444444444444444444444444444444")
             db.add(db_routine)
-            logger.log(f"5555555555555555555555555555")
+            logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
             db.refresh(db_routine)
-            print("7777777777777777777777777")
+            logger.error("7777777777777777777777777")
 
         return db_routine
     except Exception as e:
