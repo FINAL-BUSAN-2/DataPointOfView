@@ -604,4 +604,4 @@ def create_routine(
         return db_routine
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-        # return {"error": "데이터 삽입 중 오류 발생"}
+        return {"error": "데이터 삽입 중 오류 발생"}
