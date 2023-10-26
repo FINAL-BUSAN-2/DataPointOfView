@@ -748,9 +748,17 @@ def get_merged_routines_from_database(email):
 
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-async def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database(request.session["mem_email"])
+def read_routines(request: Request):
+    email = request.session["user_email"]
+    merged_routines = get_merged_routines_from_database(email)
     return merged_routines
+
+
+# # 루틴 데이터 가져오는 엔드포인트
+# @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
+# async def read_routines(request: Request):
+#     merged_routines = get_merged_routines_from_database(request.session["mem_email"])
+#     return merged_routines
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])

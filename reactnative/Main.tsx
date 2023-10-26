@@ -14,7 +14,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 
-//import axios from 'axios';
+import axios from 'axios';
 
 // 화면 관리
 type MainProps = {
@@ -39,7 +39,7 @@ const Main: React.FC<MainProps> = ({
   setUserInfo,
 }) => {
   ///추가된루틴데이터가져오기
-  const [rtndata, rtnsetData] = useState([]); // 데이터상태추가
+  const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
 
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
@@ -59,15 +59,18 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://43.200.178.131:3344/rtnlist');
-      if (response.ok) {
+      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
+      //http://43.200.178.131:3344
+
+      if (response.data) {
+        const data = response.data;
+        // 정렬 없이 데이터를 설정함
+        setData(data);
+      } else {
+        console.error('데이터가 없습니다.');
       }
-      const data = await response.json();
-      rtnsetData(data);
-      console.log(rtnsetData);
-      // return data;
     } catch (error) {
-      throw new Error(`Error accessing chart data: ${error}`);
+      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
     }
   };
 
