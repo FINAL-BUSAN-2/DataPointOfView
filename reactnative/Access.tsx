@@ -12,7 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {VictoryPie} from 'victory-native';
+import {VictoryPie} from 'victory';
 import Balloon from 'react-native-balloon';
 
 // 화면 관리
@@ -84,7 +84,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     try {
       const data4 = await pilllistData(); // getChartData() 호출하여 데이터 가져오기
       setChartData4(data4);
-      console.log(chartData4);
+      console.log(data4);
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
@@ -205,7 +205,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       }
       const data6 = await response.json();
       setChartData6(data6);
-      console.log(setChartData6);
+      // console.log(setChartData6);
     } catch (error) {
       throw new Error(`Error accessing chart data: ${error.message}`);
     }
@@ -290,8 +290,8 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             triangleOffset="20%">
             <ScrollView>
               <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
-              {chartData6 &&
-                chartData6.map((item, index) => (
+              {chartData3 &&
+                chartData3.map((item, index) => (
                   <Text key={`dataPoint-${index}`}>ㆍ{item.hrtn_id}</Text>
                 ))}
             </ScrollView>
@@ -336,7 +336,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       <View style={styles.statistics}>
         <View style={styles.chart}>
           <View style={styles.healthchart}>
-            <VictoryPie
+            {/* <VictoryPie
               data={chartData.map(dataPoint => ({
                 x: dataPoint.tag,
                 y: dataPoint.count,
@@ -346,10 +346,10 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               radius={40} // 반지름
               innerRadius={15}
               colorScale={chartData.map(dataPoint => dataPoint.color)}
-            />
+            /> */}
           </View>
           <View style={styles.pillchart}>
-            <VictoryPie
+            {/* <VictoryPie
               data={chartData2.map(dataPoint2 => ({
                 x: dataPoint2.func,
                 y: dataPoint2.count,
@@ -359,7 +359,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               radius={40} // 반지름
               innerRadius={15}
               colorScale={chartData2.map(dataPoint2 => dataPoint2.color)}
-            />
+            /> */}
           </View>
         </View>
         <View style={styles.statisticstextbox}>

@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
 
-from sqlalchemy import create_engine, Column, String, Integer, func, or_
+from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -930,12 +930,15 @@ def get_color_by_func(func):
 
 
 @app.get("/pill_listdata")
-def get_pill_list_data(db: Session = Depends(get_db)):
+def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
     pill_names_query = (
         db.query(PILL_PROD.pill_nm)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)))
+        .filter(
+            and_(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))),
+            PRTN_SETTING.prtn_mem == request.session["user_email"],
+        )
         .distinct()
         .all()
     )
