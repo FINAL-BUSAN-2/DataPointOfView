@@ -177,3 +177,21 @@ export async function pilllistData() {
     throw new Error(`Error fetching chart data: ${error.message}`);
   }
 }
+
+export async function testapi() {
+  try {
+    // const response = await fetch('http://43.201.38.197:3344/test');
+    const response = await fetch('http://43.200.178.131:3344/test');
+    // const response = await fetch('http://127.0.0.1:8000/test');
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const testdata = await response.json();
+
+    return testdata;
+  } catch (error) {
+    throw new Error(`Error fetching chart data: ${error.message}`);
+  }
+}

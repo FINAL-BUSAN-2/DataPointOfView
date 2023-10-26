@@ -41,11 +41,15 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState([]);
   const [chartData4, setChartData4] = useState([]);
+  const [chartData5, setChartData5] = useState([]);
+  const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
     fetchData();
     fetchData2();
     fetchData3();
     fetchData4();
+    fetchData5();
+    fetchData6();
   }, []);
 
   const fetchData = async () => {
@@ -80,10 +84,30 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     try {
       const data4 = await pilllistData(); // getChartData() 호출하여 데이터 가져오기
       setChartData4(data4);
+      console.log(chartData4);
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
   };
+  const fetchData5 = async () => {
+    try {
+      const data5 = await testapi(); // getChartData() 호출하여 데이터 가져오기
+      setChartData5(data5);
+      // console.log(data5);
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+    }
+  };
+
+  // const fetchData6 = async () => {
+  //   try {
+  //     const data6 = await testapi2(); // getChartData() 호출하여 데이터 가져오기
+  //     setChartData6(data6);
+  //     console.log(data6);
+  //   } catch (error) {
+  //     console.error('Error fetching chart data:', error);
+  //   }
+  // };
 
   // 차트 데이터를 가져오는 비동기 함수 정의
   const healthPieChartData = async () => {
@@ -158,6 +182,35 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       throw new Error(`Error accessing chart data: ${error.message}`);
     }
   };
+
+  // 차트 데이터를 가져오는 비동기 함수 정의
+  const testapi = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/test');
+      if (!response.ok) {
+        // throw new Error('Failed to fetch chart data');
+      }
+      const data5 = await response.json();
+      // console.log(data5);
+      return data5;
+    } catch (error) {
+      throw new Error(`Error accessing chart data: ${error.message}`);
+    }
+  };
+
+  const fetchData6 = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/test2');
+      if (!response.ok) {
+      }
+      const data6 = await response.json();
+      setChartData6(data6);
+      console.log(setChartData6);
+    } catch (error) {
+      throw new Error(`Error accessing chart data: ${error.message}`);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -211,6 +264,16 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
         <Text style={styles.usertext}>{userInfo}님의 오늘의 기록</Text>
+        <View>
+          <Text>Test Data:</Text>
+          {chartData5 &&
+            chartData5.map((item, index) => (
+              <View key={index}>
+                <Text>{item.news_idx}</Text>
+                {/*Render other properties as needed */}
+              </View>
+            ))}
+        </View>
       </View>
 
       {/* 바디 */}
@@ -227,9 +290,10 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             triangleOffset="20%">
             <ScrollView>
               <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
-              {chartData3.map((dataPoint, index) => (
-                <Text key={`dataPoint-${index}`}>ㆍ{dataPoint.name}</Text>
-              ))}
+              {chartData6 &&
+                chartData6.map((item, index) => (
+                  <Text key={`dataPoint-${index}`}>ㆍ{item.hrtn_id}</Text>
+                ))}
             </ScrollView>
           </Balloon>
         </View>
@@ -251,7 +315,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             <ScrollView>
               <Text style={styles.statictext}>💊 섭취한 영양 {'\n'}</Text>
               {chartData4.map((dataPoint, index) => (
-                <Text key={`dataPoint-${index}`}>ㆍ{dataPoint.name}</Text>
+                <Text key={index}>ㆍ{dataPoint.name}</Text>
               ))}
             </ScrollView>
           </Balloon>
