@@ -39,7 +39,7 @@ const Main: React.FC<MainProps> = ({
   setUserInfo,
 }) => {
   ///추가된루틴데이터가져오기
-  const [rtndata, rtnsetData] = useState<RoutineData[]>([]); // 데이터상태추가
+  const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
 
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
@@ -59,28 +59,17 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const fetchedData = await rtn_list(); //
-      rtnsetData(fetchedData);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
+      const response = await fetch('http://10.0.2.2:8000/rtnlist');
 
-  const rtn_list = async () => {
-    try {
-      const response = await fetch('http://43.200.178.131:3344/rtnlist');
       if (response.ok) {
-        const data = await response.json();
+        const data = awit;
         // 정렬 없이 데이터를 설정함
-        return data;
+        setData(data);
       } else {
-        console.error(
-          '데이터를 가져오는데 실패했습니다. 상태 코드:',
-          response.status,
-        );
+        console.error('데이터가 없습니다.');
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다:', error);
+      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
     }
   };
 
@@ -185,7 +174,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 루틴리스트 */}
       <FlatList
-        data={rtndata}
+        data={data}
         renderItem={({item}) => (
           <View style={styles.routineItem2}>
             <View style={styles.routineItemSection}>
