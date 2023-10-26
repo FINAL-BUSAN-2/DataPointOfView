@@ -12,7 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {VictoryPie} from 'victory';
+// import {VictoryPie} from 'victory';
 import Balloon from 'react-native-balloon';
 
 // 화면 관리

@@ -945,9 +945,7 @@ def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_list_data = [
-        {
-            "name": pill_name[0],
-        }
+        {"name": pill_name[0], "email": request.session["user_email"]}
         for pill_name in pill_names_query
     ]
 
