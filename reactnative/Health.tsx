@@ -30,6 +30,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const camera = React.useRef(null);
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraImgPath, setCameraImgPath] = useState('');
   // 카메라 아이콘 클릭 핸들러
   const handleCameraButtonClick = () => {
     setIsCameraOpen(true);
@@ -157,6 +158,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     });
 
     Alert.alert(photo.path);
+    setCameraImgPath(photo.path);
   };
 
   return (
@@ -168,16 +170,35 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       </View>
 
       {isCameraOpen && device !== null ? (
-        <View style={styles.cameraContainer}>
-          <Camera
-            style={styles.camera}
-            device={device}
-            photo={true}
-            isActive={true}
-            ref={camera}
-          />
-        </View>
+        cameraImgPath !== '' ? (
+          <View>
+            <Image
+              source={{uri: cameraImgPath}}
+              style={{width: 100, height: 100}}
+            />{' '}
+            {/* 이미지 크기는 예시입니다. 원하는 대로 조절하세요. */}
+          </View>
+        ) : (
+          <View style={styles.cameraContainer}>
+            <Camera
+              style={styles.camera}
+              device={device}
+              photo={true}
+              isActive={true}
+              ref={camera}
+            />
+          </View>
+        )
       ) : (
+        // <View style={styles.cameraContainer}>
+        //   <Camera
+        //     style={styles.camera}
+        //     device={device}
+        //     photo={true}
+        //     isActive={true}
+        //     ref={camera}
+        //   />
+        // </View>
         <View style={styles.container}>
           <ScrollView>
             <View style={{flex: 3}}>
