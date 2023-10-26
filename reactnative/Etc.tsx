@@ -116,10 +116,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 필수 항목을 작성해 주세요.');
-    } else if (!selectedDate) {
-      Alert.alert('오류', '날짜를 선택해 주세요.');
-    } else if (selectedDaysOfWeek.length === 0) {
-      Alert.alert('오류', '반복 요일을 선택해 주세요.');
     } else {
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
@@ -134,8 +130,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             ertn_set: parseInt(set), // 세트
             ertn_reps: parseInt(reps), // 횟수
             ertn_day: selectedDaysOfWeek, // 반복요일
-            ertn_sdate: selectedDate, // 날짜선택
-            ertn_time: selectedTime, // 시간
+            ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
+            ertn_time: selectedTime || new Date().toTimeString(), // 시간
             ertn_alram: notificationEnabled, // 알림
           }),
         });
