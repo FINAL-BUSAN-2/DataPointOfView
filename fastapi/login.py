@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
 
-from sqlalchemy import create_engine, Column, String, Integer, func, or_
+from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -207,7 +207,7 @@ class ERTN_SETTING(Base):
     ertn_sdate = Column(String(10), nullable=False)
     ertn_time = Column(String(50), nullable=False)
     ertn_alram = Column(Integer, nullable=False)
-    ertn_day = Column(String(50))
+    ertn_day = Column(String(50), nullable=False)
     ertn_edate = Column(String(10), nullable=True)
 
 
@@ -224,7 +224,7 @@ class HRTN_SETTING(Base):
     hrtn_sdate = Column(String(10), nullable=False)
     hrtn_time = Column(String(50), nullable=False)
     hrtn_alram = Column(Integer, nullable=False)
-    hrtn_day = Column(String(50))
+    hrtn_day = Column(String(50), nullable=False)
     hrtn_edate = Column(String(10), nullable=True)
 
 
@@ -241,7 +241,7 @@ class PRTN_SETTING(Base):
     prtn_sdate = Column(String(10), nullable=False)
     prtn_time = Column(String(50), nullable=False)
     prtn_alram = Column(Integer, nullable=False)
-    prtn_day = Column(String(50))
+    prtn_day = Column(String(50), nullable=False)
     prtn_edate = Column(String(10), nullable=True)
 
 
@@ -266,6 +266,13 @@ class PILL_PROD(Base):
     pill_rv = Column(Float)
     pill_rvnum = Column(Integer)
     pill_info = Column(String(255))
+
+
+class PILL_FUNC(Base):
+    __tablename__ = "pill_func"
+    func_cd = Column(String(10), primary_key=True)
+    func_nm = Column(String(60))
+    func_emoji = Column(String(90))
 
 
 class PILL_NUTR(Base):
@@ -293,7 +300,15 @@ class PRTN_FIN(Base):
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
-#####################
+##### 로그인정보 (이메일)
+def get_current_user_email(request: Request):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        raise HTTPException(status_code=400, detail="User not logged in")
+    return user_email
+
+
+############################################# 루틴추가
 # 루틴추가_기타
 class ERoutineCreate(BaseModel):
     ertn_mem: str
@@ -310,6 +325,7 @@ class ERoutineCreate(BaseModel):
     ertn_edate: Optional[str] = None
 
 
+# ertn_id 생성
 def generate_unique_ertn_id(ertn_mem):
     at_index = ertn_mem.find("@")
 
@@ -367,15 +383,15 @@ def generate_unique_hrtn_id(hrtn_mem):
 
         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
         with SessionLocal() as db:
-            max_prtn_id = (
+            max_hrtn_id = (
                 db.query(HRTN_SETTING.hrtn_id)
                 .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
                 .order_by(desc(HRTN_SETTING.hrtn_id))
                 .first()
             )
-            if max_prtn_id:
+            if max_hrtn_id:
                 max_number = int(
-                    max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                    max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
                 )  # "@" 이후부터 숫자 부분 추출
                 new_number = max_number + 1
             else:
@@ -437,35 +453,55 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-##########
-###################
 # 루틴추가_기타
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
-    email = request.session["user_email"]
+    logger.error(f"111111111111111111111111111111")
+    # email = request.session["user_email"]
+    # 라우터에 전달된 데이터 출력
+    logging.error(f"Received: {request}")
     try:
         # Create a unique ertn_id
-        ertn_id = generate_unique_ertn_id(email)
-
+        logging.error(f"Received routine: {routine}")
+        # ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
+        logger.error(f"33333333333333333333333333")
+        # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=email,  # 로그인아이디필요
-                ertn_id=ertn_id,
-                ertn_nm=routine.ertn_nm,
+                # ertn_mem=email,  # 로그인아이디필요
+                # ertn_id=ertn_id,
+                # ertn_nm=routine.ertn_nm,
+                # ertn_cat="기타",
+                # ertn_tag="기타",
+                # ertn_set=routine.ertn_set,
+                # ertn_reps=routine.ertn_reps,
+                # ertn_sdate=routine.ertn_sdate,
+                # ertn_time=routine.ertn_time,
+                # ertn_alram=routine.ertn_alram,
+                # ertn_day=routine.ertn_day,
+                # ertn_edate=routine.ertn_edate,
+                ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
+                ertn_id="qwert0175@n0000001",
+                ertn_nm="테스트입니다",
                 ertn_cat="기타",
                 ertn_tag="기타",
-                ertn_set=routine.ertn_set,
-                ertn_reps=routine.ertn_reps,
-                ertn_sdate=routine.ertn_sdate,
-                ertn_time=routine.ertn_time,
-                ertn_alram=routine.ertn_alram,
-                ertn_day=routine.ertn_day,
-                ertn_edate=routine.ertn_edate,
+                ertn_set=1,
+                ertn_reps=2,
+                ertn_sdate="2023-01-01",
+                ertn_time="09:00",
+                ertn_alram=0,
+                ertn_day="수요일",
+                ertn_edate=None,
             )
-
+            # logging.error(f"Received routine: {routine}")
+            logging.error(f"Routine to add: {db_routine}")
+            logger.error(f"44444444444444444444444444444444")
             db.add(db_routine)
+            logger.error(f"5555555555555555555555555555")
             db.commit()
+            logger(f"6666666666666666666666666")
             db.refresh(db_routine)
+            logger.error("7777777777777777777777777")
 
         return db_routine
     except Exception as e:
@@ -478,6 +514,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
 def create_routine(routine: HRoutineCreate, request: Request):
     email = request.session["user_email"]
     try:
+        hrtn_id = generate_unique_hrtn_id(email)
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
                 hrtn_mem=email,
@@ -506,15 +543,17 @@ def create_routine(routine: HRoutineCreate, request: Request):
 
 # 루틴추가_영양
 @app.post("/p_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: PRoutineCreate):
+def create_routine(routine: PRoutineCreate, request: Request):
+    email = request.session["user_email"]
     try:
+        prtn_id = generate_unique_prtn_id(email)
         with SessionLocal() as db:
             db_routine = PRTN_SETTING(
-                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_mem=email,  # 로그인아이디필요
                 prtn_id="",
                 prtn_nm=routine.prtn_nm,
                 prtn_cat="영양",
-                prtn_tag=routine.prtn_tag,
+                prtn_tag="영양",
                 prtn_set=routine.prtn_set,
                 prtn_reps=routine.prtn_reps,
                 prtn_sdate=routine.prtn_sdate,
@@ -753,13 +792,6 @@ def get_search_news(db: Session = Depends(get_db), search: str = None):
     return news
 
 
-class PILL_FUNC(Base):
-    __tablename__ = "pill_func"
-    func_cd = Column(String(10), primary_key=True)
-    func_nm = Column(String(60))
-    func_emoji = Column(String(90))
-
-
 class Pill_funcBase(BaseModel):
     func_cd: str
     func_nm: str
@@ -773,24 +805,24 @@ class Pill_funcInDB(Pill_funcBase):
 
 @app.get("/pill_func/", response_model=List[Pill_funcInDB])
 def get_search_pill(db: Session = Depends(get_db)):
-    pill_func = db.query(Pill_func).all()
+    pill_func = db.query(PILL_FUNC(Base)).all()
     return pill_func
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(db: Session = Depends(get_db)):
-    # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
+def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
+    # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
         db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
-        .join(
-            HRTN_SETTING,
-            HRTN_SETTING.hrtn_nm
-            == func.substr(HEALTH.health_nm, 1, func.length(HRTN_SETTING.hrtn_nm)),
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_tag)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+            )
         )
-        .filter(HRTN_FIN.hrtn_id.in_(hrtn_ids_query))
         .group_by(HEALTH.health_tag)
         .all()
     )
@@ -917,21 +949,19 @@ def get_color_by_func(func):
 
 
 @app.get("/pill_listdata")
-def get_pill_list_data(db: Session = Depends(get_db)):
+def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
     pill_names_query = (
         db.query(PILL_PROD.pill_nm)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)))
+        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
         .distinct()
         .all()
     )
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_list_data = [
-        {
-            "name": pill_name[0],
-        }
+        {"name": pill_name[0], "email": request.session["user_email"]}
         for pill_name in pill_names_query
     ]
 
@@ -945,6 +975,6 @@ def test(db: Session = Depends(get_db)):
 
 
 @app.get("/test2")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING).all()
-    return testdata
+def test2(db: Session = Depends(get_db)):
+    testdata2 = db.query(HEALTH).all()
+    return testdata2

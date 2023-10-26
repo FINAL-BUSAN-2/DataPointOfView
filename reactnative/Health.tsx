@@ -202,6 +202,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           <View style={styles.container}>
             <ScrollView>
               <View style={{flex: 3}}>
+
                 {/* 큰틀1 */}
                 <View style={{flex: 3}}>
                   {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
@@ -211,6 +212,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                       {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                       <View style={{flex: 5, flexDirection: 'column'}}>
                         {/* 위쪽 공간 */}
+
                         <View
                           style={{
                             flex: 1,
@@ -246,12 +248,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                       {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                       <View style={{flex: 1, flexDirection: 'column'}}>
                         {/* 위쪽 공간 (오른쪽 위) */}
+
                         <View
                           style={{
                             flex: 1,
                             borderWidth: 1,
                             borderColor: 'purple',
                           }}>
+
                           {/* 위쪽 컨텐츠 (오른쪽 위) */}
                           {/* <Text>태그4</Text> */}
 
@@ -339,6 +343,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               <Text>유산소</Text>
                             </TouchableOpacity>
                           </View>
+
                         </View>
                       </View>
                     </View>
@@ -684,6 +689,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000',
     borderRadius: 5,
+    backgroundColor: 'rgb(127,127,127)',
   },
 
   selectedButton: {
@@ -691,7 +697,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 1,
     borderColor: '#000',
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: 'rgb(43,58,85)',
     borderRadius: 5,
   },
 
@@ -711,7 +717,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -719,6 +725,7 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
   cameraContainer: {
     flex: 1,

@@ -3,8 +3,8 @@ import {StyleSheet} from 'react-native';
 
 export interface ToggleProps {
   label: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
+  value: 0 | 1;
+  onChange: (value: 0 | 1) => void;
   children?: ReactNode | undefined;
 }
 
