@@ -457,7 +457,6 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-###################
 # 루틴추가_기타
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
@@ -796,7 +795,6 @@ def get_search_pill(db: Session = Depends(get_db)):
 def get_health_chart_data(db: Session = Depends(get_db)):
     # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
         db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
@@ -960,6 +958,6 @@ def test(db: Session = Depends(get_db)):
 
 
 @app.get("/test2")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING).all()
-    return testdata
+def test2(db: Session = Depends(get_db)):
+    testdata2 = db.query(HEALTH).all()
+    return testdata2
