@@ -55,7 +55,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     } else {
       console.log('알림 off');
     }
-    5;
   };
 
   // 반복 기능
