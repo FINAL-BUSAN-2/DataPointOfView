@@ -119,21 +119,30 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     } else {
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const selectedTime = `${hours}:${minutes}`;
+
+        const requestData = {
+          ertn_nm: routineName, // 루틴명
+          ertn_set: parseInt(set), // 세트
+          ertn_reps: parseInt(reps), // 횟수
+          ertn_day: selectedDaysOfWeek, // 반복요일
+          ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
+          ertn_time: selectedTime || new Date().toTimeString(), // 시간
+          ertn_alram: notificationEnabled, // 알림
+        };
+
+        console.log('보내는 데이터:', requestData);
+
         const response = await fetch('http://43.200.178.131:3344/routines', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            ertn_nm: routineName, // 루틴명
-            ertn_set: parseInt(set), // 세트
-            ertn_reps: parseInt(reps), // 횟수
-            ertn_day: selectedDaysOfWeek, // 반복요일
-            ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
-            ertn_time: selectedTime || new Date().toTimeString(), // 시간
-            ertn_alram: notificationEnabled, // 알림
-          }),
+          body: JSON.stringify(requestData),
         });
 
         if (response.status === 200) {
@@ -142,7 +151,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         } else {
           // 서버에서 오류 응답을 받았을 경우 에러 메시지를 표시합니다.
           Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
-          console.error('서버 응답 오류:', response.status);
+          console.error('서버 응답 오류:', response);
         }
       } catch (error) {
         // 네트워크 오류 또는 예상치 못한 오류가 발생하면 에러 메시지를 표시할 수 있습니다.
