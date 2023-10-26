@@ -467,7 +467,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
+        # ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
@@ -485,7 +485,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 # ertn_day=routine.ertn_day,
                 # ertn_edate=routine.ertn_edate,
                 ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
-                ertn_id=ertn_id,
+                ertn_id="qwert0175@n0000001",
                 ertn_nm="테스트입니다",
                 ertn_cat="기타",
                 ertn_tag="기타",
