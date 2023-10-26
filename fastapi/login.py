@@ -820,7 +820,7 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
         db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
-        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_tag)
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
         .filter(
             and_(
                 HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
