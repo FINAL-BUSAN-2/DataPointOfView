@@ -793,17 +793,13 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 @app.get("/health_piechartdata")
 def get_health_chart_data(db: Session = Depends(get_db)):
-    # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+    # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
+    # hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
         db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
-        .join(
-            HRTN_SETTING,
-            HRTN_SETTING.hrtn_nm
-            == func.substr(HEALTH.health_nm, 1, func.length(HRTN_SETTING.hrtn_nm)),
-        )
-        .filter(HRTN_FIN.hrtn_id.in_(hrtn_ids_query))
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_tag)
+        .filter(HRTN_FIN.hrtn_id.in_(HRTN_SETTING.hrtn_id))
         .group_by(HEALTH.health_tag)
         .all()
     )
@@ -935,10 +931,7 @@ def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
         db.query(PILL_PROD.pill_nm)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(
-            and_(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))),
-            PRTN_SETTING.prtn_mem == request.session["user_email"],
-        )
+        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
         .distinct()
         .all()
     )
