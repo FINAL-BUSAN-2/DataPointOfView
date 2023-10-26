@@ -15,7 +15,6 @@ import {Toggle} from './components';
 import {EaddRoutine} from './api';
 
 import {Alert} from 'react-native';
-import axios from 'axios';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -46,16 +45,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   };
 
   // 알림 기능
-  const [notificationEnabled, setNotificationEnabled] = useState<number>(0);
+  const [notificationEnabled, setNotificationEnabled] =
+    useState<boolean>(false);
 
   const handleNotificationChange = (newValue: 0 | 1) => {
-    setNotificationEnabled(newValue);
+    setNotificationEnabled(newValue === 1);
     if (newValue) {
       console.log('알림 on');
     } else {
       console.log('알림 off');
     }
-    5;
   };
 
   // 반복 기능
@@ -126,41 +125,38 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const selectedTime = `${hours}:${minutes}`;
         const daysString = selectedDaysOfWeek.toString();
-
+        const ertn_alram = notificationEnabled ? 1 : 0;
         console.log('111111111111111111111111');
+
         const requestData = {
-          // ertn_nm: routineName, // 루틴명
-          // ertn_set: parseInt(set), // 세트
-          // ertn_reps: parseInt(reps), // 횟수
-          // ertn_day: daysString, // 반복요일
-          // ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
-          // ertn_time: selectedTime || new Date().toTimeString(), // 시간
-          // ertn_alram: notificationEnabled, // 알림
-          ertn_nm: '루틴명', // 루틴명
-          ertn_set: 1, // 세트
-          ertn_reps: 2, // 횟수
-          ertn_day: '수요일', // 반복요일
-          ertn_sdate: '2023-10-26', // 선택된 날짜 또는 현재 날짜, // 날짜선택
-          ertn_time: '09:00', // 시간
-          ertn_alram: 1, // 알림
+          ertn_nm: routineName, // 루틴명
+          ertn_set: parseInt(set), // 세트
+          ertn_reps: parseInt(reps), // 횟수
+          ertn_day: daysString, // 반복요일
+          ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
+          ertn_time: selectedTime || new Date().toTimeString(), // 시간
+          ertn_alram: ertn_alram, // 알림
         };
+        console.log('ertn_nm type:', typeof requestData.ertn_nm);
+        console.log('ertn_set type:', typeof requestData.ertn_set);
+        console.log('ertn_reps type:', typeof requestData.ertn_reps);
+        console.log('ertn_day type:', typeof requestData.ertn_day);
+        console.log('ertn_sdate type:', typeof requestData.ertn_sdate);
+        console.log('ertn_time type:', typeof requestData.ertn_time);
+        console.log('ertn_alram type:', typeof requestData.ertn_alram);
+
         console.log('2222222222222222222222222222');
         console.log('보내는 데이터:', requestData);
         console.log('3333333333333333333');
         console.log('44444444444444444444444===', requestData);
-        const response = await axios.post(
-          'http://43.200.178.131:3344/routines',
-          requestData,
-        );
-        // {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify(requestData),
-        // }
-
+        const response = await fetch('http://43.200.178.131:3344/routines', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
         console.log('55555555555555555555555555===', response);
         if (response.status >= 200 && response.status < 300) {
           // 데이터가 성공적으로 서버에 저장되었을 때 성공 메시지를 표시합니다.

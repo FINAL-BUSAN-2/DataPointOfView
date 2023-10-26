@@ -463,35 +463,23 @@ def create_routine(routine: ERoutineCreate, request: Request):
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        # ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
+        ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                # ertn_mem=email,  # 로그인아이디필요
-                # ertn_id=ertn_id,
-                # ertn_nm=routine.ertn_nm,
-                # ertn_cat="기타",
-                # ertn_tag="기타",
-                # ertn_set=routine.ertn_set,
-                # ertn_reps=routine.ertn_reps,
-                # ertn_sdate=routine.ertn_sdate,
-                # ertn_time=routine.ertn_time,
-                # ertn_alram=routine.ertn_alram,
-                # ertn_day=routine.ertn_day,
-                # ertn_edate=routine.ertn_edate,
                 ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
-                ertn_id="qwert0175@n0000001",
-                ertn_nm="테스트입니다",
+                ertn_id=ertn_id,
+                ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
                 ertn_tag="기타",
-                ertn_set=1,
-                ertn_reps=2,
-                ertn_sdate="2023-01-01",
-                ertn_time="09:00",
-                ertn_alram=0,
-                ertn_day="수요일",
-                ertn_edate=None,
+                ertn_set=routine.ertn_set,
+                ertn_reps=routine.ertn_reps,
+                ertn_sdate=routine.ertn_sdate,
+                ertn_time=routine.ertn_time,
+                ertn_alram=routine.ertn_alram,
+                ertn_day=routine.ertn_day,
+                ertn_edate=routine.ertn_edate,
             )
             # logging.error(f"Received routine: {routine}")
             logging.error(f"Routine to add: {db_routine}")
@@ -509,65 +497,164 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# 루틴추가_건강
-@app.post("/h_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: HRoutineCreate, request: Request):
-    email = request.session["user_email"]
-    try:
-        hrtn_id = generate_unique_hrtn_id(email)
-        with SessionLocal() as db:
-            db_routine = HRTN_SETTING(
-                hrtn_mem=email,
-                hrtn_id=generate_unique_hrtn_id(
-                    request.session["user_email"]
-                ),  # 로그인아이디필요
-                hrtn_nm=routine.hrtn_nm,
-                hrtn_cat="건강",
-                hrtn_tag=routine.hrtn_tag,
-                hrtn_set=routine.hrtn_set,
-                hrtn_reps=routine.hrtn_reps,
-                hrtn_sdate=routine.hrtn_sdate,
-                hrtn_time=routine.hrtn_time,
-                hrtn_alram=routine.hrtn_alram,
-                hrtn_day=routine.hrtn_day,
-            )
-
-            db.add(db_routine)
-            db.commit()
-            db.refresh(db_routine)
-            return db_routine
-    except Exception as e:
-        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-        # return {"error": "데이터 삽입 중 오류 발생"}
+# # 루틴추가_건강
+# class HRoutineCreate(BaseModel):
+#     hrtn_mem: str
+#     hrtn_id: str
+#     hrtn_nm: str
+#     hrtn_cat: str
+#     hrtn_tag: str
+#     hrtn_set: int
+#     hrtn_reps: int
+#     hrtn_sdate: str
+#     hrtn_time: str
+#     hrtn_alram: int
+#     hrtn_day: str
+#     hrtn_edate: str
 
 
-# 루틴추가_영양
-@app.post("/p_routines")  # , response_model=RoutineCreate)
-def create_routine(routine: PRoutineCreate, request: Request):
-    email = request.session["user_email"]
-    try:
-        prtn_id = generate_unique_prtn_id(email)
-        with SessionLocal() as db:
-            db_routine = PRTN_SETTING(
-                prtn_mem=email,  # 로그인아이디필요
-                prtn_id="",
-                prtn_nm=routine.prtn_nm,
-                prtn_cat="영양",
-                prtn_tag="영양",
-                prtn_set=routine.prtn_set,
-                prtn_reps=routine.prtn_reps,
-                prtn_sdate=routine.prtn_sdate,
-                prtn_time=routine.prtn_time,
-                prtn_alram=routine.prtn_alram,
-                prtn_day=routine.prtn_day,
-            )
-            db.add(db_routine)
-            db.commit()
-            db.refresh(db_routine)
-        return db_routine
-    except Exception as e:
-        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-        # return {"error": "데이터 삽입 중 오류 발생"}
+# # hrtn_id 생성
+# def generate_unique_hrtn_id(hrtn_mem):
+#     at_index = hrtn_mem.find("@")
+
+#     if at_index != -1:
+#         first_part = hrtn_mem[:at_index]  # "@" 앞부분 추출
+#         first_char_after_at = hrtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+#         with SessionLocal() as db:
+#             max_hrtn_id = (
+#                 db.query(HRTN_SETTING.hrtn_id)
+#                 .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
+#                 .order_by(desc(HRTN_SETTING.hrtn_id))
+#                 .first()
+#             )
+#             if max_hrtn_id:
+#                 max_number = int(
+#                     max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
+#                 )  # "@" 이후부터 숫자 부분 추출
+#                 new_number = max_number + 1
+#             else:
+#                 new_number = 1
+
+#             # hrtn_id 생성
+#             hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
+#     else:
+#         raise ValueError("Invalid ertn_mem format")
+
+#     return hrtn_id
+
+
+# # 루틴추가_영양
+# class PRoutineCreate(BaseModel):
+#     prtn_nm: str
+#     prtn_set: int
+#     prtn_reps: int
+#     prtn_tag: str
+#     prtn_day: str
+#     prtn_sdate: str
+#     prtn_time: str
+#     prtn_id: str
+#     prtn_cat: str
+#     prtn_alram: int
+#     prtn_mem: str
+#     prtn_edate: str
+
+
+# # prtn_id 생성
+# def generate_unique_prtn_id(prtn_mem):
+#     at_index = prtn_mem.find("@")
+
+#     if at_index != -1:
+#         first_part = prtn_mem[:at_index]  # "@" 앞부분 추출
+#         first_char_after_at = prtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+#         with SessionLocal() as db:
+#             max_prtn_id = (
+#                 db.query(PRTN_SETTING.prtn_id)
+#                 .filter(PRTN_SETTING.prtn_mem == prtn_mem)
+#                 .order_by(desc(PRTN_SETTING.prtn_id))
+#                 .first()
+#             )
+#             if max_prtn_id:
+#                 max_number = int(
+#                     max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+#                 )  # "@" 이후부터 숫자 부분 추출
+#                 new_number = max_number + 1
+#             else:
+#                 new_number = 1
+
+#             # prtn_id 생성
+#             prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
+#     else:
+#         raise ValueError("Invalid ertn_mem format")
+
+#     return prtn_id
+
+
+# ###################
+
+
+# # 루틴추가_건강
+# @app.post("/h_routines")  # , response_model=RoutineCreate)
+# def create_routine(routine: HRoutineCreate, request: Request):
+#     email = request.session["user_email"]
+#     try:
+#         hrtn_id = generate_unique_hrtn_id(email)
+#         with SessionLocal() as db:
+#             db_routine = HRTN_SETTING(
+#                 hrtn_mem=email,
+#                 hrtn_id=generate_unique_hrtn_id(
+#                     request.session["user_email"]
+#                 ),  # 로그인아이디필요
+#                 hrtn_nm=routine.hrtn_nm,
+#                 hrtn_cat="건강",
+#                 hrtn_tag=routine.hrtn_tag,
+#                 hrtn_set=routine.hrtn_set,
+#                 hrtn_reps=routine.hrtn_reps,
+#                 hrtn_sdate=routine.hrtn_sdate,
+#                 hrtn_time=routine.hrtn_time,
+#                 hrtn_alram=routine.hrtn_alram,
+#                 hrtn_day=routine.hrtn_day,
+#             )
+
+#             db.add(db_routine)
+#             db.commit()
+#             db.refresh(db_routine)
+#             return db_routine
+#     except Exception as e:
+#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+#         # return {"error": "데이터 삽입 중 오류 발생"}
+
+
+# # 루틴추가_영양
+# @app.post("/p_routines")  # , response_model=RoutineCreate)
+# def create_routine(routine: PRoutineCreate, request: Request):
+#     email = request.session["user_email"]
+#     try:
+#         prtn_id = generate_unique_prtn_id(email)
+#         with SessionLocal() as db:
+#             db_routine = PRTN_SETTING(
+#                 prtn_mem=email,  # 로그인아이디필요
+#                 prtn_id="",
+#                 prtn_nm=routine.prtn_nm,
+#                 prtn_cat="영양",
+#                 prtn_tag="영양",
+#                 prtn_set=routine.prtn_set,
+#                 prtn_reps=routine.prtn_reps,
+#                 prtn_sdate=routine.prtn_sdate,
+#                 prtn_time=routine.prtn_time,
+#                 prtn_alram=routine.prtn_alram,
+#                 prtn_day=routine.prtn_day,
+#             )
+#             db.add(db_routine)
+#             db.commit()
+#             db.refresh(db_routine)
+#         return db_routine
+#     except Exception as e:
+#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+#         # return {"error": "데이터 삽입 중 오류 발생"}
 
 
 ####################################################### 루틴리스트 받아오기
@@ -753,9 +840,17 @@ def get_merged_routines_from_database(email):
 
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-async def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database(request.session["mem_email"])
+def read_routines(request: Request):
+    email = request.session["user_email"]
+    merged_routines = get_merged_routines_from_database(email)
     return merged_routines
+
+
+# # 루틴 데이터 가져오는 엔드포인트
+# @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
+# async def read_routines(request: Request):
+#     merged_routines = get_merged_routines_from_database(request.session["mem_email"])
+#     return merged_routines
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
