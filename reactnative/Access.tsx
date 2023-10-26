@@ -12,7 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {VictoryPie} from 'victory-native';
+// import {VictoryPie} from 'victory';
 import Balloon from 'react-native-balloon';
 
 // 화면 관리
@@ -41,11 +41,15 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState([]);
   const [chartData4, setChartData4] = useState([]);
+  const [chartData5, setChartData5] = useState([]);
+  const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
     fetchData();
     fetchData2();
     fetchData3();
     fetchData4();
+    fetchData5();
+    fetchData6();
   }, []);
 
   const fetchData = async () => {
@@ -76,14 +80,53 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     }
   };
 
+  // 차트 데이터를 가져오는 비동기 함수 정의
+  const pilllistData = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
+      // const response = await fetch('http://54.180.91.68:3306');
+      if (!response.ok) {
+        // throw new Error('Failed to fetch chart data');
+      }
+      const data4 = await response.json();
+      console.log(data4);
+      console.log(chartData4);
+      return data4;
+    } catch (error) {
+      throw new Error(`Error accessing chart data: ${error.message}`);
+    }
+  };
+
   const fetchData4 = async () => {
     try {
       const data4 = await pilllistData(); // getChartData() 호출하여 데이터 가져오기
       setChartData4(data4);
+      console.log(data4);
+      console.log(chartData4);
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
   };
+
+  const fetchData5 = async () => {
+    try {
+      const data5 = await testapi(); // getChartData() 호출하여 데이터 가져오기
+      setChartData5(data5);
+      // console.log(data5);
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+    }
+  };
+
+  // const fetchData6 = async () => {
+  //   try {
+  //     const data6 = await testapi2(); // getChartData() 호출하여 데이터 가져오기
+  //     setChartData6(data6);
+  //     console.log(data6);
+  //   } catch (error) {
+  //     console.error('Error fetching chart data:', error);
+  //   }
+  // };
 
   // 차트 데이터를 가져오는 비동기 함수 정의
   const healthPieChartData = async () => {
@@ -144,20 +187,33 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   };
 
   // 차트 데이터를 가져오는 비동기 함수 정의
-  const pilllistData = async () => {
+  const testapi = async () => {
     try {
-      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
-      // const response = await fetch('http://54.180.91.68:3306');
+      const response = await fetch('http://43.200.178.131:3344/test');
       if (!response.ok) {
         // throw new Error('Failed to fetch chart data');
       }
-      const data4 = await response.json();
-      // console.log(data4);
-      return data4;
+      const data5 = await response.json();
+      // console.log(data5);
+      return data5;
     } catch (error) {
       throw new Error(`Error accessing chart data: ${error.message}`);
     }
   };
+
+  const fetchData6 = async () => {
+    try {
+      const response = await fetch('http://43.200.178.131:3344/test2');
+      if (!response.ok) {
+      }
+      const data6 = await response.json();
+      setChartData6(data6);
+      // console.log(setChartData6);
+    } catch (error) {
+      throw new Error(`Error accessing chart data: ${error.message}`);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -210,55 +266,52 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>{userInfo}님의 오늘의 기록</Text>
+        <Text style={styles.usertext}>📍{userInfo}님의 오늘의 기록</Text>
+        {/* <View>
+          <Text>Test Data:</Text>
+          {chartData5 &&
+            chartData5.map((item, index) => (
+              <View key={index}>
+                <Text>{item.news_idx}</Text>
+              </View>
+            ))}
+        </View> */}
       </View>
+
+      <View style={styles.titletop}>
+        <View style={styles.line}></View>
+      </View>
+
+      {/* <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
+              {chartData3 &&
+                chartData3.map((item, index) => (
+                  <Text key={`dataPoint-${index}`}>ㆍ{item.hrtn_id}</Text>
+                ))} */}
 
       {/* 바디 */}
-      <View style={styles.body}>
-        <View style={styles.balloonbox}>
-          <Balloon
-            containerStyle={{right: 10}}
-            borderWidth={2}
-            borderRadius={20}
-            triangleDirection="right"
-            triangleSize={12}
-            width={125}
-            height={200}
-            triangleOffset="20%">
-            <ScrollView>
-              <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
-              {chartData3.map((dataPoint, index) => (
-                <Text key={`dataPoint-${index}`}>ㆍ{dataPoint.name}</Text>
-              ))}
-            </ScrollView>
-          </Balloon>
+      <View style={styles.topcontainer}>
+        <View style={styles.tophealth}>
+          <View style={styles.tophealthtitle}>
+            <Text style={styles.tophealthtitletext}>운동 Top</Text>
+          </View>
+          <View style={styles.tophealthemoji}></View>
+          <View style={styles.tophealthtag}></View>
         </View>
-        <View style={styles.bodybox}>
-          <Image
-            source={require('./android/app/src/img/staticbody.png')}
-            style={styles.bodyimg}
-          />
+        <View style={styles.toppill}>
+          <View style={styles.toppilltitle}>
+            <Text style={styles.toppilltitletext}>영양 Top</Text>
+          </View>
+          <View style={styles.toppillemoji}></View>
+          <View style={styles.toppilltag}></View>
         </View>
-        <View style={styles.pilllist}>
-          <Balloon
-            borderWidth={2}
-            borderRadius={20}
-            triangleDirection="left"
-            triangleSize={12}
-            width={125}
-            height={200}
-            triangleOffset="20%">
-            <ScrollView>
-              <Text style={styles.statictext}>💊 섭취한 영양 {'\n'}</Text>
-              {chartData4.map((dataPoint, index) => (
-                <Text key={`dataPoint-${index}`}>ㆍ{dataPoint.name}</Text>
-              ))}
-            </ScrollView>
-          </Balloon>
+        <View style={styles.fin}>
+          <View style={styles.fintitle}>
+            <Text style={styles.fintitletext}>달성률</Text>
+          </View>
+          <View style={styles.finemoji}></View>
+          <View style={styles.finper}></View>
         </View>
       </View>
-
-      <View style={styles.line}></View>
 
       {/* 통계 */}
       <View style={styles.titlecontainer}>
@@ -272,7 +325,13 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       <View style={styles.statistics}>
         <View style={styles.chart}>
           <View style={styles.healthchart}>
-            <VictoryPie
+            {/* {chartData2.map((dataPoint, index) => (
+              <Text key={index}>
+                ㆍ{dataPoint.func}
+                {dataPoint.count}
+              </Text>
+            ))} */}
+            {/* <VictoryPie
               data={chartData.map(dataPoint => ({
                 x: dataPoint.tag,
                 y: dataPoint.count,
@@ -282,10 +341,16 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               radius={40} // 반지름
               innerRadius={15}
               colorScale={chartData.map(dataPoint => dataPoint.color)}
-            />
+            /> */}
           </View>
           <View style={styles.pillchart}>
-            <VictoryPie
+            {chartData2.map((dataPoint, index) => (
+              <Text key={index}>
+                ㆍ{dataPoint.func}
+                {dataPoint.count}
+              </Text>
+            ))}
+            {/* <VictoryPie
               data={chartData2.map(dataPoint2 => ({
                 x: dataPoint2.func,
                 y: dataPoint2.count,
@@ -295,9 +360,12 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               radius={40} // 반지름
               innerRadius={15}
               colorScale={chartData2.map(dataPoint2 => dataPoint2.color)}
-            />
+            /> */}
           </View>
         </View>
+
+        <View style={styles.line}></View>
+
         <View style={styles.statisticstextbox}>
           <Text style={styles.recotext}>
             👍 : "비타민"을(를) 섭취하시는 걸 추천드려요
@@ -393,7 +461,7 @@ const styles = StyleSheet.create({
   },
   // user 정보
   userinfo: {
-    flex: 1,
+    flex: 0.5,
   },
   usertext: {
     fontSize: 18,
@@ -402,36 +470,118 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // 바디
-  body: {
-    flex: 4,
+  // 통계 랭킹
+  topcontainer: {
+    flex: 2.5,
+    alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    backgroundColor: 'rgb(245,235,224)',
+    borderRadius: 20,
+    width: '90%',
+  },
+  tophealth: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  tophealthtitle: {
+    flex: 1,
+    alignSelf: 'center',
     alignItems: 'center',
-    bottom: 5,
-  },
-  balloonbox: {
-    flex: 1,
-    left: 20,
-  },
-  bodybox: {
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  bodyimg: {
-    width: '70%',
-    height: '100%',
-  },
-  pilllist: {
-    flex: 1,
-    right: 20,
-  },
-  statictext: {
+  tophealthtitletext: {
+    alignSelf: 'center',
     fontWeight: 'bold',
     color: 'black',
   },
+  tophealthemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  tophealthtag: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
+  toppill: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  toppilltitle: {
+    flex: 1,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toppilltitletext: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  toppillemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  toppilltag: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
+  fin: {flex: 1, flexDirection: 'column'},
+  fintitle: {
+    flex: 1,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fintitletext: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  finemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  finper: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
   // 선
+  titletop: {
+    flex: 0.3,
+  },
   line: {
     width: '80%',
     height: 2,
@@ -488,29 +638,35 @@ const styles = StyleSheet.create({
   chart: {
     flex: 5,
     width: '80%',
-    borderWidth: 5,
-    borderColor: 'rgb(231,230,230)',
-    borderRadius: 30,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginBottom: 20,
   },
   healthchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    //테두리, 이후 지우기
+    borderColor: 'rgb(231,230,230)',
+    borderWidth: 2,
+    borderRadius: 15,
   },
   pillchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    //테두리, 이후 지우기
+    borderColor: 'rgb(231,230,230)',
+    borderWidth: 2,
+    borderRadius: 15,
   },
   // 통계 텍스트 영역
   statisticstextbox: {
     flex: 5,
     height: 100,
     alignSelf: 'center',
-    paddingTop: 10,
+    marginTop: 20,
   },
   recotext: {
     fontSize: 15,
