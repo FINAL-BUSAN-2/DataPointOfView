@@ -115,9 +115,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const handleSubmit = async () => {
     if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
-      Alert.alert('모든 항목을 작성해 주세요.');
+      Alert.alert('모든 필수 항목을 작성해 주세요.');
+    } else if (!selectedDate) {
+      Alert.alert('오류', '날짜를 선택해 주세요.');
+    } else if (selectedDaysOfWeek.length === 0) {
+      Alert.alert('오류', '반복 요일을 선택해 주세요.');
     } else {
-      Alert.alert(selectedTime);
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
         const response = await fetch('http://43.200.178.131:3344/routines', {
@@ -143,6 +146,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         } else {
           // 서버에서 오류 응답을 받았을 경우 에러 메시지를 표시합니다.
           Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+          console.error('서버 응답 오류:', response.status);
         }
       } catch (error) {
         // 네트워크 오류 또는 예상치 못한 오류가 발생하면 에러 메시지를 표시할 수 있습니다.
