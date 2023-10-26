@@ -325,6 +325,12 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       <View style={styles.statistics}>
         <View style={styles.chart}>
           <View style={styles.healthchart}>
+            {/* {chartData2.map((dataPoint, index) => (
+              <Text key={index}>
+                ㆍ{dataPoint.func}
+                {dataPoint.count}
+              </Text>
+            ))} */}
             {/* <VictoryPie
               data={chartData.map(dataPoint => ({
                 x: dataPoint.tag,
