@@ -127,7 +127,7 @@ const Main: React.FC<MainProps> = ({
               }}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>HP-log / {userInfo}님</Text>
+          <Text style={styles.title}>하루로그</Text>
         </View>
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>

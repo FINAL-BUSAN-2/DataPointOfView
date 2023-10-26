@@ -199,15 +199,15 @@ class ERTN_SETTING(Base):
     __tablename__ = "ertn_setting"
     ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     ertn_id = Column(String(50), primary_key=True)
-    ertn_nm = Column(String(100), nullable=False)
-    ertn_cat = Column(String(20), nullable=False)
-    ertn_tag = Column(String(60), nullable=False)
-    ertn_set = Column(Integer, nullable=False)
-    ertn_reps = Column(Integer, nullable=False)
-    ertn_sdate = Column(String(10), nullable=False)
-    ertn_time = Column(String(50), nullable=False)
-    ertn_alram = Column(Integer, nullable=False)
-    ertn_day = Column(String(50), nullable=False)
+    ertn_nm = Column(String(100))  # nullable=False
+    ertn_cat = Column(String(20))  # nullable=False
+    ertn_tag = Column(String(60))  # nullable=False
+    ertn_set = Column(Integer)  # nullable=False
+    ertn_reps = Column(Integer)  # nullable=False
+    ertn_sdate = Column(String(10))  # nullable=False
+    ertn_time = Column(String(50))  # nullable=False
+    ertn_alram = Column(Integer)  # nullable=False
+    ertn_day = Column(String(50), nullable=True)
     ertn_edate = Column(String(10), nullable=True)
 
 
@@ -840,7 +840,7 @@ def get_merged_routines_from_database(email):
 
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-def read_routines(request: Request):
+def read_routines(request: Request, db: Session = Depends(get_db)):
     email = request.session["user_email"]
     merged_routines = get_merged_routines_from_database(email)
     return merged_routines
