@@ -266,69 +266,52 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>{userInfo}님의 오늘의 기록</Text>
-        <View>
+        <Text style={styles.usertext}>📍{userInfo}님의 오늘의 기록</Text>
+        {/* <View>
           <Text>Test Data:</Text>
           {chartData5 &&
             chartData5.map((item, index) => (
               <View key={index}>
                 <Text>{item.news_idx}</Text>
-                {/*Render other properties as needed */}
               </View>
             ))}
-        </View>
+        </View> */}
       </View>
 
-      {/* 바디 */}
-      <View style={styles.body}>
-        <View style={styles.balloonbox}>
-          <Balloon
-            containerStyle={{right: 10}}
-            borderWidth={2}
-            borderRadius={20}
-            triangleDirection="right"
-            triangleSize={12}
-            width={125}
-            height={200}
-            triangleOffset="20%">
-            <ScrollView>
-              <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
+      <View style={styles.titletop}>
+        <View style={styles.line}></View>
+      </View>
+
+      {/* <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
               {chartData3 &&
                 chartData3.map((item, index) => (
                   <Text key={`dataPoint-${index}`}>ㆍ{item.hrtn_id}</Text>
-                ))}
-            </ScrollView>
-          </Balloon>
+                ))} */}
+
+      {/* 바디 */}
+      <View style={styles.topcontainer}>
+        <View style={styles.tophealth}>
+          <View style={styles.tophealthtitle}>
+            <Text style={styles.tophealthtitletext}>운동 Top</Text>
+          </View>
+          <View style={styles.tophealthemoji}></View>
+          <View style={styles.tophealthtag}></View>
         </View>
-        <View style={styles.bodybox}>
-          <Image
-            source={require('./android/app/src/img/staticbody.png')}
-            style={styles.bodyimg}
-          />
+        <View style={styles.toppill}>
+          <View style={styles.toppilltitle}>
+            <Text style={styles.toppilltitletext}>영양 Top</Text>
+          </View>
+          <View style={styles.toppillemoji}></View>
+          <View style={styles.toppilltag}></View>
         </View>
-        <View style={styles.pilllist}>
-          <Balloon
-            borderWidth={2}
-            borderRadius={20}
-            triangleDirection="left"
-            triangleSize={12}
-            width={125}
-            height={200}
-            triangleOffset="20%">
-            <ScrollView>
-              <Text style={styles.statictext}>💊 섭취한 영양 {'\n'}</Text>
-              {chartData4.map((dataPoint, index) => (
-                <Text key={index}>
-                  ㆍ{dataPoint.name}
-                  {dataPoint.email}
-                </Text>
-              ))}
-            </ScrollView>
-          </Balloon>
+        <View style={styles.fin}>
+          <View style={styles.fintitle}>
+            <Text style={styles.fintitletext}>달성률</Text>
+          </View>
+          <View style={styles.finemoji}></View>
+          <View style={styles.finper}></View>
         </View>
       </View>
-
-      <View style={styles.line}></View>
 
       {/* 통계 */}
       <View style={styles.titlecontainer}>
@@ -374,6 +357,9 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             /> */}
           </View>
         </View>
+
+        <View style={styles.line}></View>
+
         <View style={styles.statisticstextbox}>
           <Text style={styles.recotext}>
             👍 : "비타민"을(를) 섭취하시는 걸 추천드려요
@@ -469,7 +455,7 @@ const styles = StyleSheet.create({
   },
   // user 정보
   userinfo: {
-    flex: 1,
+    flex: 0.5,
   },
   usertext: {
     fontSize: 18,
@@ -478,36 +464,118 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // 바디
-  body: {
-    flex: 4,
+  // 통계 랭킹
+  topcontainer: {
+    flex: 2.5,
+    alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    backgroundColor: 'rgb(245,235,224)',
+    borderRadius: 20,
+    width: '90%',
+  },
+  tophealth: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  tophealthtitle: {
+    flex: 1,
+    alignSelf: 'center',
     alignItems: 'center',
-    bottom: 5,
-  },
-  balloonbox: {
-    flex: 1,
-    left: 20,
-  },
-  bodybox: {
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  bodyimg: {
-    width: '70%',
-    height: '100%',
-  },
-  pilllist: {
-    flex: 1,
-    right: 20,
-  },
-  statictext: {
+  tophealthtitletext: {
+    alignSelf: 'center',
     fontWeight: 'bold',
     color: 'black',
   },
+  tophealthemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  tophealthtag: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
+  toppill: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  toppilltitle: {
+    flex: 1,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toppilltitletext: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  toppillemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  toppilltag: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
+  fin: {flex: 1, flexDirection: 'column'},
+  fintitle: {
+    flex: 1,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fintitletext: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  finemoji: {
+    flex: 2,
+    alignSelf: 'center',
+    width: '65%',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 150,
+    borderColor: 'rgb(175,171,171)',
+    backgroundColor: 'white',
+  },
+  finper: {
+    alignSelf: 'center',
+    width: '70%',
+    marginTop: 10,
+    marginBottom: 15,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: 'rgb(206,119,119)',
+  },
   // 선
+  titletop: {
+    flex: 0.3,
+  },
   line: {
     width: '80%',
     height: 2,
@@ -564,29 +632,35 @@ const styles = StyleSheet.create({
   chart: {
     flex: 5,
     width: '80%',
-    borderWidth: 5,
-    borderColor: 'rgb(231,230,230)',
-    borderRadius: 30,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginBottom: 20,
   },
   healthchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    //테두리, 이후 지우기
+    borderColor: 'rgb(231,230,230)',
+    borderWidth: 2,
+    borderRadius: 15,
   },
   pillchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    //테두리, 이후 지우기
+    borderColor: 'rgb(231,230,230)',
+    borderWidth: 2,
+    borderRadius: 15,
   },
   // 통계 텍스트 영역
   statisticstextbox: {
     flex: 5,
     height: 100,
     alignSelf: 'center',
-    paddingTop: 10,
+    marginTop: 20,
   },
   recotext: {
     fontSize: 15,
