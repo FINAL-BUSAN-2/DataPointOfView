@@ -45,15 +45,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   };
 
   // 알림 기능
-  const [notificationEnabled, setNotificationEnabled] =
-    useState<boolean>(false);
-  const handleNotificationChange = (newValue: any) => {
+  const [notificationEnabled, setNotificationEnabled] = useState<number>(0);
+
+  const handleNotificationChange = (newValue: 0 | 1) => {
     setNotificationEnabled(newValue);
     if (newValue) {
       console.log('알림 on');
     } else {
       console.log('알림 off');
     }
+    5;
   };
 
   // 반복 기능
@@ -123,19 +124,29 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const selectedTime = `${hours}:${minutes}`;
+        const daysString = selectedDaysOfWeek.toString();
 
+        console.log('111111111111111111111111');
         const requestData = {
-          ertn_nm: routineName, // 루틴명
-          ertn_set: parseInt(set), // 세트
-          ertn_reps: parseInt(reps), // 횟수
-          ertn_day: selectedDaysOfWeek, // 반복요일
-          ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
-          ertn_time: selectedTime || new Date().toTimeString(), // 시간
-          ertn_alram: notificationEnabled, // 알림
+          // ertn_nm: routineName, // 루틴명
+          // ertn_set: parseInt(set), // 세트
+          // ertn_reps: parseInt(reps), // 횟수
+          // ertn_day: daysString, // 반복요일
+          // ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
+          // ertn_time: selectedTime || new Date().toTimeString(), // 시간
+          // ertn_alram: notificationEnabled, // 알림
+          ertn_nm: '루틴명', // 루틴명
+          ertn_set: 1, // 세트
+          ertn_reps: 2, // 횟수
+          ertn_day: '수요일', // 반복요일
+          ertn_sdate: '2023-10-26', // 선택된 날짜 또는 현재 날짜, // 날짜선택
+          ertn_time: '09:00', // 시간
+          ertn_alram: 1, // 알림
         };
-
+        console.log('2222222222222222222222222222');
         console.log('보내는 데이터:', requestData);
-
+        console.log('3333333333333333333');
+        console.log('44444444444444444444444===', requestData);
         const response = await fetch('http://43.200.178.131:3344/routines', {
           method: 'POST',
           headers: {
@@ -144,8 +155,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           },
           body: JSON.stringify(requestData),
         });
-
-        if (response.status === 200) {
+        console.log('55555555555555555555555555===', response);
+        if (response.status >= 200 && response.status < 300) {
           // 데이터가 성공적으로 서버에 저장되었을 때 성공 메시지를 표시합니다.
           Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
         } else {
