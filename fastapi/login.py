@@ -462,30 +462,44 @@ def generate_unique_prtn_id(prtn_mem):
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     email = request.session["user_email"]
+    # 라우터에 전달된 데이터 출력
+    print(f"Received routine data: {routine}")
     try:
         # Create a unique ertn_id
-        ertn_id = generate_unique_ertn_id(email)
+        ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
 
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=email,  # 로그인아이디필요
+                # ertn_mem=email,  # 로그인아이디필요
+                # ertn_id=ertn_id,
+                # ertn_nm=routine.ertn_nm,
+                # ertn_cat="기타",
+                # ertn_tag="기타",
+                # ertn_set=routine.ertn_set,
+                # ertn_reps=routine.ertn_reps,
+                # ertn_sdate=routine.ertn_sdate,
+                # ertn_time=routine.ertn_time,
+                # ertn_alram=routine.ertn_alram,
+                # ertn_day=routine.ertn_day,
+                # ertn_edate=routine.ertn_edate,
+                ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
                 ertn_id=ertn_id,
-                ertn_nm=routine.ertn_nm,
+                ertn_nm="테스트입니다",
                 ertn_cat="기타",
                 ertn_tag="기타",
-                ertn_set=routine.ertn_set,
-                ertn_reps=routine.ertn_reps,
-                ertn_sdate=routine.ertn_sdate,
-                ertn_time=routine.ertn_time,
-                ertn_alram=routine.ertn_alram,
-                ertn_day=routine.ertn_day,
-                ertn_edate=routine.ertn_edate,
+                ertn_set=1,
+                ertn_reps=2,
+                ertn_sdate="2023-01-01",
+                ertn_time="09:00",
+                ertn_alram=0,
+                ertn_day="수요일",
+                ertn_edate=None,
             )
 
             db.add(db_routine)
             db.commit()
             db.refresh(db_routine)
-
+            print('11111111111111111111111111111111')
         return db_routine
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
