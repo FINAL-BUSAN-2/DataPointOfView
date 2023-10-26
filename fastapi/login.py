@@ -139,8 +139,8 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
-    # request.session["user_age"] = user_info["kakao_account"]["age_range"]
-    # request.session["user_gender"] = user_info["kakao_account"]["gender"]
+    request.session["user_age"] = user_info["kakao_account"]["age_range"]
+    request.session["user_gender"] = user_info["kakao_account"]["gender"]
 
     encoded_user_info = quote(str(request.session["user_name"]))
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
@@ -152,8 +152,8 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         new_user = Mem_Detail(
             mem_email=user_info["kakao_account"]["email"],
             mem_name=user_info["kakao_account"]["profile"]["nickname"],
-            # mem_age=user_info["kakao_account"]["age_range"],
-            # mem_gen=user_info["kakao_account"]["gender"],
+            mem_age=user_info["kakao_account"]["age_range"],
+            mem_gen=user_info["kakao_account"]["gender"],
             mem_sday=sday,
             mem_delete=0,
         )
