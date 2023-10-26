@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   ScrollView,
@@ -27,8 +27,10 @@ interface RoutineAddProps {
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   const devices = useCameraDevices();
   const device = useCameraDevice('back');
+  const camera = React.useRef(null);
   // 카메라 오픈 여부 상태 추가
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraImgPath, setCameraImgPath] = useState('');
   // 카메라 아이콘 클릭 핸들러
   const handleCameraButtonClick = () => {
     setIsCameraOpen(true);
@@ -147,20 +149,56 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       }
     }
   };
-  //
+  // 사진찍기
+  const onPressButton = async () => {
+    if (!camera.current) return;
+    const photo = await camera.current.takePhoto({
+      flash: 'off',
+      qualityPrioritization: 'speed',
+    });
+
+    Alert.alert(photo.path);
+    setCameraImgPath(photo.path);
+  };
+
   return (
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'<  운동루틴추가하기'}</Text>
+          <Text style={styles.backButton}>{'<  운동 루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
 
       {isCameraOpen && device !== null ? (
-        <View style={styles.cameraContainer}>
-          <Camera style={styles.camera} device={device} />
-        </View>
+        cameraImgPath !== '' ? (
+          <View>
+            <Image
+              source={{uri: cameraImgPath}}
+              style={{width: 100, height: 100}}
+            />{' '}
+            {/* 이미지 크기는 예시입니다. 원하는 대로 조절하세요. */}
+          </View>
+        ) : (
+          <View style={styles.cameraContainer}>
+            <Camera
+              style={styles.camera}
+              device={device}
+              photo={true}
+              isActive={true}
+              ref={camera}
+            />
+          </View>
+        )
       ) : (
+        // <View style={styles.cameraContainer}>
+        //   <Camera
+        //     style={styles.camera}
+        //     device={device}
+        //     photo={true}
+        //     isActive={true}
+        //     ref={camera}
+        //   />
+        // </View>
         <View style={styles.container}>
           <ScrollView>
             <View style={{flex: 3}}>
@@ -169,42 +207,49 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
                 <View style={{flex: 1, flexDirection: 'row'}}>
                   {/* 왼쪽 공간 */}
-                  <View style={{flex: 1, borderWidth: 1, borderColor: 'red'}}>
+                  {/* borderColor: 'red ,borderWidth: 1*/}
+                  <View style={{flex: 1}}>
                     {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                     <View style={{flex: 5, flexDirection: 'column'}}>
                       {/* 위쪽 공간 */}
                       <View
-                        style={{flex: 1, borderWidth: 1, borderColor: 'green'}}>
+                        style={{
+                          flex: 2.6,
+                          //borderWidth: 1,
+                          //borderColor: 'green',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
                         {/* 위쪽 컨텐츠 */}
                         <Text>운동인식</Text>
                       </View>
                       {/* 아래쪽 공간 */}
-                      <View
-                        style={{flex: 1, borderWidth: 1, borderColor: 'blue'}}>
+                      {/* borderColor: 'blue',borderWidth: 1 */}
+                      <View style={{flex: 1}}>
                         {/* 아래쪽 컨텐츠 */}
                         {/* <Text>카메라</Text> */}
                         {/* 카메라 아이콘 */}
-                        <TouchableOpacity onPress={() => setIsCameraOpen(true)}>
+                        <TouchableOpacity
+                          onPress={() => handleCameraButtonClick()}>
                           <Image
                             source={require('./android/app/src/img/camera.png')}
                             style={styles.cameraicon}
                           />
                         </TouchableOpacity>
                       </View>
-
                     </View>
                   </View>
                   {/* 오른쪽 공간 */}
                   <View
-                    style={{flex: 3, borderWidth: 1, borderColor: 'orange'}}>
+                    // borderColor: 'orange',borderWidth: 1
+                    style={{flex: 3}}>
                     {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                     <View style={{flex: 1, flexDirection: 'column'}}>
                       {/* 위쪽 공간 (오른쪽 위) */}
+                      {/* borderColor: 'purple',borderWidth: 1 */}
                       <View
                         style={{
                           flex: 1,
-                          borderWidth: 1,
-                          borderColor: 'purple',
                         }}>
                         {/* 위쪽 컨텐츠 (오른쪽 위) */}
                         {/* <Text>태그4</Text> */}
@@ -223,7 +268,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>상체</Text>
+                            <Text style={{color: 'white'}}>상체</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity
@@ -233,7 +278,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>하체</Text>
+                            <Text style={{color: 'white'}}>하체</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity
@@ -243,7 +288,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>코어</Text>
+                            <Text style={{color: 'white'}}>코어</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity
@@ -253,13 +298,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>기타</Text>
+                            <Text style={{color: 'white'}}>기타</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
                       {/* 아래쪽 공간 (오른쪽 아래) */}
-                      <View
-                        style={{flex: 1, borderWidth: 1, borderColor: 'pink'}}>
+                      {/* borderColor: 'pink' */}
+                      <View style={{flex: 1}}>
                         {/* 아래쪽 컨텐츠 (오른쪽 아래) */}
                         <View
                           style={{
@@ -276,7 +321,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>스트레칭</Text>
+                            <Text style={{color: 'white'}}>스트레칭</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity
@@ -286,7 +331,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                                 ? styles.selectedButton
                                 : styles.button
                             }>
-                            <Text>유산소</Text>
+                            <Text style={{color: 'white'}}>유산소</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -422,7 +467,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         </View>
       )}
       {isCameraOpen && device !== null ? (
-        <TouchableOpacity style={styles.addContainer}>
+        <TouchableOpacity onPress={onPressButton} style={styles.addContainer}>
           <View style={styles.addTab}>
             <Text style={styles.addtext}>찰칵찰칵</Text>
           </View>
@@ -631,6 +676,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000',
     borderRadius: 5,
+    backgroundColor: 'rgb(127,127,127)',
   },
 
   selectedButton: {
@@ -638,7 +684,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 1,
     borderColor: '#000',
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: 'rgb(43,58,85)',
     borderRadius: 5,
   },
 
@@ -658,7 +704,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -666,6 +712,7 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
   cameraContainer: {
     flex: 1,

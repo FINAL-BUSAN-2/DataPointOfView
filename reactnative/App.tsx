@@ -12,12 +12,13 @@ import HplogSet from './hplogset';
 import Access from './Access';
 import Social from './Social';
 import NewsInfo from './NewsInfo';
+import Search from './serch';
 
 const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(false);
+  const [isLogin, setLogin] = useState(true);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   function SetWrapper(props) {
@@ -103,6 +104,7 @@ function App() {
             <Stack.Screen name="hplogset" component={SetWrapper} />
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
+            <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="Etc" component={Etc} />
 
             <Stack.Screen name="Access" component={AccessWrapper} />

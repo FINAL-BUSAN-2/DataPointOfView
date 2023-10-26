@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 ///// 건강-입력된 값 DB로 전송
 export const HaddRoutine = async (
   hrtn_nm,
@@ -18,7 +20,7 @@ export const HaddRoutine = async (
       hrtn_day: String(hrtn_day), //반복요일
       hrtn_sdate: hrtn_sdate, //날짜
       hrtn_time: hrtn_time, //시간
-      hrtn_mem: 'abc123@gmail.com',
+      hrtn_mem: '',
       hrtn_id: '',
       hrtn_cat: '건강',
       hrtn_alram: 1,
@@ -77,31 +79,34 @@ export const EaddRoutine = async (
   ertn_nm,
   ertn_set,
   ertn_reps,
-  ertn_tag,
+  //ertn_tag,
   ertn_day,
   ertn_sdate = selectedDate,
-  ertn_time = selectedTime,
-  ertn_alram = notificationEnabled,
+  selectedTime,
+  notificationEnabled,
 ) => {
   try {
     const data = {
       ertn_nm: String(ertn_nm), // 루틴명
       ertn_set: ertn_set, // 1일 반복 횟수
       ertn_reps: ertn_reps, // 1일 반복 갯수
-      ertn_tag: String(ertn_tag), // 태그
+      ertn_tag: '기타', // 태그
       ertn_day: String(ertn_day), //반복요일
       ertn_sdate: ertn_sdate, //날짜
-      ertn_time: ertn_time, //시간
-      ertn_mem: 'lei4le123h@naver.com',
+      ertn_time: selectedTime, //시간
+      ertn_mem: 'qwert0175@naver.com',
       ertn_id: '',
       ertn_cat: '기타',
-      ertn_alram: ertn_alram,
+      ertn_alram: notificationEnabled,
       ertn_edate: '',
     };
-    // ertn_alram: ertn_alram, // Pass 0 or 1
-    const response = await fetch('http://43.200.178.131:3344/routines', data);
+
+    const response = await axios.post(
+      'http://43.200.178.131:3344/routines',
+      data,
+    );
     // http://43.200.178.131:3344 개발머신의 애뮬레이터 네트워크 상에서 10.0.2.2로 사용
-    console.log(response.data);
+    console.log(response.data, data);
   } catch (error) {
     console.error(error.message); // 기본적인 오류 메시지
     if (error.response) {

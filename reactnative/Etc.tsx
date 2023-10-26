@@ -66,14 +66,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
   // const [tagsEnabled, setTagsEnabled] = useState<string>('');
 
   // 루틴명 입력 핸들러
+  // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
     setRoutineName(text);
   };
-  // 아이콘 추가 핸들러
-  const handleAddButtonClick = () => {
-    console.log('+버튼 클릭');
-    // 여기에 "+" 버튼이 클릭됐을 때의 로직을 구현하세요.
-  };
+
   // 몇회 입력 핸들러
   const handleSetChange = (text: string) => {
     //숫자가 아닌 문자가 입력될 경우 입력x (숫자가아닌문자는빈문자열로바꿈)
@@ -120,22 +117,35 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 항목을 작성해 주세요.');
     } else {
+      Alert.alert(selectedTime);
       // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-        await EaddRoutine(
-          routineName, // 루틴명
-          parseInt(set), // 세트
-          parseInt(reps), // 횟수
-          //tagsEnabled, // 태그
-          selectedDaysOfWeek, // 반복요일
-          selectedDate, // 날짜선택
-          selectedTime, // 시간
-        );
+        const response = await fetch('http://43.200.178.131:3344/routines', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ertn_nm: routineName, // 루틴명
+            ertn_set: parseInt(set), // 세트
+            ertn_reps: parseInt(reps), // 횟수
+            ertn_day: selectedDaysOfWeek, // 반복요일
+            ertn_sdate: selectedDate, // 날짜선택
+            ertn_time: selectedTime, // 시간
+            ertn_alram: notificationEnabled, // 알림
+          }),
+        });
 
-        // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
-        Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        if (response.status === 200) {
+          // 데이터가 성공적으로 서버에 저장되었을 때 성공 메시지를 표시합니다.
+          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        } else {
+          // 서버에서 오류 응답을 받았을 경우 에러 메시지를 표시합니다.
+          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+        }
       } catch (error) {
-        // 에러가 발생하면 에러 메시지를 표시할 수 있습니다.
+        // 네트워크 오류 또는 예상치 못한 오류가 발생하면 에러 메시지를 표시할 수 있습니다.
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         console.error('루틴 추가 오류:', error);
       }
@@ -147,7 +157,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'< 기타루틴 추가하기'}</Text>
+          <Text style={styles.backButton}>{'< 기타 루틴 추가하기'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -162,23 +172,23 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 placeholder="루틴명을 입력해 주세요!"
               />
               {/* 카메라 아이콘 */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
                 <Image
                   source={require('./android/app/src/img/camera.png')}
                   style={styles.cameraicon}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {/* 루틴 아이콘 */}
-            <View style={styles.Routineicon}>
+            {/* <View style={styles.Routineicon}>
               <TouchableOpacity onPress={handleAddButtonClick}>
                 <Image
                   source={require('./android/app/src/img/flo_ex.png')}
                   style={styles.Routineicon_add}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
 
           {/*일%회 입력 박스 */}
@@ -579,6 +589,7 @@ const styles = StyleSheet.create({
   addtext: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
 
   header: {
@@ -592,7 +603,7 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
     color: 'black',
