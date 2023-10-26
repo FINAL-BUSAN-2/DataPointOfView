@@ -15,6 +15,7 @@ import {Toggle} from './components';
 import {EaddRoutine} from './api';
 
 import {Alert} from 'react-native';
+import axios from 'axios';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -147,14 +148,19 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         console.log('보내는 데이터:', requestData);
         console.log('3333333333333333333');
         console.log('44444444444444444444444===', requestData);
-        const response = await fetch('http://43.200.178.131:3344/routines', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        });
+        const response = await axios.post(
+          'http://43.200.178.131:3344/routines',
+          requestData,
+        );
+        // {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify(requestData),
+        // }
+
         console.log('55555555555555555555555555===', response);
         if (response.status >= 200 && response.status < 300) {
           // 데이터가 성공적으로 서버에 저장되었을 때 성공 메시지를 표시합니다.
