@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
 
-from sqlalchemy import create_engine, Column, String, Integer, func, or_
+from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -139,8 +139,6 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
-    request.session["user_age"] = user_info["kakao_account"]["age_range"]
-    request.session["user_gender"] = user_info["kakao_account"]["gender"]
 
     encoded_user_info = quote(str(request.session["user_name"]))
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
@@ -175,8 +173,6 @@ async def kakao_logout_callback(request: Request):
     request.session.pop("user_email", None)
     request.session.pop("user_name", None)
     request.session.pop("access_token", None)
-    request.session.pop("user_age", None)
-    request.session.pop("user_gender", None)
     return {"message": "로그아웃 되었습니다."}
 
 
@@ -359,6 +355,102 @@ def generate_unique_ertn_id(ertn_mem):
         raise ValueError("Invalid ertn_mem format")
 
     return ertn_id
+
+
+# 루틴추가_건강
+class HRoutineCreate(BaseModel):
+    hrtn_mem: str
+    hrtn_id: str
+    hrtn_nm: str
+    hrtn_cat: str
+    hrtn_tag: str
+    hrtn_set: int
+    hrtn_reps: int
+    hrtn_sdate: str
+    hrtn_time: str
+    hrtn_alram: int
+    hrtn_day: str
+    hrtn_edate: str
+
+
+# hrtn_id 생성
+def generate_unique_hrtn_id(hrtn_mem):
+    at_index = hrtn_mem.find("@")
+
+    if at_index != -1:
+        first_part = hrtn_mem[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = hrtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+        with SessionLocal() as db:
+            max_hrtn_id = (
+                db.query(HRTN_SETTING.hrtn_id)
+                .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
+                .order_by(desc(HRTN_SETTING.hrtn_id))
+                .first()
+            )
+            if max_hrtn_id:
+                max_number = int(
+                    max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                )  # "@" 이후부터 숫자 부분 추출
+                new_number = max_number + 1
+            else:
+                new_number = 1
+
+            # hrtn_id 생성
+            hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
+    return hrtn_id
+
+
+# 루틴추가_영양
+class PRoutineCreate(BaseModel):
+    prtn_nm: str
+    prtn_set: int
+    prtn_reps: int
+    prtn_tag: str
+    prtn_day: str
+    prtn_sdate: str
+    prtn_time: str
+    prtn_id: str
+    prtn_cat: str
+    prtn_alram: int
+    prtn_mem: str
+    prtn_edate: str
+
+
+# prtn_id 생성
+def generate_unique_prtn_id(prtn_mem):
+    at_index = prtn_mem.find("@")
+
+    if at_index != -1:
+        first_part = prtn_mem[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = prtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
+        with SessionLocal() as db:
+            max_prtn_id = (
+                db.query(PRTN_SETTING.prtn_id)
+                .filter(PRTN_SETTING.prtn_mem == prtn_mem)
+                .order_by(desc(PRTN_SETTING.prtn_id))
+                .first()
+            )
+            if max_prtn_id:
+                max_number = int(
+                    max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
+                )  # "@" 이후부터 숫자 부분 추출
+                new_number = max_number + 1
+            else:
+                new_number = 1
+
+            # prtn_id 생성
+            prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
+    else:
+        raise ValueError("Invalid ertn_mem format")
+
+    return prtn_id
 
 
 # 루틴추가_기타
@@ -813,19 +905,19 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(db: Session = Depends(get_db)):
-    # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
+def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
+    # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
         db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
-        .join(
-            HRTN_SETTING,
-            HRTN_SETTING.hrtn_nm
-            == func.substr(HEALTH.health_nm, 1, func.length(HRTN_SETTING.hrtn_nm)),
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+            )
         )
-        .filter(HRTN_FIN.hrtn_id.in_(hrtn_ids_query))
         .group_by(HEALTH.health_tag)
         .all()
     )
@@ -952,21 +1044,19 @@ def get_color_by_func(func):
 
 
 @app.get("/pill_listdata")
-def get_pill_list_data(db: Session = Depends(get_db)):
+def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
     pill_names_query = (
         db.query(PILL_PROD.pill_nm)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)))
+        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
         .distinct()
         .all()
     )
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_list_data = [
-        {
-            "name": pill_name[0],
-        }
+        {"name": pill_name[0], "email": request.session["user_email"]}
         for pill_name in pill_names_query
     ]
 
@@ -980,6 +1070,6 @@ def test(db: Session = Depends(get_db)):
 
 
 @app.get("/test2")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING).all()
-    return testdata
+def test2(db: Session = Depends(get_db)):
+    testdata2 = db.query(HEALTH).all()
+    return testdata2
