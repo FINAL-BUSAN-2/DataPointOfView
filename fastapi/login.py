@@ -766,12 +766,6 @@ def get_search_news(db: Session = Depends(get_db), search: str = None):
 
 
 
-class PILL_FUNC(Base):
-    __tablename__ = "pill_func"
-    func_cd = Column(String(10), primary_key=True)
-    func_nm = Column(String(60))
-    func_emoji = Column(String(90))
-
 
 class Pill_funcBase(BaseModel):
     func_cd: str
@@ -786,7 +780,8 @@ class Pill_funcInDB(Pill_funcBase):
 
 @app.get("/pill_func/", response_model=List[Pill_funcInDB])
 def get_search_pill(db: Session = Depends(get_db)):
-    pill_func = db.query(Pill_func).all()
+    pill_func = db.query(PILL_FUNC(Base):
+).all()
     return pill_func
 
 
