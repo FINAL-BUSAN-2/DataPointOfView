@@ -148,6 +148,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       }
     }
   };
+  // 사진찍기
   const onPressButton = async () => {
     if (!camera.current) return;
     const photo = await camera.current.takePhoto({
@@ -155,7 +156,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       qualityPrioritization: 'speed',
     });
 
-    console.log(photo);
+    Alert.alert(photo.path);
   };
 
   return (
@@ -200,7 +201,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                         {/* 아래쪽 컨텐츠 */}
                         {/* <Text>카메라</Text> */}
                         {/* 카메라 아이콘 */}
-                        <TouchableOpacity onPress={() => setIsCameraOpen(true)}>
+                        <TouchableOpacity
+                          onPress={() => handleCameraButtonClick()}>
                           <Image
                             source={require('./android/app/src/img/camera.png')}
                             style={styles.cameraicon}
