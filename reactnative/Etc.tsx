@@ -136,13 +136,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
           ertn_time: selectedTime || new Date().toTimeString(), // 시간
           ertn_alram: ertn_alram, // 알림
-          // ertn_nm: '루틴명', // 루틴명
-          // ertn_set: 1, // 세트
-          // ertn_reps: 2, // 횟수
-          // ertn_day: '수요일', // 반복요일
-          // ertn_sdate: '2023-10-26', // 선택된 날짜 또는 현재 날짜, // 날짜선택
-          // ertn_time: '09:00', // 시간
-          // ertn_alram: 1, // 알림
         };
         console.log('ertn_nm type:', typeof requestData.ertn_nm);
         console.log('ertn_set type:', typeof requestData.ertn_set);
