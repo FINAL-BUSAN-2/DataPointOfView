@@ -453,11 +453,16 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-# 루틴추가_기타
 @app.get("/routines")
-def create_routine(routine: ERoutineCreate, request: Request):
-    logger.error(f"111111111111111111111111111111")
-    email = request.session["user_email"]
+def test(request: Request):
+    eee = request.session["user_email"]
+    return eee
+
+    # 루틴추가_기타
+    # @app.get("/routines")
+    # def create_routine(routine: ERoutineCreate, request: Request):
+    #     logger.error(f"111111111111111111111111111111")
+    #     email = request.session["user_email"]
     # # 라우터에 전달된 데이터 출력
     # logging.error(f"Received: {request}")
     # try:
@@ -1067,9 +1072,3 @@ def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
 def test(db: Session = Depends(get_db)):
     testdata = db.query(News_Data).all()
     return testdata
-
-
-@app.get("/test2")
-def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(HEALTH).all()
-    return testdata2
