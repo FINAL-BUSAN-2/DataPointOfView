@@ -43,12 +43,6 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
-    // fetchData();
-    // fetchData2();
-    // fetchData3();
-    // fetchData4();
-    // fetchData5();
-    // fetchData6();
     fetch('http://43.200.178.131:3344/health_piechartdata')
       .then(response => response.json())
       .then(healthdata => setChartData(healthdata))
@@ -57,30 +51,36 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    console.log('chartData2:', chartData2);
     fetch('http://43.200.178.131:3344/test2')
       .then(response => response.json())
       .then(test => setChartData3(test))
       .catch(error => console.error('Error:', error));
   }, []);
-
+  // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
     ? chartData.pie_chart_data.map(item => ({
         count: item.count,
         color: item.color,
       }))
     : [];
+  // 영양 차트 데이터
+  const pillChartData = chartData2.pill_chart_data
+    ? chartData2.pill_chart_data.map(item => ({
+        count1: item.count1,
+        color1: item.color1,
+      }))
+    : [];
 
-  const hcount = pieChartData.map(item1 => item1.count);
-  const hcolor = pieChartData.map(item2 => item2.color);
+  // 데이터 변수 설정
+  const hcount = pieChartData.map(item => item.count);
+  const hcolor = pieChartData.map(item => item.color);
   const htopTag = chartData.top_tag;
   const htopEmoji = chartData.top_emoji;
-  const pcount = chartData2.map(dataPoint => dataPoint.count1);
-  const pcolor = chartData2.map(dataPoint => dataPoint.color1);
-  const top_func_nm = chartData2.map(dataPoint => dataPoint.top_func_nm);
-  const top_func_emoji = chartData2.map(dataPoint => dataPoint.top_func_emoji);
-  const test = chartData3.map(dataPoint => dataPoint.health_emoji);
-  // console.log('pieChartData:', pieChartData);
+  const pcount = pillChartData.map(item => item.count1);
+  const pcolor = pillChartData.map(item => item.color1);
+  const ptopFunc = chartData2.top_func1;
+  const ptopEmoji = chartData2.top_emoji1;
+
   console.log('hcount:', pcount);
   console.log('hcolor:', pcolor);
   // console.log('test:', test);
@@ -138,78 +138,86 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
         <Text style={styles.usertext}>📍{userInfo}님의 오늘의 기록</Text>
-        {/* <View>
-          <Text>Test Data:</Text>
-          {chartData5 &&
-            chartData5.map((item, index) => (
-              <View key={index}>
-                <Text>{item.news_idx}</Text>
-              </View>
-            ))}
-        </View> */}
       </View>
 
       <View style={styles.titletop}>
         <View style={styles.line}></View>
       </View>
 
-      {/* <Text style={styles.statictext}>💪 달성한 운동 {'\n'}</Text>
-              {chartData3 &&
-                chartData3.map((item, index) => (
-                  <Text key={`dataPoint-${index}`}>ㆍ{item.hrtn_id}</Text>
-                ))} */}
-
-      {/* 바디 */}
+      {/* 랭킹영역 */}
       <View style={styles.topcontainer}>
+        {/* 운동랭킹 영역 */}
         <View style={styles.tophealth}>
+          {/* 운동랭킹 타이틀 영역 */}
           <View style={styles.tophealthtitle}>
+            {/* 운동랭킹 타이틀 스타일 */}
             <Text style={styles.tophealthtitletext}>운동 Top</Text>
           </View>
+          {/* 운동랭킹 이모지 영역 */}
           <View style={styles.tophealthemoji}>
+            {/* 운동랭킹 이모지 스타일 */}
             <Text style={styles.tophealthemojitext}>{htopEmoji}</Text>
           </View>
+          {/* 운동랭킹 태그 영역 */}
           <View style={styles.tophealthtag}>
+            {/* 운동랭킹 태그 스타일 */}
             <Text style={styles.tophealthtagtext}>{htopTag}</Text>
           </View>
         </View>
+
+        {/* 영양랭킹 영역 */}
         <View style={styles.toppill}>
+          {/* 영양랭킹 타이틀 영역 */}
           <View style={styles.toppilltitle}>
+            {/* 영양랭킹 타이틀 스타일 */}
             <Text style={styles.toppilltitletext}>영양 Top</Text>
           </View>
-          <View style={styles.toppillemoji}></View>
-          <View style={styles.toppilltag}></View>
+          {/* 영양랭킹 이모지 영역 */}
+          <View style={styles.toppillemoji}>
+            {/* 영양랭킹 이모지 스타일 */}
+            <Text style={styles.toppillemojitext}>{ptopEmoji}</Text>
+          </View>
+          {/* 영양랭킹 기능명 영역 */}
+          <View style={styles.toppillfunc}>
+            {/* 영양랭킹 기능명 스타일 */}
+            <Text style={styles.toppillfunctext}>{ptopFunc}</Text>
+          </View>
         </View>
+
+        {/* 달성률 영역 */}
         <View style={styles.fin}>
+          {/* 달성률 타이틀 영역 */}
           <View style={styles.fintitle}>
+            {/* 달성률 타이틀 스타일 */}
             <Text style={styles.fintitletext}>달성률</Text>
           </View>
+          {/* 달성률 이모지 영역*/}
           <View style={styles.finemoji}></View>
+          {/* 달성률 %영역 */}
           <View style={styles.finper}></View>
         </View>
       </View>
 
-      {/* 통계 */}
+      {/* 통계 타이틀 영역 */}
       <View style={styles.titlecontainer}>
+        {/* 운동 통계 타이틀 영역 */}
         <View style={styles.titlehealth}>
+          {/* 운동 통계 타이틀 스타일 */}
           <Text style={styles.titletext}>운동 통계</Text>
         </View>
-        <View style={styles.titleetc}>
+        {/* 영양 통계 타이틀 영역 */}
+        <View style={styles.titlepill}>
+          {/* 영약 통계 타이틀 스타일 */}
           <Text style={styles.titletext}>영양 통계</Text>
         </View>
       </View>
-      <View style={styles.statistics}>
-        <View style={styles.chart}>
-          <View style={styles.healthchart}>
-            {/* {chartData.map((item, index) => (
-              <Text key={index}>{JSON.stringify(item)}</Text>
-            ))} */}
-            {/* {chartData2.map((dataPoint, index) => (
-              <Text key={index}>
-                ㆍ{dataPoint.func}
-                {dataPoint.count}
-              </Text>
-            ))} */}
 
+      {/* 통계 영역 */}
+      <View style={styles.statistics}>
+        {/* 차트 영역 */}
+        <View style={styles.chart}>
+          {/* 운동 차트 */}
+          <View style={styles.healthchart}>
             {chartData.pie_chart_data ? (
               <PieChart
                 widthAndHeight={100}
@@ -217,49 +225,41 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
                 sliceColor={hcolor}
               />
             ) : (
-              // 데이터가 로딩 중일 때 보여줄 컴포넌트나 메시지
               <Text>Loading...</Text>
             )}
           </View>
+
+          {/* 영양 차트 */}
           <View style={styles.pillchart}>
-            {/* <PieChart
-              widthAndHeight={100}
-              series={series2}
-              sliceColor={sliceColor2}
-            /> */}
-            {/* {chartData2.map((dataPoint, index) => (
-              <Text key={index}>
-                ㆍ{dataPoint.func}
-                {dataPoint.count}
-              </Text>
-            ))} */}
-            {/* <VictoryPie
-              data={chartData2.map(dataPoint2 => ({
-                x: dataPoint2.func,
-                y: dataPoint2.count,
-              }))}
-              width={80} // 가로 크기
-              height={80} // 세로 크기
-              radius={40} // 반지름
-              innerRadius={15}
-              colorScale={chartData2.map(dataPoint2 => dataPoint2.color)}
-            /> */}
-            <Text>{test}</Text>
+            {chartData2.pill_chart_data ? (
+              <PieChart
+                widthAndHeight={100}
+                series={pcount}
+                sliceColor={pcolor}
+              />
+            ) : (
+              <Text>Loading...</Text>
+            )}
           </View>
         </View>
 
         <View style={styles.line}></View>
 
+        {/* 통계 텍스트 영역 */}
         <View style={styles.statisticstextbox}>
+          {/* 성분 추천 */}
           <Text style={styles.recotext}>
             👍 : "비타민"을(를) 섭취하시는 걸 추천드려요
           </Text>
+          {/* 추천 제품 */}
           <Text style={styles.recoproducttext}>
             ㄴ추천 제품 : "레모나","아이셔","레몬"
           </Text>
+          {/* 부작용 */}
           <Text style={styles.cautiontext}>
             ❗ : "제품A"와 "제품B"같이 섭취 시
           </Text>
+          {/* 부작용 */}
           <Text style={styles.cautiontext2}>부작용이 있을 수 있어요!</Text>
         </View>
       </View>
@@ -433,7 +433,10 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     backgroundColor: 'white',
   },
-  toppilltag: {
+  toppillemojitext: {
+    fontSize: 32,
+  },
+  toppillfunc: {
     alignSelf: 'center',
     width: '70%',
     marginTop: 10,
@@ -441,6 +444,10 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 15,
     backgroundColor: 'rgb(206,119,119)',
+  },
+  toppillfunctext: {
+    fontSize: 16,
+    color: 'white',
   },
   fin: {flex: 1, flexDirection: 'column'},
   fintitle: {
@@ -473,6 +480,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'rgb(206,119,119)',
   },
+
   // 선
   titletop: {
     flex: 0.3,
@@ -503,6 +511,13 @@ const styles = StyleSheet.create({
     right: '100%',
     zIndex: 2,
   },
+  // 타이틀 텍스트
+  titletext: {
+    fontSize: 16,
+    alignSelf: 'center',
+    color: '#000',
+    fontWeight: 'bold',
+  },
   // 영양 타이틀
   titleetc: {
     width: '25%',
@@ -513,13 +528,6 @@ const styles = StyleSheet.create({
     left: '100%',
     backgroundColor: '#fff',
     zIndex: 2,
-  },
-  // 타이틀 텍스트
-  titletext: {
-    fontSize: 16,
-    alignSelf: 'center',
-    color: '#000',
-    fontWeight: 'bold',
   },
   // 통계 영역
   statistics: {
@@ -556,6 +564,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 15,
   },
+
   // 통계 텍스트 영역
   statisticstextbox: {
     flex: 5,
