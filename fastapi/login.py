@@ -301,11 +301,11 @@ class PRTN_FIN(Base):
 
 
 ##### 로그인정보 (이메일)
-def get_current_user_email(request: Request):
-    user_email = request.session.get("user_email")
-    if not user_email:
-        raise HTTPException(status_code=400, detail="User not logged in")
-    return user_email
+# def get_current_user_email(request: Request):
+#     user_email = request.session.get("user_email")
+#     if not user_email:
+#         raise HTTPException(status_code=400, detail="User not logged in")
+#     return user_email
 
 
 ############################################# 루틴추가
@@ -468,7 +468,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
+                ertn_mem=email,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
