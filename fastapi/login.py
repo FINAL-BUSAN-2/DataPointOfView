@@ -1005,45 +1005,28 @@ def get_color_by_tag(tag):
 #         for func_count in func_counts_query
 #     ]
 def get_pill_chart_data(db: Session = Depends(get_db)):
-    # subquery for prtn_id
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-
-    # Window function for getting the top function name and emoji
-    window_func = db.query(
-        PILL_FUNC.func_nm,
-        func.count(PILL_FUNC.func_nm).over().label("count"),
-        func.first_value(PILL_FUNC.func_nm)
-        .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-        .label("top_func_nm"),
-        func.first_value(PILL_FUNC.func_emoji)
-        .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-        .label("top_func_emoji"),
-    ).subquery()
-
-    # Main query
     func_counts_query = (
         db.query(
-            window_func.c.func_nm,
-            window_func.c.count,
-            window_func.c.top_func_nm,
-            window_func.c.top_func_emoji,
+            PILL_FUNC.func_nm,
+            func.count(PILL_FUNC.func_nm).label("count"),
+            func.first_value(PILL_FUNC.func_nm)
+            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+            .label("top_func_nm"),
+            func.first_value(PILL_FUNC.func_emoji)
+            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+            .label("top_func_emoji"),
         )
-        .select_from(PRTN_SETTING)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PILL_CMB, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-        .join(window_func, window_func.c.func_nm == PILL_CMB.cmb_func)
+        .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
+        .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
+        .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .filter(
             and_(
                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
             )
         )
-        .group_by(
-            window_func.c.func_nm,
-            window_func.c.count,
-            window_func.c.top_func_nm,
-            window_func.c.top_func_emoji,
-        )
+        .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
         .all()
     )
 
