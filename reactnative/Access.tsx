@@ -51,7 +51,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     // fetchData6();
     fetch('http://43.200.178.131:3344/health_piechartdata')
       .then(response => response.json())
-      .then(healthdata => setChartData(healthdata))
+      .then(healthdata => setChartData(healthdata.pie_chart_data))
       .catch(error => console.error('Error:', error));
     fetch('http://43.200.178.131:3344/pill_piechartdata')
       .then(response => response.json())
@@ -60,11 +60,13 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     console.log('chartData2:', chartData2);
   }, []);
 
-  const series = chartData.map(dataPoint => dataPoint.count);
-  const sliceColor = chartData.map(dataPoint => dataPoint.color);
+  const count = chartData.map(dataPoint => dataPoint.count);
+  const color = chartData.map(dataPoint => dataPoint.color);
+  const toptag = chartData.map(dataPoint => dataPoint.color);
+  const emoji = chartData.map(dataPoint => dataPoint.color);
   const series2 = chartData2.map(dataPoint => dataPoint.count);
   const sliceColor2 = chartData2.map(dataPoint => dataPoint.color);
-  console.log('under:', chartData2);
+  console.log('under:', series);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

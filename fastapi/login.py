@@ -928,17 +928,19 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         {
             "tag": tag_count[0],
             "count": tag_count[1],
-            "emoji": tag_count[2],
             "color": get_color_by_tag(tag_count[0]),
         }
         for tag_count in tag_counts_query
     ]
 
-    top_tag = max(pie_chart_data, key=lambda x: x["count"])["tag"]
+    top_item = max(pie_chart_data, key=lambda x: x["count"])
+    top_tag = top_item["tag"]
+    top_emoji = top_item["emoji"]
 
     return {
         "pie_chart_data": pie_chart_data,
         "top_tag": top_tag,
+        "top_emoji": top_emoji,
     }
 
 
