@@ -976,7 +976,7 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
             )
         )
-        .group_by(PILL_FUNC.func_nm, PILL_PROD.pill_nm)
+        .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
         .all()
     )
 
