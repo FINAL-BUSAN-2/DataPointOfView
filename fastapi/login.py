@@ -1035,9 +1035,45 @@ def test(db: Session = Depends(get_db)):
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(HEALTH).all()
+    testdata2 = db.query(PILL_PROD).all()
     return testdata2
 
+
+
+@app.get("/test3")
+def test3(db: Session = Depends(get_db)):
+    testdata3 = (
+        db.query(PILL_PROD)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata3
+
+
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    testdata4 = (
+        db.query(PILL_CMB)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata4
+
+
+@app.get("/test5")
+def test5(db: Session = Depends(get_db)):
+    testdata5 = (
+        db.query(PILL_FUNC)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata5
 
 ############################################################## pill_prod((영양검색창활용)
 class PILL_PROD_SEARCH(BaseModel):
@@ -1053,3 +1089,4 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
+
