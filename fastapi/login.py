@@ -961,7 +961,7 @@ def test2(db: Session = Depends(get_db)):
     return testdata2
 
 
-############################################################## pill_prod((영양검색창활용)
+############################################################## 루 틴검색창
 class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
     pill_nm: str
