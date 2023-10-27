@@ -481,22 +481,20 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 ertn_day=routine.ertn_day,
                 ertn_edate=routine.ertn_edate,
             )
-            # # logging.error(f"Received routine: {routine}")
-            # logging.error(f"Routine to add: {db_routine}")
-            # logger.error(f"44444444444444444444444444444444")
-            # db.add(db_routine)
-            # logger.error(f"5555555555555555555555555555")
+            # logging.error(f"Received routine: {routine}")
+            logging.error(f"Routine to add: {db_routine}")
+            logger.error(f"44444444444444444444444444444444")
+            db.add(db_routine)
+            logger.error(f"5555555555555555555555555555")
             db.commit()
-            # logger(f"6666666666666666666666666")
-            # db.refresh(db_routine)
-            # logger.error("7777777777777777777777777")
+            logger(f"6666666666666666666666666")
+            db.refresh(db_routine)
+            logger.error("7777777777777777777777777")
 
-        # return db_routine
+        return db_routine
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-        # return {"error": "데이터 삽입 중 오류 발생"}
-    finally:
-        db.close()
+        return {"error": "데이터 삽입 중 오류 발생"}
 
 
 # # 루틴추가_건강
