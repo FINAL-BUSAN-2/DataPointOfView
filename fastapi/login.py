@@ -964,15 +964,15 @@ def get_color_by_tag(tag):
 
 @app.get("/pill_piechartdata")
 def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
-        .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
-        .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
+        .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
         .filter(
             and_(
-                PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)),
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
             )
         )
