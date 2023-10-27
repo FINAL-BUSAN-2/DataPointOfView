@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
@@ -26,7 +27,24 @@ interface RoutineAddProps {
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
-  const devices = useCameraDevices();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
+  const toggleModal = () => {
+    RNFS.unlink(`${internalStoragePath}/${newFileName}`)
+      .then(() => {
+        console.log('파일 삭제 성공');
+        RNFS.readdir(internalStoragePath).then(files => {
+          console.log('폴더 내 파일 목록:', files);
+          // 이 목록에 이동된 파일이 있는지 확인할 수 있음
+        });
+      })
+      .catch(err => {
+        console.log('파일 삭제 실패: ', err);
+      });
+    setModalVisible(!isModalVisible);
+    setCameraImgPath('');
+  };
+  // const devices = useCameraDevices();
   const device = useCameraDevice('back');
   const camera = React.useRef(null);
   // 카메라 오픈 여부 상태 추가
@@ -150,40 +168,119 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       }
     }
   };
+  // 내부 저장소의 경로 얻기
+  const internalStoragePath = RNFS.DocumentDirectoryPath;
   // 사진찍기
   const onCameraButton = async () => {
+    const timestamp = Date.now();
+    const newFileName = `photo_${timestamp}.jpg`;
     if (!camera.current) return;
     const photo = await camera.current.takePhoto({
       flash: 'off',
       qualityPrioritization: 'speed',
     });
 
-    Alert.alert(photo.path);
-    setCameraImgPath(photo.path);
+    await RNFS.moveFile(
+      `/${photo.path}`,
+      `file://${internalStoragePath}/${newFileName}`,
+    )
+      .then(() =>
+        console.log(
+          'Image Moved',
+          `${photo.path}`,
+          '-- to --',
+          `file://${internalStoragePath}/${newFileName}`,
+        ),
+      )
+      .then(() =>
+        setCameraImgPath(`file://${internalStoragePath}/${newFileName}`),
+      );
+    RNFS.readdir(internalStoragePath).then(files => {
+      console.log('폴더 내 파일 목록:', files);
+      // 이 목록에 이동된 파일이 있는지 확인할 수 있음
+    });
+    setModalVisible(!isModalVisible);
+    setNewFileName(newFileName);
   };
 
   return (
     <>
       {isCameraOpen && device !== null ? (
-        cameraImgPath !== '' ? (
-          <View>
-            <Image
-              source={{uri: cameraImgPath}}
-              style={{width: 100, height: 100}}
-            />
-            {/* 이미지 크기는 예시입니다. 원하는 대로 조절하세요. */}
-          </View>
-        ) : (
-          <View style={styles.cameraContainer}>
-            <Camera
-              style={styles.camera}
-              device={device}
-              photo={true}
-              isActive={true}
-              ref={camera}
-            />
-          </View>
-        )
+        // <View>
+        //   <Image
+        //     source={{uri: cameraImgPath}}
+        //     style={{width: 300, height: 300}}
+        //   />
+        //   <Text>{cameraImgPath}</Text>
+        // </View>
+        <View style={styles.cameraContainer}>
+          <Camera
+            style={styles.camera}
+            device={device}
+            photo={true}
+            isActive={true}
+            ref={camera}
+          />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={toggleModal}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                source={{
+                  uri: `file://${internalStoragePath}/${newFileName}`,
+                }}
+                style={{width: 300, height: 300}}
+              />
+              <View
+                style={{
+                  width: 300,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity>
+                  <View
+                    style={{
+                      width: 120,
+                      height: 50,
+                      backgroundColor: 'blue',
+                      margin: 15,
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{textAlign: 'center', color: 'white'}}>
+                      전송
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={toggleModal}>
+                  <View
+                    style={{
+                      width: 120,
+                      height: 50,
+                      backgroundColor: 'red',
+                      margin: 15,
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{textAlign: 'center', color: 'white'}}>
+                      닫기
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
       ) : (
         // <View style={styles.cameraContainer}>
         //   <Camera
