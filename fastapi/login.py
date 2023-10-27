@@ -1025,10 +1025,10 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
-# @app.get("/test")
-# def test(db: Session = Depends(get_db)):
-#     testdata = db.query(PILL_CMB).all()
-#     return testdata
+@app.get("/test")
+def test(db: Session = Depends(get_db)):
+    testdata = db.query(PILL_CMB).all()
+    return testdata
 
 
 # @app.get("/test2")
@@ -1052,9 +1052,13 @@ def test3(db: Session = Depends(get_db)):
 def test4(db: Session = Depends(get_db)):
     testdata4 = (
         db.query(PILL_CMB)
-        .join(PILL_CMB, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+            ),
+        )
         .all()
     )
     return testdata4
