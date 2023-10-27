@@ -51,7 +51,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     // fetchData6();
     fetch('http://43.200.178.131:3344/health_piechartdata')
       .then(response => response.json())
-      .then(healthdata => setChartData(healthdata.pie_chart_data))
+      .then(healthdata => setChartData(healthdata))
       .catch(error => console.error('Error:', error));
     fetch('http://43.200.178.131:3344/pill_piechartdata')
       .then(response => response.json())
@@ -60,13 +60,31 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
     console.log('chartData2:', chartData2);
   }, []);
 
-  const count = chartData.map(dataPoint => dataPoint.count);
-  const color = chartData.map(dataPoint => dataPoint.color);
-  const toptag = chartData.map(dataPoint => dataPoint.color);
-  const emoji = chartData.map(dataPoint => dataPoint.color);
-  const series2 = chartData2.map(dataPoint => dataPoint.count);
-  const sliceColor2 = chartData2.map(dataPoint => dataPoint.color);
-  console.log('under:', series);
+  if (!chartData) {
+    return <div>Loading...</div>;
+  }
+  const pieChartData = chartData.pie_chart_data
+    ? chartData.pie_chart_data.map(item => ({
+        count: item.count,
+        color: item.color,
+      }))
+    : [];
+
+  const hcount = pieChartData.map(item => item.count);
+  const hcolor = pieChartData.map(item => item.color);
+  const htopTag = chartData.top_tag;
+  const htopEmoji = chartData.top_emoji;
+  // const count = chartData.map(dataPoint => dataPoint.count);
+  // const color = chartData.map(dataPoint => dataPoint.color);
+  // const toptag = chartData.map(dataPoint => dataPoint.color);
+  // const emoji = chartData.map(dataPoint => dataPoint.color);
+  const pcount = chartData2.map(dataPoint => dataPoint.count1);
+  const pcolor = chartData2.map(dataPoint => dataPoint.color1);
+  const top_func_nm = chartData2.map(dataPoint => dataPoint.top_func_nm);
+  const top_func_emoji = chartData2.map(dataPoint => dataPoint.top_func_emoji);
+  // console.log('pieChartData:', pieChartData);
+  console.log('hcount:', pcount);
+  console.log('hcolor:', pcolor);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -147,8 +165,12 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
           <View style={styles.tophealthtitle}>
             <Text style={styles.tophealthtitletext}>운동 Top</Text>
           </View>
-          <View style={styles.tophealthemoji}></View>
-          <View style={styles.tophealthtag}></View>
+          <View style={styles.tophealthemoji}>
+            <Text style={styles.tophealthemojitext}>{htopEmoji}</Text>
+          </View>
+          <View style={styles.tophealthtag}>
+            <Text style={styles.tophealthtagtext}>{htopTag}</Text>
+          </View>
         </View>
         <View style={styles.toppill}>
           <View style={styles.toppilltitle}>
@@ -188,11 +210,11 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               </Text>
             ))} */}
 
-            {/* <PieChart
+            <PieChart
               widthAndHeight={100}
-              series={series}
-              sliceColor={sliceColor}
-            /> */}
+              series={hcount}
+              sliceColor={hcolor}
+            />
           </View>
           <View style={styles.pillchart}>
             {/* <PieChart
@@ -353,6 +375,8 @@ const styles = StyleSheet.create({
   tophealthemoji: {
     flex: 2,
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '65%',
     marginBottom: 5,
     borderWidth: 1,
@@ -360,14 +384,23 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     backgroundColor: 'white',
   },
+  tophealthemojitext: {
+    fontSize: 32,
+  },
   tophealthtag: {
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     marginTop: 10,
     marginBottom: 15,
     height: 35,
     borderRadius: 15,
     backgroundColor: 'rgb(206,119,119)',
+  },
+  tophealthtagtext: {
+    fontSize: 16,
+    color: 'white',
   },
   toppill: {
     flex: 1,
