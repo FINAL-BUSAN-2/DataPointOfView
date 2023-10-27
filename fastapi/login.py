@@ -254,7 +254,7 @@ class HEALTH(Base):
 
 class HRTN_FIN(Base):
     __tablename__ = "hrtn_fin"
-    hrtn_id = Column(String(100), ForeignKey("hrtn_setting.hrnt_id"), primary_key=True)
+    hrtn_id = Column(String(100), primary_key=True)
     fin_hrtn_time = Column(String(8), primary_key=True)
 
 
@@ -296,7 +296,7 @@ class PILL_CMB(Base):
 
 class PRTN_FIN(Base):
     __tablename__ = "prtn_fin"
-    prtn_id = Column(String(100), ForeignKey("prtn_setting.prnt_id"), primary_key=True)
+    prtn_id = Column(String(100), primary_key=True)
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
