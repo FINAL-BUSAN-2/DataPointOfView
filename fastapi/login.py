@@ -454,7 +454,7 @@ def generate_unique_prtn_id(prtn_mem):
 
 
 # 루틴추가_기타
-@app.post("/routines")
+@app.get("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
     email = request.session["user_email"]

@@ -142,7 +142,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         };
         console.log('44444444444444444444444===', requestData);
 
-        const response = await axios.post(
+        const response = await axios.get(
           'http://43.200.178.131:3344/routines',
           requestData,
           {timeout: 10000}, // 10초 타임아웃
