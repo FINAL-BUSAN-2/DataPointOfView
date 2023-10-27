@@ -19,7 +19,7 @@ import {
   useCameraDevice,
   useCameraDevices,
 } from 'react-native-vision-camera';
-
+import axios from 'axios';
 import HealthSearch from './search_health';
 
 interface RoutineAddProps {
@@ -79,7 +79,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   //태그 설정
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
-  const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // 초기 상태에서는 빈 문자열 배열로 설정
+  const [tagsEnabled, setTagsEnabled] = useState<string[]>([]);
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -118,39 +120,69 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
   // 태그 설정 핸들러
-  const handletagsEnabled = (category: string) => {
-    setTagsEnabled(category);
-    console.log(`태그 ${category} 선택됨`);
+  // const handletagsEnabled = (category: string) => {
+  //   setTagsEnabled(category);
+  //   console.log(`태그 ${category} 선택됨`);
+  // };
+  // 태그 버튼을 누를 때 선택 상태를 토글하는 함수
+  const handletagsEnabled = (tag: string) => {
+    if (tagsEnabled.includes(tag)) {
+      // 이미 선택된 태그라면 선택 해제
+      setTagsEnabled(tagsEnabled.filter(selectedTag => selectedTag !== tag));
+    } else {
+      // 선택되지 않은 태그라면 선택 추가
+      setTagsEnabled([...tagsEnabled, tag]);
+    }
   };
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+    if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
-      Alert.alert('모든 항목을 작성해 주세요.');
+      Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
-      // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-        await HaddRoutine(
-          routineName, // 루틴명
-          parseInt(set), // 세트
-          parseInt(reps), // 횟수
-          selectedDaysOfWeek, // 반복요일
-          selectedDate, // 날짜선택
-          selectedTime, // 시간
-          tagsEnabled, //태그
-          notificationEnabled, // 알림여부
-        );
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const selectedTime = `${hours}:${minutes}`;
+        const daysString = selectedDaysOfWeek.toString();
+        const ertn_alram = notificationEnabled ? 1 : 0;
 
-        // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
-        Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        const requestData = {
+          hrtn_nm: routineName,
+          hrtn_set: parseInt(set),
+          hrtn_reps: parseInt(reps),
+          hrtn_day: daysString,
+          hrtn_sdate: selectedDate || new Date().toDateString(),
+          hrtn_time: selectedTime || new Date().toTimeString(),
+          hrtn_alram: ertn_alram,
+          hrtn_id: '',
+          hrtn_cat: '',
+          hrtn_tag: tagsEnabled,
+          hrtn_edate: '',
+          hrtn_mem: '',
+        };
+        console.log('44444444444444444444444===', requestData);
+
+        const response = await axios.post(
+          'http://43.200.178.131:3344/h_routines',
+          requestData,
+          {timeout: 10000}, // 10초 타임아웃
+        );
+        console.log('55555555555555555555555555===', response);
+        if (response.status >= 200 && response.status < 300) {
+          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        } else {
+          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+        }
       } catch (error) {
-        // 에러가 발생하면 에러 메시지를 표시할 수 있습니다.
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         console.error('루틴 추가 오류:', error);
       }
     }
   };
+
   // 사진찍기
   const onPressButton = async () => {
     if (!camera.current) return;
@@ -266,7 +298,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Upper Body')}
                             style={
-                              tagsEnabled === 'Upper Body'
+                              tagsEnabled.includes('Upper Body')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -276,7 +308,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Lower Body')}
                             style={
-                              tagsEnabled === 'Lower Body'
+                              tagsEnabled.includes('Lower Body')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -286,7 +318,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Core')}
                             style={
-                              tagsEnabled === 'Core'
+                              tagsEnabled.includes('Core')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -296,7 +328,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('etc')}
                             style={
-                              tagsEnabled === 'etc'
+                              tagsEnabled.includes('etc')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -319,7 +351,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Stretching')}
                             style={
-                              tagsEnabled === 'Stretching'
+                              tagsEnabled.includes('Stretching')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -329,7 +361,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Cardio')}
                             style={
-                              tagsEnabled === 'Cardio'
+                              tagsEnabled.includes('Cardio')
                                 ? styles.selectedButton
                                 : styles.button
                             }>
@@ -342,16 +374,18 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 </View>
               </View>
             </View>
+
             <View style={styles.healthheader}>
               {/* 루틴명 입력 */}
               <View style={styles.Routinename}>
-                <TextInput
+                {/* <TextInput
                   style={styles.Routineinput}
                   value={routineName}
                   onChangeText={handleRoutineNameChange}
                   placeholder="루틴 이름을 설정해주세요"
-                />
-                {/*<HealthSearch /> */}
+                /> */}
+
+                <HealthSearch />
 
                 {/* 카메라 아이콘
               <TouchableOpacity

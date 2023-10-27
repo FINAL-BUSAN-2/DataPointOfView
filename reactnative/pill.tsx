@@ -15,6 +15,7 @@ import {Toggle} from './components';
 import {PaddRoutine} from './api';
 import {Alert} from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import axios from 'axios';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -119,27 +120,46 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+    if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
-      Alert.alert('모든 항목을 작성해 주세요.');
+      Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
-      // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-        await PaddRoutine(
-          routineName, // 루틴명
-          parseInt(set), // 세트
-          parseInt(reps), // 횟수
-          //tagsEnabled, // 태그
-          selectedDaysOfWeek, // 반복요일
-          selectedDate, // 날짜선택
-          selectedTime, // 시간
-          notificationEnabled, // 알림여부
-        );
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const selectedTime = `${hours}:${minutes}`;
+        const daysString = selectedDaysOfWeek.toString();
+        const ertn_alram = notificationEnabled ? 1 : 0;
 
-        // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
-        Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        const requestData = {
+          prtn_nm: routineName,
+          prtn_set: parseInt(set),
+          prtn_reps: parseInt(reps),
+          prtn_day: daysString,
+          prtn_sdate: selectedDate || new Date().toDateString(),
+          prtn_time: selectedTime || new Date().toTimeString(),
+          prtn_alram: ertn_alram,
+          prtn_id: '',
+          prtn_cat: '',
+          prtn_tag: '',
+          prtn_edate: '',
+          prtn_mem: '',
+        };
+        console.log('44444444444444444444444===', requestData);
+
+        const response = await axios.post(
+          'http://43.200.178.131:3344/p_routines',
+          requestData,
+          {timeout: 10000}, // 10초 타임아웃
+        );
+        console.log('55555555555555555555555555===', response);
+        if (response.status >= 200 && response.status < 300) {
+          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        } else {
+          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+        }
       } catch (error) {
-        // 에러가 발생하면 에러 메시지를 표시할 수 있습니다.
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         console.error('루틴 추가 오류:', error);
       }
