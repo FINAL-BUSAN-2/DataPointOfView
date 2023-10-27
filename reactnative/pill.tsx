@@ -17,7 +17,7 @@ import {Alert} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import axios from 'axios';
 
-import Search from './search_health';
+import Search from './search';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
