@@ -268,6 +268,16 @@ class PILL_PROD(Base):
     pill_info = Column(String(255))
 
 
+class PILL_SIDEEFF(Base):
+    __tablename__ = "pill_sideeff"
+    sideeff_cd1 = Column(String(10), primary_key=True)
+    sideeff_nm1 = Column(String(90), nullable=False)
+    sideeff_cd2 = Column(String(10), primary_key=True)
+    sideeff_nm2 = Column(String(90), nullable=False)
+    sideeff_txt = Column(String(255), nullable=False)
+    sideeff_caution = Column(String(255), nullable=False)
+
+
 class PILL_FUNC(Base):
     __tablename__ = "pill_func"
     func_cd = Column(String(10), primary_key=True)
@@ -283,15 +293,9 @@ class PILL_NUTR(Base):
 
 class PILL_CMB(Base):
     __tablename__ = "pill_cmb"
-    cmb_nutr = Column(
-        String(10), ForeignKey("pill_nutr.nutr_cd"), primary_key=True, nullable=False
-    )
-    cmb_func = Column(
-        String(10), ForeignKey("pill_func.func_cd"), primary_key=True, nullable=False
-    )
-    cmb_pill = Column(
-        String(20), ForeignKey("pill_prod.pill_cd"), primary_key=True, nullable=False
-    )
+    cmb_nutr = Column(String(10), primary_key=True, nullable=False)
+    cmb_func = Column(String(10), primary_key=True, nullable=False)
+    cmb_pill = Column(String(20), primary_key=True, nullable=False)
 
 
 class PRTN_FIN(Base):
@@ -808,7 +812,7 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
+def get_health_chart_data(db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
@@ -932,7 +936,7 @@ def get_color_by_tag(tag):
 #         .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
 #         .all()
 #     )
-def get_pill_chart_data(request: Request, db: Session = Depends(get_db)):
+def get_pill_chart_data(db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
