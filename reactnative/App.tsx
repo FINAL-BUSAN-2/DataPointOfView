@@ -12,7 +12,7 @@ import HplogSet from './hplogset';
 import Access from './Access';
 import Social from './Social';
 import NewsInfo from './NewsInfo';
-import Search from './serch';
+import Search from './search';
 
 const Stack = createStackNavigator();
 

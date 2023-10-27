@@ -199,14 +199,14 @@ class ERTN_SETTING(Base):
     __tablename__ = "ertn_setting"
     ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     ertn_id = Column(String(50), primary_key=True)
-    ertn_nm = Column(String(100))  # nullable=False
-    ertn_cat = Column(String(20))  # nullable=False
-    ertn_tag = Column(String(60))  # nullable=False
-    ertn_set = Column(Integer)  # nullable=False
-    ertn_reps = Column(Integer)  # nullable=False
-    ertn_sdate = Column(String(10))  # nullable=False
-    ertn_time = Column(String(50))  # nullable=False
-    ertn_alram = Column(Integer)  # nullable=False
+    ertn_nm = Column(String(100), nullable=False)  # nullable=False
+    ertn_cat = Column(String(20), nullable=False)  # nullable=False
+    ertn_tag = Column(String(60), nullable=False)  # nullable=False
+    ertn_set = Column(Integer, nullable=False)  # nullable=False
+    ertn_reps = Column(Integer, nullable=False)  # nullable=False
+    ertn_sdate = Column(String(10), nullable=False)  # nullable=False
+    ertn_time = Column(String(50), nullable=False)  # nullable=False
+    ertn_alram = Column(Integer, nullable=False)  # nullable=False
     ertn_day = Column(String(50), nullable=True)
     ertn_edate = Column(String(10), nullable=True)
 
@@ -370,11 +370,11 @@ class HRoutineCreate(BaseModel):
     hrtn_tag: str
     hrtn_set: int
     hrtn_reps: int
-    hrtn_sdate: str
-    hrtn_time: str
-    hrtn_alram: int
-    hrtn_day: str
-    hrtn_edate: str
+    hrtn_sdate: Optional[str] = None
+    hrtn_time: Optional[str] = None
+    hrtn_alram: Optional[int] = 0
+    hrtn_day: Optional[str] = None
+    hrtn_edate: Optional[str] = None
 
 
 # hrtn_id 생성
@@ -411,18 +411,18 @@ def generate_unique_hrtn_id(hrtn_mem):
 
 # 루틴추가_영양
 class PRoutineCreate(BaseModel):
+    prtn_mem: str
+    prtn_id: str
     prtn_nm: str
+    prtn_cat: str
+    prtn_tag: str
     prtn_set: int
     prtn_reps: int
-    prtn_tag: str
-    prtn_day: str
-    prtn_sdate: str
-    prtn_time: str
-    prtn_id: str
-    prtn_cat: str
-    prtn_alram: int
-    prtn_mem: str
-    prtn_edate: str
+    prtn_sdate: Optional[str] = None
+    prtn_time: Optional[str] = None
+    prtn_alram: Optional[int] = 0
+    prtn_day: Optional[str] = None
+    prtn_edate: Optional[str] = None
 
 
 # prtn_id 생성
@@ -499,105 +499,6 @@ def create_routine(routine: ERoutineCreate, request: Request):
     except Exception as e:
         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
         return {"error": "데이터 삽입 중 오류 발생"}
-
-
-# # 루틴추가_건강
-# class HRoutineCreate(BaseModel):
-#     hrtn_mem: str
-#     hrtn_id: str
-#     hrtn_nm: str
-#     hrtn_cat: str
-#     hrtn_tag: str
-#     hrtn_set: int
-#     hrtn_reps: int
-#     hrtn_sdate: str
-#     hrtn_time: str
-#     hrtn_alram: int
-#     hrtn_day: str
-#     hrtn_edate: str
-
-
-# # hrtn_id 생성
-# def generate_unique_hrtn_id(hrtn_mem):
-#     at_index = hrtn_mem.find("@")
-
-#     if at_index != -1:
-#         first_part = hrtn_mem[:at_index]  # "@" 앞부분 추출
-#         first_char_after_at = hrtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
-
-#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
-#         with SessionLocal() as db:
-#             max_hrtn_id = (
-#                 db.query(HRTN_SETTING.hrtn_id)
-#                 .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
-#                 .order_by(desc(HRTN_SETTING.hrtn_id))
-#                 .first()
-#             )
-#             if max_hrtn_id:
-#                 max_number = int(
-#                     max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
-#                 )  # "@" 이후부터 숫자 부분 추출
-#                 new_number = max_number + 1
-#             else:
-#                 new_number = 1
-
-#             # hrtn_id 생성
-#             hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
-#     else:
-#         raise ValueError("Invalid ertn_mem format")
-
-#     return hrtn_id
-
-
-# # 루틴추가_영양
-# class PRoutineCreate(BaseModel):
-#     prtn_nm: str
-#     prtn_set: int
-#     prtn_reps: int
-#     prtn_tag: str
-#     prtn_day: str
-#     prtn_sdate: str
-#     prtn_time: str
-#     prtn_id: str
-#     prtn_cat: str
-#     prtn_alram: int
-#     prtn_mem: str
-#     prtn_edate: str
-
-
-# # prtn_id 생성
-# def generate_unique_prtn_id(prtn_mem):
-#     at_index = prtn_mem.find("@")
-
-#     if at_index != -1:
-#         first_part = prtn_mem[:at_index]  # "@" 앞부분 추출
-#         first_char_after_at = prtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
-
-#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
-#         with SessionLocal() as db:
-#             max_prtn_id = (
-#                 db.query(PRTN_SETTING.prtn_id)
-#                 .filter(PRTN_SETTING.prtn_mem == prtn_mem)
-#                 .order_by(desc(PRTN_SETTING.prtn_id))
-#                 .first()
-#             )
-#             if max_prtn_id:
-#                 max_number = int(
-#                     max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
-#                 )  # "@" 이후부터 숫자 부분 추출
-#                 new_number = max_number + 1
-#             else:
-#                 new_number = 1
-
-#             # prtn_id 생성
-#             prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
-#     else:
-#         raise ValueError("Invalid ertn_mem format")
-
-#     return prtn_id
-
-
-# ###################
 
 
 # # 루틴추가_건강
@@ -844,16 +745,18 @@ def get_merged_routines_from_database(email):
 
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-def read_routines(request: Request, db: Session = Depends(get_db)):
-    email = request.session["user_email"]
-    merged_routines = get_merged_routines_from_database(email)
+async def read_routines(request: Request):
+    merged_routines = get_merged_routines_from_database(
+        "qwert0175@naver.com"
+    )  # request.session["mem_email"]
     return merged_routines
 
 
 # # 루틴 데이터 가져오는 엔드포인트
 # @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-# async def read_routines(request: Request):
-#     merged_routines = get_merged_routines_from_database(request.session["mem_email"])
+# def read_routines(request: Request, db: Session = Depends(get_db)):
+#     email = request.session["user_email"]
+#     merged_routines = get_merged_routines_from_database(email)
 #     return merged_routines
 
 
@@ -1136,6 +1039,7 @@ def test2(db: Session = Depends(get_db)):
     return testdata2
 
 
+
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
     testdata3 = (
@@ -1170,3 +1074,19 @@ def test5(db: Session = Depends(get_db)):
         .all()
     )
     return testdata5
+
+############################################################## pill_prod((영양검색창활용)
+class PILL_PROD_SEARCH(BaseModel):
+    pill_cd: str
+    pill_nm: str
+    pill_mnf: str
+    # pill_rv:Float
+    # pill_rvnum:Optional[Integer] = None
+    # pill_info:Optional[str] = None
+
+
+@app.get("/pillsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    pillsearch = db.query(PILL_PROD).all()
+    return pillsearch
+
