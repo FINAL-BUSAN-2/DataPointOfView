@@ -957,7 +957,7 @@ def test(db: Session = Depends(get_db)):
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(HEALTH).all()
+    testdata2 = db.query(PILL_FUNC).all()
     return testdata2
 
 
