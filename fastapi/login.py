@@ -1035,7 +1035,7 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .filter(
             and_(
                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-                PRTN_SETTING.prtn_mem == "abc123@naver.com",
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
             )
         )
         .group_by(

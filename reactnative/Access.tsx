@@ -79,11 +79,11 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const pcolor = chartData2.map(dataPoint => dataPoint.color1);
   const top_func_nm = chartData2.map(dataPoint => dataPoint.top_func_nm);
   const top_func_emoji = chartData2.map(dataPoint => dataPoint.top_func_emoji);
-  const test = chartData3.map(dataPoint => dataPoint.func_emoji);
+  const test = chartData3.map(dataPoint => dataPoint.health_emoji);
   // console.log('pieChartData:', pieChartData);
-  console.log('hcount:', hcount);
-  console.log('hcolor:', hcolor);
-  console.log('test:', test);
+  console.log('hcount:', pcount);
+  console.log('hcolor:', pcolor);
+  // console.log('test:', test);
   // console.log('hcolor:', test);
   return (
     <View style={styles.container}>
