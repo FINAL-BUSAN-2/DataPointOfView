@@ -9,18 +9,9 @@ import {
   FlatList,
 } from 'react-native';
 
-// import PropTypes from 'prop-types';
 import {useNavigation} from '@react-navigation/native';
 
 interface autoDatas {
-  // city: string;
-  // growth_from_2000_to_2013: string;
-  // latitude: number;
-  // longitude: number;
-  // population: string;
-  // rank: string;
-  // state: string;
-
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
