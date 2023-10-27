@@ -20,6 +20,8 @@ import {
   useCameraDevices,
 } from 'react-native-vision-camera';
 
+import HealthSearch from './search_health';
+
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -349,6 +351,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                   onChangeText={handleRoutineNameChange}
                   placeholder="루틴 이름을 설정해주세요"
                 />
+                {/*<HealthSearch /> */}
+
                 {/* 카메라 아이콘
               <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
