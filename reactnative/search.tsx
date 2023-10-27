@@ -9,18 +9,9 @@ import {
   FlatList,
 } from 'react-native';
 
-// import PropTypes from 'prop-types';
 import {useNavigation} from '@react-navigation/native';
 
 interface autoDatas {
-  // city: string;
-  // growth_from_2000_to_2013: string;
-  // latitude: number;
-  // longitude: number;
-  // population: string;
-  // rank: string;
-  // state: string;
-
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
@@ -35,7 +26,7 @@ function Search() {
   };
 
   const fetchData = () => {
-    return fetch('http://43.200.178.131:3344/pillserch')
+    return fetch('http://43.200.178.131:3344/pillsearch')
       .then(res => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -47,9 +38,10 @@ function Search() {
 
   const updateData = async () => {
     const res = await fetchData();
-    let filteredItems = res
-      .filter((list: autoDatas) => list.pill_nm.includes(keyword))
-      .slice(0, 10);
+    let filteredItems = res.filter((list: autoDatas) =>
+      list.pill_nm.includes(keyword),
+    );
+    // .slice(0, 10); 최대 10개항목만
     setKeyItems(filteredItems);
   };
 
