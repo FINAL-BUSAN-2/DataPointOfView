@@ -486,10 +486,10 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"44444444444444444444444444444444")
             db.add(db_routine)
             logger.error(f"5555555555555555555555555555")
-            db.commit()
-            logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
-            logger.error("7777777777777777777777777")
+            # db.commit()
+            # logger(f"6666666666666666666666666")
+            # db.refresh(db_routine)
+            # logger.error("7777777777777777777777777")
 
         return db_routine
     except Exception as e:
