@@ -1053,12 +1053,8 @@ def test4(db: Session = Depends(get_db)):
     testdata4 = (
         db.query(PILL_CMB)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .filter(
-            and_(
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_PROD.pill_cd.in_(PILL_CMB.cmb_pill),
-            )
-        )
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
         .all()
     )
     return testdata4
