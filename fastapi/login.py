@@ -1027,17 +1027,16 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
-@app.get("/test")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(PILL_CMB).all()
-    return testdata
+# @app.get("/test")
+# def test(db: Session = Depends(get_db)):
+#     testdata = db.query(PILL_CMB).all()
+#     return testdata
 
 
-@app.get("/test2")
-def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(PILL_PROD).all()
-    return testdata2
-
+# @app.get("/test2")
+# def test2(db: Session = Depends(get_db)):
+#     testdata2 = db.query(PILL_PROD).all()
+#     return testdata2
 
 
 @app.get("/test3")
@@ -1056,8 +1055,12 @@ def test4(db: Session = Depends(get_db)):
     testdata4 = (
         db.query(PILL_CMB)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd == PILL_CMB.cmb_pill,
+            )
+        )
         .all()
     )
     return testdata4
@@ -1075,6 +1078,7 @@ def test5(db: Session = Depends(get_db)):
     )
     return testdata5
 
+
 ############################################################## pill_prod((영양검색창활용)
 class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
@@ -1089,4 +1093,3 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
-
