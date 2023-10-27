@@ -1058,12 +1058,28 @@ def test4(db: Session = Depends(get_db)):
         .filter(
             and_(
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_PROD.pill_cd == PILL_CMB.cmb_pill,
+                PILL_PROD.pill_cd.in_(PILL_CMB.cmb_pill),
             )
         )
         .all()
     )
     return testdata4
+
+
+@app.get("/test2")
+def test2(db: Session = Depends(get_db)):
+    testdata2 = (
+        db.query(PILL_CMB)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill.in_(PILL_PROD.pill_cd),
+            )
+        )
+        .all()
+    )
+    return testdata2
 
 
 @app.get("/test5")
