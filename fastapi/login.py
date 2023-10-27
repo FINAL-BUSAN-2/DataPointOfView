@@ -969,7 +969,17 @@ def get_color_by_tag(tag):
 def get_pill_chart_data(db: Session = Depends(get_db)):
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     func_counts_query = (
-        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        db.query(
+            PILL_FUNC.func_nm,
+            func.count(PILL_FUNC.func_nm).label("count"),
+            PILL_FUNC.func_emoji,
+            func.first_value(PILL_FUNC.func_nm)
+            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+            .label("top_func_nm"),
+            func.first_value(PILL_FUNC.func_emoji)
+            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+            .label("top_func_emoji"),
+        )
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
@@ -989,17 +999,14 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
             "func": func_count[0],
             "count1": func_count[1],
             "emoji1": func_count[2],
+            "top_func_nm": func_count[3],
+            "top_func_emoji": func_count[4],
             "color1": get_color_by_func(func_count[0]),
         }
         for func_count in func_counts_query
     ]
 
-    top_func = max(pill_chart_data, key=lambda x: x["count1"])["func"]
-
-    return {
-        "pill_chart_data": pill_chart_data,
-        "top_func": top_func,
-    }
+    return pill_chart_data
 
 
 def get_color_by_func(func):
