@@ -464,7 +464,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        ertn_id = generate_unique_ertn_id(email)
+        ertn_id = generate_unique_ertn_id(routine.ertn_mem)
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:

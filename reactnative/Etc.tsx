@@ -138,10 +138,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           ertn_cat: '',
           ertn_tag: '',
           ertn_edate: '',
-          ertn_mem: 'qwert0175@naner',
+          ertn_mem: 'qwert0175@naver.com',
         };
         console.log('44444444444444444444444===', requestData);
-
+        console.error;
         const response = await axios.post(
           'http://43.200.178.131:3344/routines',
           // requestData,
