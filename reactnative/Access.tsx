@@ -186,18 +186,18 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               </Text>
             ))} */}
 
-            <PieChart
+            {/* <PieChart
               widthAndHeight={100}
               series={series}
               sliceColor={sliceColor}
-            />
+            /> */}
           </View>
           <View style={styles.pillchart}>
-            <PieChart
+            {/* <PieChart
               widthAndHeight={100}
               series={series2}
               sliceColor={sliceColor2}
-            />
+            /> */}
             {/* {chartData2.map((dataPoint, index) => (
               <Text key={index}>
                 ㆍ{dataPoint.func}
