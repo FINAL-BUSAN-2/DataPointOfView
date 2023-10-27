@@ -64,7 +64,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const sliceColor = chartData.map(dataPoint => dataPoint.color);
   const series2 = chartData2.map(dataPoint => dataPoint.count);
   const sliceColor2 = chartData2.map(dataPoint => dataPoint.color);
-  console.log(chartData);
+  console.log('under:', chartData2);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

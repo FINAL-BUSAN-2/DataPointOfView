@@ -928,7 +928,6 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
             "tag": tag_count[0],
             "count": tag_count[1],
             "emoji": tag_count[2],
-            "toptag": top_tag,
             "color": get_color_by_tag(tag_count[0]),
         }
         for tag_count in tag_counts_query
@@ -936,7 +935,10 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
 
     top_tag = max(pie_chart_data, key=lambda x: x["count"])["tag"]
 
-    return pie_chart_data
+    return {
+        "pie_chart_data": pie_chart_data,
+        "top_tag": top_tag,
+    }
 
 
 def get_color_by_tag(tag):
@@ -992,7 +994,10 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
 
     top_func = max(pill_chart_data, key=lambda x: x["count1"])["func"]
 
-    return pill_chart_data
+    return {
+        "pill_chart_data": pill_chart_data,
+        "top_func": top_func,
+    }
 
 
 def get_color_by_func(func):
