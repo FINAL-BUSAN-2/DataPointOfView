@@ -17,6 +17,8 @@ import {Alert} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import axios from 'axios';
 
+import Search from './search_health';
+
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -177,7 +179,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          {/* 루틴명 입력 */}
+          {/* 루틴입력 */}
+          <View style={{zIndex: 1}}>
+            <Search />
+          </View>
+          {/* 
           <View style={styles.Routinename}>
             <TextInput
               style={styles.Routineinput}
@@ -186,7 +192,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               placeholder="루틴명을 입력해 주세요!"
               onFocus={() => navigation.navigate('Search')}
             />
-          </View>
+          </View> */}
 
           {/* 루틴 아이콘 */}
           {/* <View style={styles.Routineicon}>

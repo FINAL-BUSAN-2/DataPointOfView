@@ -375,19 +375,19 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               </View>
             </View>
 
-            <View style={styles.healthheader}>
-              {/* 루틴명 입력 */}
-              <View style={styles.Routinename}>
-                {/* <TextInput
+            {/* <View style={styles.healthheader}> */}
+            {/* 루틴명 입력 */}
+            {/* <View style={styles.Routinename}> */}
+            {/* <TextInput
                   style={styles.Routineinput}
                   value={routineName}
                   onChangeText={handleRoutineNameChange}
                   placeholder="루틴 이름을 설정해주세요"
                 /> */}
-
-                <HealthSearch />
-
-                {/* 카메라 아이콘
+            <View style={{zIndex: 1}}>
+              <HealthSearch />
+            </View>
+            {/* 카메라 아이콘
               <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
                 <Image
@@ -395,17 +395,17 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                   style={styles.cameraicon}
                 />
               </TouchableOpacity> */}
-              </View>
-              {/* 루틴 아이콘 */}
-              <View style={styles.Routineicon}>
+            {/* </View> */}
+            {/* 루틴 아이콘 */}
+            {/* <View style={styles.Routineicon}>
                 <TouchableOpacity onPress={handleAddButtonClick}>
                   <Image
                     source={require('./android/app/src/img/flo_ex.png')}
                     style={styles.Routineicon_add}
                   />
                 </TouchableOpacity>
-              </View>
-            </View>
+              </View> */}
+            {/* </View> */}
 
             {/* 세트 & 횟수 입력 박스 */}
             <View style={styles.setreps}>
