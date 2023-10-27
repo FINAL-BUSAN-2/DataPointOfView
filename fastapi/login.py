@@ -255,7 +255,7 @@ class HEALTH(Base):
 class HRTN_FIN(Base):
     __tablename__ = "hrtn_fin"
     hrtn_id = Column(String(100), primary_key=True)
-    fin_hrnt_time = Column(String(8), primary_key=True)
+    fin_hrtn_time = Column(String(8), primary_key=True)
 
 
 class PILL_PROD(Base):
@@ -266,6 +266,16 @@ class PILL_PROD(Base):
     pill_rv = Column(Float)
     pill_rvnum = Column(Integer)
     pill_info = Column(String(255))
+
+
+class PILL_SIDEEFF(Base):
+    __tablename__ = "pill_sideeff"
+    sideeff_cd1 = Column(String(10), primary_key=True)
+    sideeff_nm1 = Column(String(90), nullable=False)
+    sideeff_cd2 = Column(String(10), primary_key=True)
+    sideeff_nm2 = Column(String(90), nullable=False)
+    sideeff_txt = Column(String(255), nullable=False)
+    sideeff_caution = Column(String(255), nullable=False)
 
 
 class PILL_FUNC(Base):
@@ -283,20 +293,14 @@ class PILL_NUTR(Base):
 
 class PILL_CMB(Base):
     __tablename__ = "pill_cmb"
-    cmb_nutr = Column(
-        String(10), ForeignKey("pill_nutr.nutr_cd"), primary_key=True, nullable=False
-    )
-    cmb_func = Column(
-        String(10), ForeignKey("pill_func.func_cd"), primary_key=True, nullable=False
-    )
-    cmb_pill = Column(
-        String(20), ForeignKey("pill_prod.pill_cd"), primary_key=True, nullable=False
-    )
+    cmb_nutr = Column(String(10), primary_key=True, nullable=False)
+    cmb_func = Column(String(10), primary_key=True, nullable=False)
+    cmb_pill = Column(String(20), primary_key=True, nullable=False)
 
 
 class PRTN_FIN(Base):
     __tablename__ = "prtn_fin"
-    prtn_id = Column(String(100), ForeignKey("prtn_setting.prnt_id"), primary_key=True)
+    prtn_id = Column(String(100), primary_key=True)
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
@@ -806,7 +810,7 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
+def get_health_chart_data(db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
@@ -867,32 +871,100 @@ def get_color_by_tag(tag):
 
 
 @app.get("/pill_piechartdata")
+# def get_pill_chart_data(db: Session = Depends(get_db)):
+#     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+#     func_counts_query = (
+#         db.query(
+#             PILL_FUNC.func_nm,
+#             func.count(PILL_FUNC.func_nm).label("count"),
+#             func.first_value(PILL_FUNC.func_nm)
+#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+#             .label("top_func_nm"),
+#             func.first_value(PILL_FUNC.func_emoji)
+#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+#             .label("top_func_emoji"),
+#         )
+#         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
+#         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
+#         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
+#         .filter(
+#             and_(
+#                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+#                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+#             )
+#         )
+#         .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
+#         .all()
+#     )
+
+
+#     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
+#     pill_chart_data = [
+#         {
+#             "func": func_count[0],
+#             "count1": func_count[1],
+#             "top_func_nm": func_count[2],
+#             "top_func_emoji": func_count[3],
+#             "color1": get_color_by_func(func_count[0]),
+#         }
+#         for func_count in func_counts_query
+#     ]
+# def get_pill_chart_data(db: Session = Depends(get_db)):
+#     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+#     func_counts_query = (
+#         db.query(
+#             PILL_FUNC.func_nm,
+#             func.count(PILL_FUNC.func_nm).label("count"),
+#             func.first_value(PILL_FUNC.func_nm)
+#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+#             .label("top_func_nm"),
+#             func.first_value(PILL_FUNC.func_emoji)
+#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
+#             .label("top_func_emoji"),
+#         )
+#         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
+#         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
+#         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
+#         .filter(
+#             and_(
+#                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+#                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+#             )
+#         )
+#         .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
+#         .all()
+#     )
 def get_pill_chart_data(db: Session = Depends(get_db)):
+    # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     func_counts_query = (
-        db.query(
-            PILL_FUNC.func_nm,
-            func.count(PILL_FUNC.func_nm).label("count"),
-            PILL_FUNC.func_emoji,
-            func.first_value(PILL_FUNC.func_nm)
-            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-            .label("top_func_nm"),
-            func.first_value(PILL_FUNC.func_emoji)
-            .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-            .label("top_func_emoji"),
-        )
-        .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-        .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .filter(
             and_(
                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
             )
         )
-        .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
+        .group_by(PILL_FUNC.func_nm)
         .all()
     )
+    # # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
+    # pill_chart_data = [
+    #     {
+    #         "func": func_count[0],
+    #         "count1": func_count[1],
+    #         "top_func_nm": func_count[2],
+    #         "top_func_emoji": func_count[3],
+    #         "color1": get_color_by_func(func_count[0]),
+    #     }
+    #     for func_count in func_counts_query
+    # ]
+
+    # return pill_chart_data
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_chart_data = [
@@ -900,14 +972,20 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
             "func": func_count[0],
             "count1": func_count[1],
             "emoji1": func_count[2],
-            "top_func_nm": func_count[3],
-            "top_func_emoji": func_count[4],
-            "color1": get_color_by_func(func_count[0]),
+            "color1": get_color_by_tag(func_count[0]),
         }
         for func_count in func_counts_query
     ]
 
-    return pill_chart_data
+    top_item1 = max(pill_chart_data, key=lambda x: x["count1"])
+    top_func1 = top_item1["func"]
+    top_emoji1 = top_item1["emoji1"]
+
+    return {
+        "pie_chart_data": pill_chart_data,
+        "top_func1": top_func1,
+        "top_emoji1": top_emoji1,
+    }
 
 
 def get_color_by_func(func):
@@ -947,19 +1025,76 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
-@app.get("/test")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(News_Data).all()
-    return testdata
+# @app.get("/test")
+# def test(db: Session = Depends(get_db)):
+#     testdata = db.query(PILL_CMB).all()
+#     return testdata
+
+
+# @app.get("/test2")
+# def test2(db: Session = Depends(get_db)):
+#     testdata2 = db.query(PILL_PROD).all()
+#     return testdata2
+
+
+@app.get("/test3")
+def test3(db: Session = Depends(get_db)):
+    testdata3 = (
+        db.query(PILL_PROD)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata3
+
+
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    testdata4 = (
+        db.query(PILL_CMB)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd.in_(PILL_CMB.cmb_pill),
+            )
+        )
+        .all()
+    )
+    return testdata4
 
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(PILL_FUNC).all()
+    testdata2 = (
+        db.query(PILL_CMB)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill.in_(PILL_PROD.pill_cd),
+            )
+        )
+        .all()
+    )
     return testdata2
 
+  
+@app.get("/test5")
+def test5(db: Session = Depends(get_db)):
+    testdata5 = (
+        db.query(PILL_FUNC)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata5
 
-############################################################## 루틴검색창
+
+############################################################## pill_prod ,health ((영양검색창활용)
+
 class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
     pill_nm: str

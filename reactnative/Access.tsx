@@ -58,11 +58,12 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
     console.log('chartData2:', chartData2);
+    fetch('http://43.200.178.131:3344/test2')
+      .then(response => response.json())
+      .then(test => setChartData3(test))
+      .catch(error => console.error('Error:', error));
   }, []);
 
-  if (!chartData) {
-    return <div>Loading...</div>;
-  }
   const pieChartData = chartData.pie_chart_data
     ? chartData.pie_chart_data.map(item => ({
         count: item.count,
@@ -70,21 +71,20 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       }))
     : [];
 
-  const hcount = pieChartData.map(item => item.count);
-  const hcolor = pieChartData.map(item => item.color);
+  const hcount = pieChartData.map(item1 => item1.count);
+  const hcolor = pieChartData.map(item2 => item2.color);
   const htopTag = chartData.top_tag;
   const htopEmoji = chartData.top_emoji;
-  // const count = chartData.map(dataPoint => dataPoint.count);
-  // const color = chartData.map(dataPoint => dataPoint.color);
-  // const toptag = chartData.map(dataPoint => dataPoint.color);
-  // const emoji = chartData.map(dataPoint => dataPoint.color);
   const pcount = chartData2.map(dataPoint => dataPoint.count1);
   const pcolor = chartData2.map(dataPoint => dataPoint.color1);
   const top_func_nm = chartData2.map(dataPoint => dataPoint.top_func_nm);
   const top_func_emoji = chartData2.map(dataPoint => dataPoint.top_func_emoji);
+  const test = chartData3.map(dataPoint => dataPoint.health_emoji);
   // console.log('pieChartData:', pieChartData);
   console.log('hcount:', pcount);
   console.log('hcolor:', pcolor);
+  // console.log('test:', test);
+  // console.log('hcolor:', test);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -210,11 +210,16 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               </Text>
             ))} */}
 
-            <PieChart
-              widthAndHeight={100}
-              series={hcount}
-              sliceColor={hcolor}
-            />
+            {chartData.pie_chart_data ? (
+              <PieChart
+                widthAndHeight={100}
+                series={hcount}
+                sliceColor={hcolor}
+              />
+            ) : (
+              // 데이터가 로딩 중일 때 보여줄 컴포넌트나 메시지
+              <Text>Loading...</Text>
+            )}
           </View>
           <View style={styles.pillchart}>
             {/* <PieChart
@@ -239,6 +244,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               innerRadius={15}
               colorScale={chartData2.map(dataPoint2 => dataPoint2.color)}
             /> */}
+            <Text>{test}</Text>
           </View>
         </View>
 
