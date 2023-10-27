@@ -266,47 +266,50 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
-        {/* 추천 */}
-        <View style={styles.upTab}>
-          <Image
-            source={require('./android/app/src/img/thumb_up.png')}
-            style={styles.upIcon}
-          />
-          <Text>추천</Text>
-        </View>
+        {/* 아티클 */}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Social'}],
+            });
+          }}>
+          <View style={styles.articleTab}>
+            <View style={styles.articleTab2}>
+              <Text style={styles.articleemoji}>📰</Text>
+              <Text style={styles.navText}>아티클</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* 홈 */}
         <TouchableOpacity
           onPress={() => {
-            console.log('호잇');
             navigation.reset({
               index: 0,
               routes: [{name: 'Main'}],
             });
           }}>
           <View style={styles.homeTab}>
-            <Image
-              source={require('./android/app/src/img/home.png')}
-              style={styles.homeIcon}
-            />
-            <Text style={styles.homeText}>홈</Text>
+            <View style={styles.homeTab2}>
+              <Text style={styles.homeemoji}>🏠</Text>
+              <Text style={styles.navText}>홈</Text>
+            </View>
           </View>
         </TouchableOpacity>
 
         {/* 개인 */}
         <TouchableOpacity
           onPress={() => {
-            console.log('가자');
             navigation.reset({
               index: 0,
               routes: [{name: 'Access'}],
             });
           }}>
           <View style={styles.accTab}>
-            <Image
-              source={require('./android/app/src/img/accessibility.png')}
-              style={styles.accIcon}
-            />
-            <Text>개인</Text>
+            <View style={styles.accTab2}>
+              <Text style={styles.accemoji}>🙋</Text>
+              <Text style={styles.navText}>개인</Text>
+            </View>
           </View>
         </TouchableOpacity>
       </View>
@@ -496,15 +499,17 @@ const styles = StyleSheet.create({
   // 통계제목 영역
   titlecontainer: {
     flex: 0.5,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
-    top: 10,
+    top: 30,
   },
   // 운동 타이틀
   titlehealth: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '25%',
     height: '120%',
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
     borderRadius: 15,
     backgroundColor: '#fff',
@@ -519,22 +524,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   // 영양 타이틀
-  titleetc: {
+  titlepill: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '25%',
     height: '120%',
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
     borderRadius: 15,
     left: '100%',
     backgroundColor: '#fff',
     zIndex: 2,
   },
+
   // 통계 영역
   statistics: {
     flex: 5,
     flexDirection: 'column',
     justifyContent: 'center',
     paddingBottom: '20%',
+    top: 20,
     zIndex: 1,
   },
   // 차트 영역
@@ -550,19 +559,11 @@ const styles = StyleSheet.create({
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    //테두리, 이후 지우기
-    borderColor: 'rgb(231,230,230)',
-    borderWidth: 2,
-    borderRadius: 15,
   },
   pillchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    //테두리, 이후 지우기
-    borderColor: 'rgb(231,230,230)',
-    borderWidth: 2,
-    borderRadius: 15,
   },
 
   // 통계 텍스트 영역
@@ -570,7 +571,7 @@ const styles = StyleSheet.create({
     flex: 5,
     height: 100,
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 25,
   },
   recotext: {
     fontSize: 15,
@@ -582,6 +583,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     alignSelf: 'center',
+    marginTop: 3,
   },
   cautiontext: {
     top: 5,
@@ -589,6 +591,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     alignSelf: 'center',
+    marginTop: 10,
   },
   cautiontext2: {
     top: 5,
@@ -596,65 +599,84 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     alignSelf: 'center',
+    marginTop: 3,
   },
 
   //네비게이션바
   navBarContainer: {
     flex: 1.5,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: '10%',
+    borderTopColor: 'rgb(231,230,230)',
+    borderTopWidth: 1,
+    height: '8%',
     backgroundColor: '#fff',
-    alignItems: 'center',
-    elevation: 50, // for Android
     zIndex: 2,
   },
-  // 추천
-  upTab: {
+  // 아티클
+  articleTab: {
+    flex: 3,
+    width: 70,
+    left: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    left: 15,
   },
-  // 추천 아이콘
-  upIcon: {
-    width: 35,
-    height: 35,
+  articleTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // 아티클 이모지
+  articleemoji: {
+    fontSize: 25,
   },
   // 홈
   homeTab: {
-    bottom: 15,
-    width: 90,
-    height: 90,
-    borderRadius: 50,
+    flex: 3,
+    width: 70,
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(43,58,85,0.7)',
   },
-  // 홈 아이콘
-  homeIcon: {
-    width: 60,
-    height: 60,
+  homeTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  // 홈 텍스트
-  homeText: {
-    bottom: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
+  // 홈 이모지
+  homeemoji: {
+    fontSize: 25,
   },
   // 개인
   accTab: {
+    flex: 3,
+    width: 70,
+    right: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    right: 15,
   },
-  // 개인 아이콘
-  accIcon: {
-    width: 35,
-    height: 35,
+  accTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 55,
+    borderRadius: 35,
+    backgroundColor: 'rgb(245,235,224)',
+  },
+  // 개인 이모지
+  accemoji: {
+    fontSize: 25,
+  },
+  // 네비게이션 텍스트
+  navText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
   },
 });
 export default Access;
