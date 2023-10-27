@@ -457,13 +457,13 @@ def generate_unique_prtn_id(prtn_mem):
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
-    # email = request.session["user_email"]
+    email = request.session["user_email"]
     # 라우터에 전달된 데이터 출력
     logging.error(f"Received: {request}")
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
+        ertn_id = generate_unique_ertn_id(email)
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
