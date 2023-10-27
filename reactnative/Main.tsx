@@ -59,8 +59,7 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/rtnlist');
-      //http://43.200.178.131:3344
+      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
 
       if (response.data) {
         const data = response.data;
