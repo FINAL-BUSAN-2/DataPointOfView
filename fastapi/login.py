@@ -928,6 +928,7 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         {
             "tag": tag_count[0],
             "count": tag_count[1],
+            "emoji": tag_count[2],
             "color": get_color_by_tag(tag_count[0]),
         }
         for tag_count in tag_counts_query
