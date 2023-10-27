@@ -910,7 +910,7 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
-        db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
+        db.query(HEALTH.health_tag, func.count(HEALTH.health_tag), HEALTH.health_emoji)
         .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
         .filter(
             and_(
@@ -921,12 +921,14 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         .group_by(HEALTH.health_tag)
         .all()
     )
-
+    top_tag = max(pie_chart_data, key=lambda x: x["count"])["tag"]
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pie_chart_data = [
         {
             "tag": tag_count[0],
             "count": tag_count[1],
+            "emoji": tag_count[2],
+            "toptag": top_tag,
             "color": get_color_by_tag(tag_count[0]),
         }
         for tag_count in tag_counts_query
@@ -956,49 +958,32 @@ def get_color_by_tag(tag):
         return "#808080"  # 기타는 회색으로 설정
 
 
-@app.get("/health_listdata")
-def get_health_list_data(db: Session = Depends(get_db)):
-    # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-
-    # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
-    health_names = (
-        db.query(HRTN_SETTING.hrtn_nm)
-        .filter(HRTN_FIN.hrtn_id.in_(hrtn_ids_query))
-        .distinct()
-        .all()
-    )
-
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    # pie_list_data = [
-    #     {
-    #         "name": health_name[0],
-    #     }
-    #     for health_name in health_names
-    # ]
-
-    return health_names
-
-
 @app.get("/pill_piechartdata")
 def get_pill_chart_data(db: Session = Depends(get_db)):
     func_counts_query = (
-        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_PROD.pill_nm)
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)))
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+            )
+        )
         .group_by(PILL_FUNC.func_nm, PILL_PROD.pill_nm)
         .all()
     )
-
+    top_func = max(pill_chart_data, key=lambda x: x["count1"])["func"]
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_chart_data = [
         {
             "func": func_count[0],
-            "count": func_count[1],
-            "color": get_color_by_func(func_count[0]),
+            "count1": func_count[1],
+            "emoji1": func_count[2],
+            "top_func": top_func,
+            "color1": get_color_by_func(func_count[0]),
         }
         for func_count in func_counts_query
     ]
@@ -1041,26 +1026,6 @@ def get_color_by_func(func):
     }
     # 딕셔너리에서 찾아 반환하거나 기타는 회색
     return color_mapping.get(func, "#808080")  # 기본값은 회색
-
-
-@app.get("/pill_listdata")
-def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
-    pill_names_query = (
-        db.query(PILL_PROD.pill_nm)
-        .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
-        .distinct()
-        .all()
-    )
-
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    pill_list_data = [
-        {"name": pill_name[0], "email": request.session["user_email"]}
-        for pill_name in pill_names_query
-    ]
-
-    return pill_list_data
 
 
 @app.get("/test")

@@ -12,8 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-// import {VictoryPie} from 'victory';
-import Balloon from 'react-native-balloon';
+import PieChart from 'react-native-pie-chart';
 
 // 화면 관리
 type AccessProps = {
@@ -44,176 +43,28 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
-    fetchData();
-    fetchData2();
-    fetchData3();
-    fetchData4();
-    fetchData5();
-    fetchData6();
+    // fetchData();
+    // fetchData2();
+    // fetchData3();
+    // fetchData4();
+    // fetchData5();
+    // fetchData6();
+    fetch('http://43.200.178.131:3344/health_piechartdata')
+      .then(response => response.json())
+      .then(healthdata => setChartData(healthdata))
+      .catch(error => console.error('Error:', error));
+    fetch('http://43.200.178.131:3344/pill_piechartdata')
+      .then(response => response.json())
+      .then(pilldata => setChartData2(pilldata))
+      .catch(error => console.error('Error:', error));
+    console.log('chartData2:', chartData2);
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const data = await healthPieChartData(); // getChartData() 호출하여 데이터 가져오기
-      setChartData(data);
-      // console.log(data);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
-
-  const fetchData2 = async () => {
-    try {
-      const data2 = await pillPieChartData(); // getChartData() 호출하여 데이터 가져오기
-      setChartData2(data2);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
-
-  const fetchData3 = async () => {
-    try {
-      const data3 = await healthlistData(); // getChartData() 호출하여 데이터 가져오기
-      setChartData3(data3);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const pilllistData = async () => {
-    try {
-      const response = await fetch('http://43.200.178.131:3344/pill_listdata');
-      // const response = await fetch('http://54.180.91.68:3306');
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-      }
-      const data4 = await response.json();
-      console.log(data4);
-      console.log(chartData4);
-      return data4;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  const fetchData4 = async () => {
-    try {
-      const data4 = await pilllistData(); // getChartData() 호출하여 데이터 가져오기
-      setChartData4(data4);
-      console.log(data4);
-      console.log(chartData4);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
-
-  const fetchData5 = async () => {
-    try {
-      const data5 = await testapi(); // getChartData() 호출하여 데이터 가져오기
-      setChartData5(data5);
-      // console.log(data5);
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-    }
-  };
-
-  // const fetchData6 = async () => {
-  //   try {
-  //     const data6 = await testapi2(); // getChartData() 호출하여 데이터 가져오기
-  //     setChartData6(data6);
-  //     console.log(data6);
-  //   } catch (error) {
-  //     console.error('Error fetching chart data:', error);
-  //   }
-  // };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const healthPieChartData = async () => {
-    try {
-      const response = await fetch(
-        'http://43.200.178.131:3344/health_piechartdata',
-      );
-      // const response = await fetch('http://54.180.91.68:3306');
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-      }
-      const data = await response.json();
-      // console.log(data);
-      return data;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const pillPieChartData = async () => {
-    try {
-      // console.log('debug');
-      const response = await fetch(
-        'http://43.200.178.131:3344/pill_piechartdata',
-      );
-
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-        // console.log(response);
-      }
-      const data2 = await response.json();
-      // console.log(data2);
-      // console.log(data2);
-      // console.log('debug');
-      return data2;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const healthlistData = async () => {
-    try {
-      const response = await fetch(
-        'http://43.200.178.131:3344/health_listdata',
-      );
-      // const response = await fetch('http://54.180.91.68:3306');
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-      }
-      const data3 = await response.json();
-      // console.log(data3);
-      return data3;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  // 차트 데이터를 가져오는 비동기 함수 정의
-  const testapi = async () => {
-    try {
-      const response = await fetch('http://43.200.178.131:3344/test');
-      if (!response.ok) {
-        // throw new Error('Failed to fetch chart data');
-      }
-      const data5 = await response.json();
-      // console.log(data5);
-      return data5;
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
-  const fetchData6 = async () => {
-    try {
-      const response = await fetch('http://43.200.178.131:3344/test2');
-      if (!response.ok) {
-      }
-      const data6 = await response.json();
-      setChartData6(data6);
-      // console.log(setChartData6);
-    } catch (error) {
-      throw new Error(`Error accessing chart data: ${error.message}`);
-    }
-  };
-
+  const series = chartData.map(dataPoint => dataPoint.count);
+  const sliceColor = chartData.map(dataPoint => dataPoint.color);
+  const series2 = chartData2.map(dataPoint => dataPoint.count);
+  const sliceColor2 = chartData2.map(dataPoint => dataPoint.color);
+  console.log(chartData);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -325,31 +176,34 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       <View style={styles.statistics}>
         <View style={styles.chart}>
           <View style={styles.healthchart}>
+            {/* {chartData.map((item, index) => (
+              <Text key={index}>{JSON.stringify(item)}</Text>
+            ))} */}
             {/* {chartData2.map((dataPoint, index) => (
               <Text key={index}>
                 ㆍ{dataPoint.func}
                 {dataPoint.count}
               </Text>
             ))} */}
-            {/* <VictoryPie
-              data={chartData.map(dataPoint => ({
-                x: dataPoint.tag,
-                y: dataPoint.count,
-              }))}
-              width={80} // 가로 크기
-              height={80} // 세로 크기
-              radius={40} // 반지름
-              innerRadius={15}
-              colorScale={chartData.map(dataPoint => dataPoint.color)}
-            /> */}
+
+            <PieChart
+              widthAndHeight={100}
+              series={series}
+              sliceColor={sliceColor}
+            />
           </View>
           <View style={styles.pillchart}>
-            {chartData2.map((dataPoint, index) => (
+            <PieChart
+              widthAndHeight={100}
+              series={series2}
+              sliceColor={sliceColor2}
+            />
+            {/* {chartData2.map((dataPoint, index) => (
               <Text key={index}>
                 ㆍ{dataPoint.func}
                 {dataPoint.count}
               </Text>
-            ))}
+            ))} */}
             {/* <VictoryPie
               data={chartData2.map(dataPoint2 => ({
                 x: dataPoint2.func,
