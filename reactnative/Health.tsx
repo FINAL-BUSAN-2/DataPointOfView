@@ -19,6 +19,7 @@ import {
   useCameraDevice,
   useCameraDevices,
 } from 'react-native-vision-camera';
+import RNFS from 'react-native-fs';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -169,7 +170,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <Image
               source={{uri: cameraImgPath}}
               style={{width: 100, height: 100}}
-            />{' '}
+            />
             {/* 이미지 크기는 예시입니다. 원하는 대로 조절하세요. */}
           </View>
         ) : (
@@ -202,7 +203,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           <View style={styles.container}>
             <ScrollView>
               <View style={{flex: 3}}>
-
                 {/* 큰틀1 */}
                 <View style={{flex: 3}}>
                   {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
@@ -255,7 +255,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                             borderWidth: 1,
                             borderColor: 'purple',
                           }}>
-
                           {/* 위쪽 컨텐츠 (오른쪽 위) */}
                           {/* <Text>태그4</Text> */}
 
@@ -343,7 +342,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               <Text>유산소</Text>
                             </TouchableOpacity>
                           </View>
-
                         </View>
                       </View>
                     </View>
