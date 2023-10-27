@@ -921,7 +921,7 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         .group_by(HEALTH.health_tag)
         .all()
     )
-    top_tag = max(pie_chart_data, key=lambda x: x["count"])["tag"]
+
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pie_chart_data = [
         {
@@ -933,6 +933,8 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         }
         for tag_count in tag_counts_query
     ]
+
+    top_tag = max(pie_chart_data, key=lambda x: x["count"])["tag"]
 
     return pie_chart_data
 
@@ -975,7 +977,7 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .group_by(PILL_FUNC.func_nm, PILL_PROD.pill_nm)
         .all()
     )
-    top_func = max(pill_chart_data, key=lambda x: x["count1"])["func"]
+
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_chart_data = [
         {
@@ -987,6 +989,8 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         }
         for func_count in func_counts_query
     ]
+
+    top_func = max(pill_chart_data, key=lambda x: x["count1"])["func"]
 
     return pill_chart_data
 
