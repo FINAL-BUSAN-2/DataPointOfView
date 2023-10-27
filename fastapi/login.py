@@ -1126,7 +1126,7 @@ def get_color_by_func(func):
 
 @app.get("/test")
 def test(db: Session = Depends(get_db)):
-    testdata = db.query(News_Data).all()
+    testdata = db.query(PILL_CMB).all()
     return testdata
 
 
