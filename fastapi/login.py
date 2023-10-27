@@ -986,7 +986,6 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
             "func": func_count[0],
             "count1": func_count[1],
             "emoji1": func_count[2],
-            "top_func": top_func,
             "color1": get_color_by_func(func_count[0]),
         }
         for func_count in func_counts_query
