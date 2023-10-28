@@ -1032,7 +1032,7 @@ def test3(db: Session = Depends(get_db)):
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
             and_(
-                HRTN_SETTING.hrtn_mem == "abc123@naver.com",
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                 or_(
                     HRTN_SETTING.hrtn_day.is_(None),
                     HRTN_SETTING.hrtn_day.like(
