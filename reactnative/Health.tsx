@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
@@ -17,17 +18,37 @@ import {HaddRoutine} from './api';
 import {
   Camera,
   useCameraDevice,
-  useCameraDevices,
+  // useCameraDevices,
 } from 'react-native-vision-camera';
+
+import RNFS from 'react-native-fs';
 import axios from 'axios';
 import HealthSearch from './search_health';
+
 
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
-  const devices = useCameraDevices();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
+  const toggleModal = () => {
+    RNFS.unlink(`${internalStoragePath}/${newFileName}`)
+      .then(() => {
+        console.log('파일 삭제 성공');
+        RNFS.readdir(internalStoragePath).then(files => {
+          console.log('폴더 내 파일 목록:', files);
+          // 이 목록에 이동된 파일이 있는지 확인할 수 있음
+        });
+      })
+      .catch(err => {
+        console.log('파일 삭제 실패: ', err);
+      });
+    setModalVisible(!isModalVisible);
+    setCameraImgPath('');
+  };
+  // const devices = useCameraDevices();
   const device = useCameraDevice('back');
   const camera = React.useRef(null);
   // 카메라 오픈 여부 상태 추가
@@ -183,16 +204,67 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
 
+  // 내부 저장소의 경로 얻기
+  const internalStoragePath = RNFS.DocumentDirectoryPath;
   // 사진찍기
-  const onPressButton = async () => {
+  const onCameraButton = async () => {
+    const timestamp = Date.now();
+    const newFileName = `photo_${timestamp}.jpg`;
     if (!camera.current) return;
     const photo = await camera.current.takePhoto({
       flash: 'off',
       qualityPrioritization: 'speed',
     });
 
-    Alert.alert(photo.path);
-    setCameraImgPath(photo.path);
+    await RNFS.moveFile(
+      `/${photo.path}`,
+      `file://${internalStoragePath}/${newFileName}`,
+    )
+      .then(() =>
+        console.log(
+          'Image Moved',
+          `${photo.path}`,
+          '-- to --',
+          `file://${internalStoragePath}/${newFileName}`,
+        ),
+      )
+      .then(() =>
+        setCameraImgPath(`file://${internalStoragePath}/${newFileName}`),
+      );
+    RNFS.readdir(internalStoragePath).then(files => {
+      console.log('폴더 내 파일 목록:', files);
+      // 이 목록에 이동된 파일이 있는지 확인할 수 있음
+    });
+    setModalVisible(!isModalVisible);
+    setNewFileName(newFileName);
+  };
+
+  const imageSearch = async () => {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: cameraImgPath,
+      type: 'image/jpeg', // 이미지 형식에 따라 변경
+      name: 'image.jpg', // 이미지 파일 이름
+    });
+
+    // FastAPI 서버 URL
+    const serverUrl = 'http://43.200.178.131:3344/imageSearch';
+
+    // POST 요청 보내기
+    fetch(serverUrl, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(newFileName, data.filename);
+      })
+      .catch(error => {
+        console.error('오류:', error);
+      });
   };
 
   return (
@@ -204,25 +276,85 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       </View>
 
       {isCameraOpen && device !== null ? (
-        cameraImgPath !== '' ? (
-          <View>
-            <Image
-              source={{uri: cameraImgPath}}
-              style={{width: 100, height: 100}}
-            />{' '}
-            {/* 이미지 크기는 예시입니다. 원하는 대로 조절하세요. */}
-          </View>
-        ) : (
-          <View style={styles.cameraContainer}>
-            <Camera
-              style={styles.camera}
-              device={device}
-              photo={true}
-              isActive={true}
-              ref={camera}
-            />
-          </View>
-        )
+        // <View>
+        //   <Image
+        //     source={{uri: cameraImgPath}}
+        //     style={{width: 300, height: 300}}
+        //   />
+        //   <Text>{cameraImgPath}</Text>
+        // </View>
+        <View style={styles.cameraContainer}>
+          <Camera
+            style={styles.camera}
+            device={device}
+            photo={true}
+            isActive={true}
+            ref={camera}
+          />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={toggleModal}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                source={{
+                  uri: `file://${internalStoragePath}/${newFileName}`,
+                }}
+                style={{
+                  width: 300,
+                  height: 300,
+                  transform: [{rotate: '-90deg'}],
+                }}
+              />
+              <View
+                style={{
+                  width: 300,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity onPress={imageSearch}>
+                  <View
+                    style={{
+                      width: 120,
+                      height: 50,
+                      backgroundColor: 'blue',
+                      margin: 15,
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{textAlign: 'center', color: 'white'}}>
+                      검색
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={toggleModal}>
+                  <View
+                    style={{
+                      width: 120,
+                      height: 50,
+                      backgroundColor: 'red',
+                      margin: 15,
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{textAlign: 'center', color: 'white'}}>
+                      닫기
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
       ) : (
         // <View style={styles.cameraContainer}>
         //   <Camera
@@ -238,6 +370,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
             <View style={{flex: 3}}>
               {/* 큰틀1 */}
               <View style={{flex: 3}}>
+
                 {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
                 <View style={{flex: 1, flexDirection: 'row'}}>
                   {/* 왼쪽 공간 */}
@@ -288,6 +421,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                         {/* 위쪽 컨텐츠 (오른쪽 위) */}
                         {/* <Text>태그4</Text> */}
 
+
                         <View
                           style={{
                             flex: 1,
@@ -304,6 +438,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                             }>
                             <Text style={{color: 'white'}}>상체</Text>
                           </TouchableOpacity>
+
 
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Lower Body')}
@@ -334,6 +469,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                             }>
                             <Text style={{color: 'white'}}>기타</Text>
                           </TouchableOpacity>
+
                         </View>
                       </View>
                       {/* 아래쪽 공간 (오른쪽 아래) */}
@@ -347,6 +483,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                           }}>
+
                           {/* <Text>태그3</Text> */}
                           <TouchableOpacity
                             onPress={() => handletagsEnabled('Stretching')}
@@ -367,6 +504,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                             }>
                             <Text style={{color: 'white'}}>유산소</Text>
                           </TouchableOpacity>
+
                         </View>
                       </View>
                     </View>
