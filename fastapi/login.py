@@ -788,15 +788,16 @@ def get_merged_routines_from_database(email):
 
 
 @app.get("/rtnlist")
-def rtnlist(db: Session = Depends(get_db)):
+def rtnlist(userEmail: str, db: Session = Depends(get_db)):
     # 현재 날짜와 요일 얻기
     today = datetime.today().date()
-    day_of_week = datetime.today().strftime("%a")
+    korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+    day_of_week = korean_days[today.weekday()]
 
     # ertn_setting 테이블에서 조건에 맞는 레코드 조회
     ertn_list = (
         db.query(ERTN_SETTING)
-        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .filter(ERTN_SETTING.ertn_mem == userEmail)
         .filter(
             (ERTN_SETTING.ertn_sdate == today)
             | (ERTN_SETTING.ertn_day.contains(day_of_week))
@@ -808,7 +809,7 @@ def rtnlist(db: Session = Depends(get_db)):
     # prtn_setting 테이블에서 조건에 맞는 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(PRTN_SETTING.prtn_mem == userEmail)
         .filter(
             (PRTN_SETTING.prtn_sdate == today)
             | (PRTN_SETTING.prtn_day.contains(day_of_week))
@@ -820,7 +821,7 @@ def rtnlist(db: Session = Depends(get_db)):
     # hrtn_setting 테이블에서 조건에 맞는 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
-        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .filter(HRTN_SETTING.hrtn_mem == userEmail)
         .filter(
             (HRTN_SETTING.hrtn_sdate == today)
             | (HRTN_SETTING.hrtn_day.contains(day_of_week))
