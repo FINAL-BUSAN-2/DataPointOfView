@@ -1118,7 +1118,8 @@ def test4(db: Session = Depends(get_db)):
         ),
     )
     print(testdata4)
-    print("debug")
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug("debug")
     return testdata4
 
 
