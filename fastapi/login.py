@@ -832,6 +832,12 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
+@app.get("/test")
+def test(db: Session = Depends(get_db)):
+    testdata = db.query(HRTN_SETTING).all()
+    return testdata
+
+
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
     testdata2 = (
