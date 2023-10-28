@@ -978,7 +978,7 @@ def test(db: Session = Depends(get_db)):
     current_day = day_name_mapping[now.strftime("%A").upper()].name
     # print(f"오늘 날짜: {today}, 요일: {current_day}")
     testdata = (
-        db.query(func.count(HRTN_SETTING))
+        db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
             and_(
                 current_day.in_(HRTN_SETTING.hrtn_day),
@@ -989,7 +989,6 @@ def test(db: Session = Depends(get_db)):
             ),
             and_(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com"),
         )
-        .group_by(HRTN_SETTING)
         .all()
     )
     return testdata
