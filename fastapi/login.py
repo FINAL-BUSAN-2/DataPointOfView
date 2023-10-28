@@ -492,7 +492,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
+            # db.refresh(db_routine)
             logger.error("7777777777777777777777777")
 
         return db_routine
@@ -595,167 +595,22 @@ class MergedRoutineResponse(BaseModel):
     rtn_day: str
 
 
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-class Weekday(Enum):
-    월 = 0
-    화 = 1
-    수 = 2
-    목 = 3
-    금 = 4
-    토 = 5
-    일 = 6
-
-
-# Define a mapping from English to Korean day names
-day_name_mapping = {
-    "MONDAY": Weekday.월,
-    "TUESDAY": Weekday.화,
-    "WEDNESDAY": Weekday.수,
-    "THURSDAY": Weekday.목,
-    "FRIDAY": Weekday.금,
-    "SATURDAY": Weekday.토,
-    "SUNDAY": Weekday.일,
-}
-
-
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-def get_merged_routines_from_database(email):
-    # 현재 날짜와 요일을 가져옵니다.
-    now = datetime.now()
-    today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    # print(f"오늘 날짜: {today}, 요일: {current_day}")
-
-    with SessionLocal() as db:
-        e_routines = db.query(ERTN_SETTING).filter_by(ertn_mem=email).all()
-        p_routines = db.query(PRTN_SETTING).filter_by(ertn_mem=email).all()
-        h_routines = db.query(HRTN_SETTING).filter_by(ertn_mem=email).all()
-
-        merged_routines = []
-
-        for routine in e_routines:
-            routine_start_date = datetime.strptime(
-                routine.ertn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.ertn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.ertn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.ertn_time,
-                                rtn_name=routine.ertn_nm,
-                                rtn_tag=routine.ertn_tag,
-                                rtn_sdate=routine.ertn_sdate,
-                                rtn_day=routine.ertn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.ertn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.ertn_time,
-                            rtn_name=routine.ertn_nm,
-                            rtn_tag=routine.ertn_tag,
-                            rtn_sdate=routine.ertn_sdate,
-                            rtn_day=routine.ertn_day,
-                        )
-                    )
-
-        for routine in p_routines:
-            routine_start_date = datetime.strptime(
-                routine.prtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.prtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.prtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.prtn_time,
-                                rtn_name=routine.prtn_nm,
-                                rtn_tag=routine.prtn_tag,
-                                rtn_sdate=routine.prtn_sdate,
-                                rtn_day=routine.prtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.prtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.prtn_time,
-                            rtn_name=routine.prtn_nm,
-                            rtn_tag=routine.prtn_tag,
-                            rtn_sdate=routine.prtn_sdate,
-                            rtn_day=routine.prtn_day,
-                        )
-                    )
-
-        for routine in h_routines:
-            routine_start_date = datetime.strptime(
-                routine.hrtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.hrtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.hrtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.hrtn_time,
-                                rtn_name=routine.hrtn_nm,
-                                rtn_tag=routine.hrtn_tag,
-                                rtn_sdate=routine.hrtn_sdate,
-                                rtn_day=routine.hrtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.hrtn_time,
-                            rtn_name=routine.hrtn_nm,
-                            rtn_tag=routine.hrtn_tag,
-                            rtn_sdate=routine.hrtn_sdate,
-                            rtn_day=routine.hrtn_day,
-                        )
-                    )
-
-                    # 루틴 정보 출력
-                    # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-
-        merged_routines.sort(key=lambda x: (x.rtn_sdate, x.rtn_time))
-        # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
-
-    return merged_routines
-
-
 # 루틴 데이터 가져오는 엔드포인트
-@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database(
-        "qwert0175@naver.com"
-    )  # request.session["mem_email"]
-    return merged_routines
+@app.get("/rtnlist")
+def rtnlist(db: Session = Depends(get_db)):
+    rtnlist = (
+        db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
+        # .join(Mem_Detail,Mem_Detail.mem_email==HRTN_SETTING.hrtn_mem)
+        .filter(
+            and_(
+                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+            )
+        ).all()
+    )
 
-
-# # 루틴 데이터 가져오는 엔드포인트
-# @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-# def read_routines(request: Request, db: Session = Depends(get_db)):
-#     email = request.session["user_email"]
-#     merged_routines = get_merged_routines_from_database(email)
-#     return merged_routines
+    return rtnlist
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
@@ -1079,7 +934,7 @@ def test2(db: Session = Depends(get_db)):
     )
     return testdata2
 
-  
+
 @app.get("/test5")
 def test5(db: Session = Depends(get_db)):
     testdata5 = (
@@ -1094,6 +949,7 @@ def test5(db: Session = Depends(get_db)):
 
 
 ############################################################## pill_prod ,health ((영양검색창활용)
+
 
 class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
