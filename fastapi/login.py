@@ -461,18 +461,18 @@ def generate_unique_prtn_id(prtn_mem):
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
-    # email = request.session["user_email"]
+    email = request.session["user_email"]
     # 라우터에 전달된 데이터 출력
     logging.error(f"Received: {request}")
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        ertn_id = generate_unique_ertn_id("qwert0175@naver.com")
+        ertn_id = generate_unique_ertn_id(email)
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem="qwert0175@naver.com",  # 로그인아이디필요
+                ertn_mem=email,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
@@ -596,46 +596,27 @@ class MergedRoutineResponse(BaseModel):
 
 
 # 루틴 데이터 가져오는 엔드포인트
+@app.get("/rtnlist")
 def rtnlist(db: Session = Depends(get_db)):
-    today_date = datetime.today().date()  # Get today's date
-    today_day = (
-        datetime.today().weekday()
-    )  # Get today's day (0=Monday, 1=Tuesday, ..., 6=Sunday)
-
-    # Filter for ertn_setting table
+    # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     ertn_list = (
         db.query(ERTN_SETTING)
         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
-        .filter(
-            (ERTN_SETTING.ertn_sdate == today_date)
-            | (ERTN_SETTING.ertn_day == today_day)
-        )
         .all()
     )
-
-    # Filter for prtn_setting table
+    # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
-        .filter(
-            (PRTN_SETTING.prtn_sdate == today_date)
-            | (PRTN_SETTING.prtn_day == today_day)
-        )
         .all()
     )
-
-    # Filter for hrtn_setting table
+    # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
-        .filter(
-            (HRTN_SETTING.hrtn_sdate == today_date)
-            | (HRTN_SETTING.hrtn_day == today_day)
-        )
         .all()
     )
-
-    # Combine the results
+    # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
 
     return combined_list
