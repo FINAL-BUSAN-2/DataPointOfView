@@ -462,6 +462,7 @@ def generate_unique_prtn_id(prtn_mem):
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
     email = request.session["user_email"]
+    print(email)
     # 라우터에 전달된 데이터 출력
     logging.error(f"Received: {request}")
     try:
