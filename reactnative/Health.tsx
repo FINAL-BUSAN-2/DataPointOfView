@@ -161,7 +161,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
-          hrtn_mem: '',
+          hrtn_mem: this.props.email,
         };
         console.log('44444444444444444444444===', requestData);
 

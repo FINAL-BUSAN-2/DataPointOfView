@@ -146,7 +146,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           prtn_cat: '',
           prtn_tag: '',
           prtn_edate: '',
-          prtn_mem: '',
+          prtn_mem: this.props.email,
         };
         console.log('44444444444444444444444===', requestData);
 
