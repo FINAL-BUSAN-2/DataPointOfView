@@ -199,15 +199,15 @@ class ERTN_SETTING(Base):
     __tablename__ = "ertn_setting"
     ertn_mem = Column(String(50), ForeignKey("mem_detail.mem_email"), primary_key=True)
     ertn_id = Column(String(50), primary_key=True)
-    ertn_nm = Column(String(100), nullable=False)
-    ertn_cat = Column(String(20), nullable=False)
-    ertn_tag = Column(String(60), nullable=False)
-    ertn_set = Column(Integer, nullable=False)
-    ertn_reps = Column(Integer, nullable=False)
-    ertn_sdate = Column(String(10), nullable=False)
-    ertn_time = Column(String(50), nullable=False)
-    ertn_alram = Column(Integer, nullable=False)
-    ertn_day = Column(String(50), nullable=False)
+    ertn_nm = Column(String(100), nullable=False)  # nullable=False
+    ertn_cat = Column(String(20), nullable=False)  # nullable=False
+    ertn_tag = Column(String(60), nullable=False)  # nullable=False
+    ertn_set = Column(Integer, nullable=False)  # nullable=False
+    ertn_reps = Column(Integer, nullable=False)  # nullable=False
+    ertn_sdate = Column(String(10), nullable=False)  # nullable=False
+    ertn_time = Column(String(50), nullable=False)  # nullable=False
+    ertn_alram = Column(Integer, nullable=False)  # nullable=False
+    ertn_day = Column(String(50), nullable=True)
     ertn_edate = Column(String(10), nullable=True)
 
 
@@ -255,7 +255,7 @@ class HEALTH(Base):
 class HRTN_FIN(Base):
     __tablename__ = "hrtn_fin"
     hrtn_id = Column(String(100), primary_key=True)
-    fin_hrnt_time = Column(String(8), primary_key=True)
+    fin_hrtn_time = Column(String(8), primary_key=True)
 
 
 class PILL_PROD(Base):
@@ -266,6 +266,16 @@ class PILL_PROD(Base):
     pill_rv = Column(Float)
     pill_rvnum = Column(Integer)
     pill_info = Column(String(255))
+
+
+class PILL_SIDEEFF(Base):
+    __tablename__ = "pill_sideeff"
+    sideeff_cd1 = Column(String(10), primary_key=True)
+    sideeff_nm1 = Column(String(90), nullable=False)
+    sideeff_cd2 = Column(String(10), primary_key=True)
+    sideeff_nm2 = Column(String(90), nullable=False)
+    sideeff_txt = Column(String(255), nullable=False)
+    sideeff_caution = Column(String(255), nullable=False)
 
 
 class PILL_FUNC(Base):
@@ -283,20 +293,14 @@ class PILL_NUTR(Base):
 
 class PILL_CMB(Base):
     __tablename__ = "pill_cmb"
-    cmb_nutr = Column(
-        String(10), ForeignKey("pill_nutr.nutr_cd"), primary_key=True, nullable=False
-    )
-    cmb_func = Column(
-        String(10), ForeignKey("pill_func.func_cd"), primary_key=True, nullable=False
-    )
-    cmb_pill = Column(
-        String(20), ForeignKey("pill_prod.pill_cd"), primary_key=True, nullable=False
-    )
+    cmb_nutr = Column(String(10), primary_key=True, nullable=False)
+    cmb_func = Column(String(10), primary_key=True, nullable=False)
+    cmb_pill = Column(String(20), primary_key=True, nullable=False)
 
 
 class PRTN_FIN(Base):
     __tablename__ = "prtn_fin"
-    prtn_id = Column(String(100), ForeignKey("prtn_setting.prnt_id"), primary_key=True)
+    prtn_id = Column(String(100), primary_key=True)
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
@@ -366,11 +370,11 @@ class HRoutineCreate(BaseModel):
     hrtn_tag: str
     hrtn_set: int
     hrtn_reps: int
-    hrtn_sdate: str
-    hrtn_time: str
-    hrtn_alram: int
-    hrtn_day: str
-    hrtn_edate: str
+    hrtn_sdate: Optional[str] = None
+    hrtn_time: Optional[str] = None
+    hrtn_alram: Optional[int] = 0
+    hrtn_day: Optional[str] = None
+    hrtn_edate: Optional[str] = None
 
 
 # hrtn_id 생성
@@ -407,18 +411,18 @@ def generate_unique_hrtn_id(hrtn_mem):
 
 # 루틴추가_영양
 class PRoutineCreate(BaseModel):
+    prtn_mem: str
+    prtn_id: str
     prtn_nm: str
+    prtn_cat: str
+    prtn_tag: str
     prtn_set: int
     prtn_reps: int
-    prtn_tag: str
-    prtn_day: str
-    prtn_sdate: str
-    prtn_time: str
-    prtn_id: str
-    prtn_cat: str
-    prtn_alram: int
-    prtn_mem: str
-    prtn_edate: str
+    prtn_sdate: Optional[str] = None
+    prtn_time: Optional[str] = None
+    prtn_alram: Optional[int] = 0
+    prtn_day: Optional[str] = None
+    prtn_edate: Optional[str] = None
 
 
 # prtn_id 생성
@@ -488,7 +492,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
+            # db.refresh(db_routine)
             logger.error("7777777777777777777777777")
 
         return db_routine
@@ -497,164 +501,63 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_건강
-# class HRoutineCreate(BaseModel):
-#     hrtn_mem: str
-#     hrtn_id: str
-#     hrtn_nm: str
-#     hrtn_cat: str
-#     hrtn_tag: str
-#     hrtn_set: int
-#     hrtn_reps: int
-#     hrtn_sdate: str
-#     hrtn_time: str
-#     hrtn_alram: int
-#     hrtn_day: str
-#     hrtn_edate: str
+# 루틴추가_건강
+@app.post("/h_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: HRoutineCreate, request: Request):
+    # email = request.session["user_email"]
+    try:
+        hrtn_id = generate_unique_hrtn_id("qwert0175@naver.com")  # email
+        with SessionLocal() as db:
+            db_routine = HRTN_SETTING(
+                hrtn_mem="qwert0175@naver.com",
+                hrtn_id=hrtn_id,
+                hrtn_nm=routine.hrtn_nm,
+                hrtn_cat="건강",
+                hrtn_tag=routine.hrtn_tag,
+                hrtn_set=routine.hrtn_set,
+                hrtn_reps=routine.hrtn_reps,
+                hrtn_sdate=routine.hrtn_sdate,
+                hrtn_time=routine.hrtn_time,
+                hrtn_alram=routine.hrtn_alram,
+                hrtn_day=routine.hrtn_day,
+            )
+
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+            return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # hrtn_id 생성
-# def generate_unique_hrtn_id(hrtn_mem):
-#     at_index = hrtn_mem.find("@")
-
-#     if at_index != -1:
-#         first_part = hrtn_mem[:at_index]  # "@" 앞부분 추출
-#         first_char_after_at = hrtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
-
-#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
-#         with SessionLocal() as db:
-#             max_hrtn_id = (
-#                 db.query(HRTN_SETTING.hrtn_id)
-#                 .filter(HRTN_SETTING.hrtn_mem == hrtn_mem)
-#                 .order_by(desc(HRTN_SETTING.hrtn_id))
-#                 .first()
-#             )
-#             if max_hrtn_id:
-#                 max_number = int(
-#                     max_hrtn_id[0][len(first_part) + 1 + 1 + 1 :]
-#                 )  # "@" 이후부터 숫자 부분 추출
-#                 new_number = max_number + 1
-#             else:
-#                 new_number = 1
-
-#             # hrtn_id 생성
-#             hrtn_id = f"{first_part}@{first_char_after_at}h{new_number:07}"
-#     else:
-#         raise ValueError("Invalid ertn_mem format")
-
-#     return hrtn_id
-
-
-# # 루틴추가_영양
-# class PRoutineCreate(BaseModel):
-#     prtn_nm: str
-#     prtn_set: int
-#     prtn_reps: int
-#     prtn_tag: str
-#     prtn_day: str
-#     prtn_sdate: str
-#     prtn_time: str
-#     prtn_id: str
-#     prtn_cat: str
-#     prtn_alram: int
-#     prtn_mem: str
-#     prtn_edate: str
-
-
-# # prtn_id 생성
-# def generate_unique_prtn_id(prtn_mem):
-#     at_index = prtn_mem.find("@")
-
-#     if at_index != -1:
-#         first_part = prtn_mem[:at_index]  # "@" 앞부분 추출
-#         first_char_after_at = prtn_mem[at_index + 1]  # "@" 다음 첫 문자 추출
-
-#         # 기존에 생성된 ertn_id 중에서 가장 큰 값을 찾아 숫자 부분을 증가시킴
-#         with SessionLocal() as db:
-#             max_prtn_id = (
-#                 db.query(PRTN_SETTING.prtn_id)
-#                 .filter(PRTN_SETTING.prtn_mem == prtn_mem)
-#                 .order_by(desc(PRTN_SETTING.prtn_id))
-#                 .first()
-#             )
-#             if max_prtn_id:
-#                 max_number = int(
-#                     max_prtn_id[0][len(first_part) + 1 + 1 + 1 :]
-#                 )  # "@" 이후부터 숫자 부분 추출
-#                 new_number = max_number + 1
-#             else:
-#                 new_number = 1
-
-#             # prtn_id 생성
-#             prtn_id = f"{first_part}@{first_char_after_at}p{new_number:07}"
-#     else:
-#         raise ValueError("Invalid ertn_mem format")
-
-#     return prtn_id
-
-
-# ###################
-
-
-# # 루틴추가_건강
-# @app.post("/h_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: HRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         hrtn_id = generate_unique_hrtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = HRTN_SETTING(
-#                 hrtn_mem=email,
-#                 hrtn_id=generate_unique_hrtn_id(
-#                     request.session["user_email"]
-#                 ),  # 로그인아이디필요
-#                 hrtn_nm=routine.hrtn_nm,
-#                 hrtn_cat="건강",
-#                 hrtn_tag=routine.hrtn_tag,
-#                 hrtn_set=routine.hrtn_set,
-#                 hrtn_reps=routine.hrtn_reps,
-#                 hrtn_sdate=routine.hrtn_sdate,
-#                 hrtn_time=routine.hrtn_time,
-#                 hrtn_alram=routine.hrtn_alram,
-#                 hrtn_day=routine.hrtn_day,
-#             )
-
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#             return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
-
-
-# # 루틴추가_영양
-# @app.post("/p_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: PRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         prtn_id = generate_unique_prtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = PRTN_SETTING(
-#                 prtn_mem=email,  # 로그인아이디필요
-#                 prtn_id="",
-#                 prtn_nm=routine.prtn_nm,
-#                 prtn_cat="영양",
-#                 prtn_tag="영양",
-#                 prtn_set=routine.prtn_set,
-#                 prtn_reps=routine.prtn_reps,
-#                 prtn_sdate=routine.prtn_sdate,
-#                 prtn_time=routine.prtn_time,
-#                 prtn_alram=routine.prtn_alram,
-#                 prtn_day=routine.prtn_day,
-#             )
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#         return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+# 루틴추가_영양
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: PRoutineCreate, request: Request):
+    # email = request.session["user_email"]
+    try:
+        prtn_id = generate_unique_prtn_id("qwert0175@naver.com")  # email
+        with SessionLocal() as db:
+            db_routine = PRTN_SETTING(
+                prtn_mem="qwert0175@naver.com",  # 로그인아이디필요
+                prtn_id=prtn_id,
+                prtn_nm=routine.prtn_nm,
+                prtn_cat="영양",
+                prtn_tag="영양",
+                prtn_set=routine.prtn_set,
+                prtn_reps=routine.prtn_reps,
+                prtn_sdate=routine.prtn_sdate,
+                prtn_time=routine.prtn_time,
+                prtn_alram=routine.prtn_alram,
+                prtn_day=routine.prtn_day,
+            )
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
 
 
 ####################################################### 루틴리스트 받아오기
@@ -692,165 +595,22 @@ class MergedRoutineResponse(BaseModel):
     rtn_day: str
 
 
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-class Weekday(Enum):
-    월 = 0
-    화 = 1
-    수 = 2
-    목 = 3
-    금 = 4
-    토 = 5
-    일 = 6
-
-
-# Define a mapping from English to Korean day names
-day_name_mapping = {
-    "MONDAY": Weekday.월,
-    "TUESDAY": Weekday.화,
-    "WEDNESDAY": Weekday.수,
-    "THURSDAY": Weekday.목,
-    "FRIDAY": Weekday.금,
-    "SATURDAY": Weekday.토,
-    "SUNDAY": Weekday.일,
-}
-
-
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-def get_merged_routines_from_database(email):
-    # 현재 날짜와 요일을 가져옵니다.
-    now = datetime.now()
-    today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    # print(f"오늘 날짜: {today}, 요일: {current_day}")
-
-    with SessionLocal() as db:
-        e_routines = db.query(ERTN_SETTING).filter_by(ertn_mem=email).all()
-        p_routines = db.query(PRTN_SETTING).filter_by(ertn_mem=email).all()
-        h_routines = db.query(HRTN_SETTING).filter_by(ertn_mem=email).all()
-
-        merged_routines = []
-
-        for routine in e_routines:
-            routine_start_date = datetime.strptime(
-                routine.ertn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.ertn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.ertn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.ertn_time,
-                                rtn_name=routine.ertn_nm,
-                                rtn_tag=routine.ertn_tag,
-                                rtn_sdate=routine.ertn_sdate,
-                                rtn_day=routine.ertn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.ertn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.ertn_time,
-                            rtn_name=routine.ertn_nm,
-                            rtn_tag=routine.ertn_tag,
-                            rtn_sdate=routine.ertn_sdate,
-                            rtn_day=routine.ertn_day,
-                        )
-                    )
-
-        for routine in p_routines:
-            routine_start_date = datetime.strptime(
-                routine.prtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.prtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.prtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.prtn_time,
-                                rtn_name=routine.prtn_nm,
-                                rtn_tag=routine.prtn_tag,
-                                rtn_sdate=routine.prtn_sdate,
-                                rtn_day=routine.prtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.prtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.prtn_time,
-                            rtn_name=routine.prtn_nm,
-                            rtn_tag=routine.prtn_tag,
-                            rtn_sdate=routine.prtn_sdate,
-                            rtn_day=routine.prtn_day,
-                        )
-                    )
-
-        for routine in h_routines:
-            routine_start_date = datetime.strptime(
-                routine.hrtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.hrtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.hrtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.hrtn_time,
-                                rtn_name=routine.hrtn_nm,
-                                rtn_tag=routine.hrtn_tag,
-                                rtn_sdate=routine.hrtn_sdate,
-                                rtn_day=routine.hrtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.hrtn_time,
-                            rtn_name=routine.hrtn_nm,
-                            rtn_tag=routine.hrtn_tag,
-                            rtn_sdate=routine.hrtn_sdate,
-                            rtn_day=routine.hrtn_day,
-                        )
-                    )
-
-                    # 루틴 정보 출력
-                    # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-
-        merged_routines.sort(key=lambda x: (x.rtn_sdate, x.rtn_time))
-        # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
-
-    return merged_routines
-
-
 # 루틴 데이터 가져오는 엔드포인트
-@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-def read_routines(request: Request):
-    email = request.session["user_email"]
-    merged_routines = get_merged_routines_from_database(email)
-    return merged_routines
+@app.get("/rtnlist")
+def rtnlist(db: Session = Depends(get_db)):
+    rtnlist = (
+        db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
+        # .join(Mem_Detail,Mem_Detail.mem_email==HRTN_SETTING.hrtn_mem)
+        .filter(
+            and_(
+                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+            )
+        ).all()
+    )
 
-
-# # 루틴 데이터 가져오는 엔드포인트
-# @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-# async def read_routines(request: Request):
-#     merged_routines = get_merged_routines_from_database(request.session["mem_email"])
-#     return merged_routines
+    return rtnlist
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
@@ -905,12 +665,12 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
+def get_health_chart_data(db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     tag_counts_query = (
-        db.query(HEALTH.health_tag, func.count(HEALTH.health_tag))
+        db.query(HEALTH.health_tag, func.count(HEALTH.health_tag), HEALTH.health_emoji)
         .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
         .filter(
             and_(
@@ -927,12 +687,21 @@ def get_health_chart_data(request: Request, db: Session = Depends(get_db)):
         {
             "tag": tag_count[0],
             "count": tag_count[1],
+            "emoji": tag_count[2],
             "color": get_color_by_tag(tag_count[0]),
         }
         for tag_count in tag_counts_query
     ]
 
-    return pie_chart_data
+    top_item = max(pie_chart_data, key=lambda x: x["count"])
+    top_tag = top_item["tag"]
+    top_emoji = top_item["emoji"]
+
+    return {
+        "pie_chart_data": pie_chart_data,
+        "top_tag": top_tag,
+        "top_emoji": top_emoji,
+    }
 
 
 def get_color_by_tag(tag):
@@ -956,54 +725,45 @@ def get_color_by_tag(tag):
         return "#808080"  # 기타는 회색으로 설정
 
 
-@app.get("/health_listdata")
-def get_health_list_data(db: Session = Depends(get_db)):
-    # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-
-    # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
-    health_names = (
-        db.query(HRTN_SETTING.hrtn_nm)
-        .filter(HRTN_FIN.hrtn_id.in_(hrtn_ids_query))
-        .distinct()
-        .all()
-    )
-
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    # pie_list_data = [
-    #     {
-    #         "name": health_name[0],
-    #     }
-    #     for health_name in health_names
-    # ]
-
-    return health_names
-
-
 @app.get("/pill_piechartdata")
 def get_pill_chart_data(db: Session = Depends(get_db)):
     func_counts_query = (
-        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_PROD.pill_nm)
-        .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
-        .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-        .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter(PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id)))
-        .group_by(PILL_FUNC.func_nm, PILL_PROD.pill_nm)
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(PRTN_FIN.prtn_id),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+                PILL_FUNC.func_cd == PILL_CMB.cmb_func,
+            )
+        )
+        .group_by(PILL_FUNC.func_nm)
         .all()
     )
 
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_chart_data = [
         {
             "func": func_count[0],
-            "count": func_count[1],
-            "color": get_color_by_func(func_count[0]),
+            "count1": func_count[1],
+            "emoji1": func_count[2],
+            "color1": get_color_by_tag(func_count[0]),
         }
         for func_count in func_counts_query
     ]
 
-    return pill_chart_data
+    top_item1 = max(pill_chart_data, key=lambda x: x["count1"])
+    top_func1 = top_item1["func"]
+    top_emoji1 = top_item1["emoji1"]
+
+    return {
+        "pill_chart_data": pill_chart_data,
+        "top_func1": top_func1,
+        "top_emoji1": top_emoji1,
+    }
 
 
 def get_color_by_func(func):
@@ -1043,33 +803,99 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
-@app.get("/pill_listdata")
-def get_pill_list_data(request: Request, db: Session = Depends(get_db)):
-    pill_names_query = (
-        db.query(PILL_PROD.pill_nm)
-        .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
-        .filter((PRTN_SETTING.prtn_id.in_(db.query(PRTN_FIN.prtn_id))))
-        .distinct()
-        .all()
-    )
-
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    pill_list_data = [
-        {"name": pill_name[0], "email": request.session["user_email"]}
-        for pill_name in pill_names_query
-    ]
-
-    return pill_list_data
-
-
 @app.get("/test")
 def test(db: Session = Depends(get_db)):
-    testdata = db.query(News_Data).all()
+    testdata = db.query(PILL_CMB).all()
     return testdata
+
+
+# @app.get("/test2")
+# def test2(db: Session = Depends(get_db)):
+#     testdata2 = db.query(PILL_PROD).all()
+#     return testdata2
+
+
+@app.get("/test3")
+def test3(db: Session = Depends(get_db)):
+    testdata3 = (
+        db.query(PILL_PROD)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata3
+
+
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    testdata4 = (
+        db.query(PILL_CMB)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+            ),
+        )
+        .all()
+    )
+    return testdata4
 
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
-    testdata2 = db.query(HEALTH).all()
+    testdata2 = (
+        db.query(PILL_CMB)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill.in_(PILL_PROD.pill_cd),
+            )
+        )
+        .all()
+    )
     return testdata2
+
+
+@app.get("/test5")
+def test5(db: Session = Depends(get_db)):
+    testdata5 = (
+        db.query(PILL_FUNC)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    return testdata5
+
+
+############################################################## pill_prod ,health ((영양검색창활용)
+
+
+class PILL_PROD_SEARCH(BaseModel):
+    pill_cd: str
+    pill_nm: str
+    pill_mnf: str
+    # pill_rv:Float
+    # pill_rvnum:Optional[Integer] = None
+    # pill_info:Optional[str] = None
+
+
+@app.get("/pillsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    pillsearch = db.query(PILL_PROD).all()
+    return pillsearch
+
+
+class HEALTH_SEARCH(BaseModel):
+    health_nm: str
+    health_tag: str
+    health_emoji: str
+
+
+@app.get("/healthsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    healthsearch = db.query(HEALTH).all()
+    return healthsearch

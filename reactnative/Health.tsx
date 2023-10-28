@@ -20,7 +20,11 @@ import {
   useCameraDevice,
   // useCameraDevices,
 } from 'react-native-vision-camera';
+
 import RNFS from 'react-native-fs';
+import axios from 'axios';
+import HealthSearch from './search_health';
+
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -96,7 +100,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   //태그 설정
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
-  const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // const [tagsEnabled, setTagsEnabled] = useState<string>('');
+  // 초기 상태에서는 빈 문자열 배열로 설정
+  const [tagsEnabled, setTagsEnabled] = useState<string[]>([]);
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -135,39 +141,69 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     }
   };
   // 태그 설정 핸들러
-  const handletagsEnabled = (category: string) => {
-    setTagsEnabled(category);
-    console.log(`태그 ${category} 선택됨`);
+  // const handletagsEnabled = (category: string) => {
+  //   setTagsEnabled(category);
+  //   console.log(`태그 ${category} 선택됨`);
+  // };
+  // 태그 버튼을 누를 때 선택 상태를 토글하는 함수
+  const handletagsEnabled = (tag: string) => {
+    if (tagsEnabled.includes(tag)) {
+      // 이미 선택된 태그라면 선택 해제
+      setTagsEnabled(tagsEnabled.filter(selectedTag => selectedTag !== tag));
+    } else {
+      // 선택되지 않은 태그라면 선택 추가
+      setTagsEnabled([...tagsEnabled, tag]);
+    }
   };
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps || !selectedDate || !selectedTime) {
+    if (!routineName || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
-      Alert.alert('모든 항목을 작성해 주세요.');
+      Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
-      // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
-        await HaddRoutine(
-          routineName, // 루틴명
-          parseInt(set), // 세트
-          parseInt(reps), // 횟수
-          selectedDaysOfWeek, // 반복요일
-          selectedDate, // 날짜선택
-          selectedTime, // 시간
-          tagsEnabled, //태그
-          notificationEnabled, // 알림여부
-        );
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const selectedTime = `${hours}:${minutes}`;
+        const daysString = selectedDaysOfWeek.toString();
+        const ertn_alram = notificationEnabled ? 1 : 0;
 
-        // DB에 데이터가 성공적으로 저장되었을 때 성공 메시지를 표시합니다.
-        Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        const requestData = {
+          hrtn_nm: routineName,
+          hrtn_set: parseInt(set),
+          hrtn_reps: parseInt(reps),
+          hrtn_day: daysString,
+          hrtn_sdate: selectedDate || new Date().toDateString(),
+          hrtn_time: selectedTime || new Date().toTimeString(),
+          hrtn_alram: ertn_alram,
+          hrtn_id: '',
+          hrtn_cat: '',
+          hrtn_tag: tagsEnabled,
+          hrtn_edate: '',
+          hrtn_mem: '',
+        };
+        console.log('44444444444444444444444===', requestData);
+
+        const response = await axios.post(
+          'http://43.200.178.131:3344/h_routines',
+          requestData,
+          {timeout: 10000}, // 10초 타임아웃
+        );
+        console.log('55555555555555555555555555===', response);
+        if (response.status >= 200 && response.status < 300) {
+          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+        } else {
+          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+        }
       } catch (error) {
-        // 에러가 발생하면 에러 메시지를 표시할 수 있습니다.
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         console.error('루틴 추가 오류:', error);
       }
     }
   };
+
   // 내부 저장소의 경로 얻기
   const internalStoragePath = RNFS.DocumentDirectoryPath;
   // 사진찍기
@@ -233,6 +269,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
 
   return (
     <>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => handleBackPress()}>
+          <Text style={styles.backButton}>{'<  운동 루틴 추가하기'}</Text>
+        </TouchableOpacity>
+      </View>
+
       {isCameraOpen && device !== null ? (
         // <View>
         //   <Image
@@ -323,170 +365,167 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         //     ref={camera}
         //   />
         // </View>
-        <View>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => handleBackPress()}>
-              <Text style={styles.backButton}>{'<  운동루틴추가하기'}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
-            <ScrollView>
+        <View style={styles.container}>
+          <ScrollView>
+            <View style={{flex: 3}}>
+              {/* 큰틀1 */}
               <View style={{flex: 3}}>
-                {/* 큰틀1 */}
-                <View style={{flex: 3}}>
-                  {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    {/* 왼쪽 공간 */}
-                    <View style={{flex: 1, borderWidth: 1, borderColor: 'red'}}>
-                      {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
-                      <View style={{flex: 5, flexDirection: 'column'}}>
-                        {/* 위쪽 공간 */}
 
-                        <View
-                          style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            borderColor: 'green',
-                          }}>
-                          {/* 위쪽 컨텐츠 */}
-                          <Text>운동인식</Text>
-                        </View>
-                        {/* 아래쪽 공간 */}
-                        <View
-                          style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            borderColor: 'blue',
-                          }}>
-                          {/* 아래쪽 컨텐츠 */}
-                          {/* <Text>카메라</Text> */}
-                          {/* 카메라 아이콘 */}
-                          <TouchableOpacity
-                            onPress={() => handleCameraButtonClick()}>
-                            <Image
-                              source={require('./android/app/src/img/camera.png')}
-                              style={styles.cameraicon}
-                            />
-                          </TouchableOpacity>
-                        </View>
+                {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  {/* 왼쪽 공간 */}
+                  {/* borderColor: 'red ,borderWidth: 1*/}
+                  <View style={{flex: 1}}>
+                    {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
+                    <View style={{flex: 5, flexDirection: 'column'}}>
+                      {/* 위쪽 공간 */}
+                      <View
+                        style={{
+                          flex: 2.6,
+                          //borderWidth: 1,
+                          //borderColor: 'green',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        {/* 위쪽 컨텐츠 */}
+                        <Text>운동인식</Text>
+                      </View>
+                      {/* 아래쪽 공간 */}
+                      {/* borderColor: 'blue',borderWidth: 1 */}
+                      <View style={{flex: 1}}>
+                        {/* 아래쪽 컨텐츠 */}
+                        {/* <Text>카메라</Text> */}
+                        {/* 카메라 아이콘 */}
+                        <TouchableOpacity
+                          onPress={() => handleCameraButtonClick()}>
+                          <Image
+                            source={require('./android/app/src/img/camera.png')}
+                            style={styles.cameraicon}
+                          />
+                        </TouchableOpacity>
                       </View>
                     </View>
-                    {/* 오른쪽 공간 */}
-                    <View
-                      style={{flex: 3, borderWidth: 1, borderColor: 'orange'}}>
-                      {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
-                      <View style={{flex: 1, flexDirection: 'column'}}>
-                        {/* 위쪽 공간 (오른쪽 위) */}
+                  </View>
+                  {/* 오른쪽 공간 */}
+                  <View
+                    // borderColor: 'orange',borderWidth: 1
+                    style={{flex: 3}}>
+                    {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
+                    <View style={{flex: 1, flexDirection: 'column'}}>
+                      {/* 위쪽 공간 (오른쪽 위) */}
+                      {/* borderColor: 'purple',borderWidth: 1 */}
+                      <View
+                        style={{
+                          flex: 1,
+                        }}>
+                        {/* 위쪽 컨텐츠 (오른쪽 위) */}
+                        {/* <Text>태그4</Text> */}
+
 
                         <View
                           style={{
                             flex: 1,
-                            borderWidth: 1,
-                            borderColor: 'purple',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}>
-                          {/* 위쪽 컨텐츠 (오른쪽 위) */}
-                          {/* <Text>태그4</Text> */}
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('Upper Body')}
+                            style={
+                              tagsEnabled.includes('Upper Body')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>상체</Text>
+                          </TouchableOpacity>
 
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('Upper Body')}
-                              style={
-                                tagsEnabled === 'Upper Body'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>상체</Text>
-                            </TouchableOpacity>
 
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('Lower Body')}
-                              style={
-                                tagsEnabled === 'Lower Body'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>하체</Text>
-                            </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('Lower Body')}
+                            style={
+                              tagsEnabled.includes('Lower Body')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>하체</Text>
+                          </TouchableOpacity>
 
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('Core')}
-                              style={
-                                tagsEnabled === 'Core'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>코어</Text>
-                            </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('Core')}
+                            style={
+                              tagsEnabled.includes('Core')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>코어</Text>
+                          </TouchableOpacity>
 
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('etc')}
-                              style={
-                                tagsEnabled === 'etc'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>기타</Text>
-                            </TouchableOpacity>
-                          </View>
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('etc')}
+                            style={
+                              tagsEnabled.includes('etc')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>기타</Text>
+                          </TouchableOpacity>
+
                         </View>
-                        {/* 아래쪽 공간 (오른쪽 아래) */}
+                      </View>
+                      {/* 아래쪽 공간 (오른쪽 아래) */}
+                      {/* borderColor: 'pink' */}
+                      <View style={{flex: 1}}>
+                        {/* 아래쪽 컨텐츠 (오른쪽 아래) */}
                         <View
                           style={{
                             flex: 1,
-                            borderWidth: 1,
-                            borderColor: 'pink',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}>
-                          {/* 아래쪽 컨텐츠 (오른쪽 아래) */}
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            {/* <Text>태그3</Text> */}
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('Stretching')}
-                              style={
-                                tagsEnabled === 'Stretching'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>스트레칭</Text>
-                            </TouchableOpacity>
 
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('Cardio')}
-                              style={
-                                tagsEnabled === 'Cardio'
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text>유산소</Text>
-                            </TouchableOpacity>
-                          </View>
+                          {/* <Text>태그3</Text> */}
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('Stretching')}
+                            style={
+                              tagsEnabled.includes('Stretching')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>스트레칭</Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            onPress={() => handletagsEnabled('Cardio')}
+                            style={
+                              tagsEnabled.includes('Cardio')
+                                ? styles.selectedButton
+                                : styles.button
+                            }>
+                            <Text style={{color: 'white'}}>유산소</Text>
+                          </TouchableOpacity>
+
                         </View>
                       </View>
                     </View>
                   </View>
                 </View>
               </View>
-              <View style={styles.healthheader}>
-                {/* 루틴명 입력 */}
-                <View style={styles.Routinename}>
-                  <TextInput
-                    style={styles.Routineinput}
-                    value={routineName}
-                    onChangeText={handleRoutineNameChange}
-                    placeholder="루틴 이름을 설정해주세요"
-                  />
-                  {/* 카메라 아이콘
+            </View>
+
+            {/* <View style={styles.healthheader}> */}
+            {/* 루틴명 입력 */}
+            {/* <View style={styles.Routinename}> */}
+            {/* <TextInput
+                  style={styles.Routineinput}
+                  value={routineName}
+                  onChangeText={handleRoutineNameChange}
+                  placeholder="루틴 이름을 설정해주세요"
+                /> */}
+            <View style={{zIndex: 1}}>
+              <HealthSearch />
+            </View>
+            {/* 카메라 아이콘
               <TouchableOpacity
                 onPress={() => console.log('Camera button pressed')}>
                 <Image
@@ -494,118 +533,117 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                   style={styles.cameraicon}
                 />
               </TouchableOpacity> */}
-                </View>
-                {/* 루틴 아이콘 */}
-                <View style={styles.Routineicon}>
-                  <TouchableOpacity onPress={handleAddButtonClick}>
-                    <Image
-                      source={require('./android/app/src/img/flo_ex.png')}
-                      style={styles.Routineicon_add}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
+            {/* </View> */}
+            {/* 루틴 아이콘 */}
+            {/* <View style={styles.Routineicon}>
+                <TouchableOpacity onPress={handleAddButtonClick}>
+                  <Image
+                    source={require('./android/app/src/img/flo_ex.png')}
+                    style={styles.Routineicon_add}
+                  />
+                </TouchableOpacity>
+              </View> */}
+            {/* </View> */}
 
-              {/* 세트 & 횟수 입력 박스 */}
-              <View style={styles.setreps}>
-                {/* 세트 입력 */}
-                <TextInput
-                  style={styles.setrepsinput}
-                  value={set}
-                  onChangeText={handleSetChange}
-                  placeholder="       "
-                  keyboardType="numeric"
-                />
-                <Text style={styles.setrepstext}>세트 X</Text>
-                {/* 횟수 입력 */}
-                <TextInput
-                  style={styles.setrepsinput}
-                  value={reps}
-                  onChangeText={handleRepsChange}
-                  placeholder="       "
-                  keyboardType="numeric"
-                />
-                <Text style={styles.setrepstext}>회</Text>
-              </View>
-
-              {/* 날짜 선택 (달력 호출) */}
-              <TouchableOpacity
-                onPress={() => setShowCalendar(true)}
-                style={styles.calendarContainer}>
-                {!showCalendar ? (
-                  <>
-                    <Text style={styles.defaultText}>
-                      {selectedDate}
-                      <Text style={styles.calendarText}>에 시작할 거예요</Text>
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => setShowCalendar(true)}></TouchableOpacity>
-                  </>
-                ) : (
-                  <>
-                    <Calendar
-                      onDayPress={handleDateSelect}
-                      markedDates={{[selectedDate]: {selected: true}}}
-                    />
-                    <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                      <Text>취소</Text>
-                    </TouchableOpacity>
-                  </>
-                )}
-              </TouchableOpacity>
-
-              {/* 시간 선택 */}
-              <View style={styles.Timecontainer}>
-                <TimeComponent onTimeChange={handleTimeChange} />
-              </View>
-
-              {/* 알림 설정 */}
-              <Toggle
-                label={'알림'}
-                value={notificationEnabled}
-                onChange={handleNotificationChange}
+            {/* 세트 & 횟수 입력 박스 */}
+            <View style={styles.setreps}>
+              {/* 세트 입력 */}
+              <TextInput
+                style={styles.setrepsinput}
+                value={set}
+                onChangeText={handleSetChange}
+                placeholder="       "
+                keyboardType="numeric"
               />
+              <Text style={styles.setrepstext}>세트 X</Text>
+              {/* 횟수 입력 */}
+              <TextInput
+                style={styles.setrepsinput}
+                value={reps}
+                onChangeText={handleRepsChange}
+                placeholder="       "
+                keyboardType="numeric"
+              />
+              <Text style={styles.setrepstext}>회</Text>
+            </View>
 
-              {/* 반복 설정 */}
-              <Toggle
-                label={'반복'}
-                value={repeatEnabled}
-                onChange={setRepeatEnabled}>
-                {repeatEnabled && (
-                  <>
-                    <View style={styles.dayPickerContainer}>
-                      <View style={styles.dayButtonRow}>
-                        {['월', '화', '수', '목', '금', '토', '일'].map(day => (
-                          <TouchableOpacity
-                            key={`day-${day}`}
-                            onPress={() => handleDayOfWeekToggle(day)}
+            {/* 날짜 선택 (달력 호출) */}
+            <TouchableOpacity
+              onPress={() => setShowCalendar(true)}
+              style={styles.calendarContainer}>
+              {!showCalendar ? (
+                <>
+                  <Text style={styles.defaultText}>
+                    {selectedDate}
+                    <Text style={styles.calendarText}>에 시작할 거예요</Text>
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setShowCalendar(true)}></TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Calendar
+                    onDayPress={handleDateSelect}
+                    markedDates={{[selectedDate]: {selected: true}}}
+                  />
+                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                    <Text>취소</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </TouchableOpacity>
+
+            {/* 시간 선택 */}
+            <View style={styles.Timecontainer}>
+              <TimeComponent onTimeChange={handleTimeChange} />
+            </View>
+
+            {/* 알림 설정 */}
+            <Toggle
+              label={'알림'}
+              value={notificationEnabled}
+              onChange={handleNotificationChange}
+            />
+
+            {/* 반복 설정 */}
+            <Toggle
+              label={'반복'}
+              value={repeatEnabled}
+              onChange={setRepeatEnabled}>
+              {repeatEnabled && (
+                <>
+                  <View style={styles.dayPickerContainer}>
+                    <View style={styles.dayButtonRow}>
+                      {['월', '화', '수', '목', '금', '토', '일'].map(day => (
+                        <TouchableOpacity
+                          key={`day-${day}`}
+                          onPress={() => handleDayOfWeekToggle(day)}
+                          style={[
+                            styles.dayButton,
+                            selectedDaysOfWeek.includes(day) &&
+                              styles.selectedDayButton,
+                          ]}>
+                          <Text
+                            key={`text-${day}`}
                             style={[
-                              styles.dayButton,
+                              styles.dayButtonText,
                               selectedDaysOfWeek.includes(day) &&
-                                styles.selectedDayButton,
+                                styles.selectedDayButtonText,
                             ]}>
-                            <Text
-                              key={`text-${day}`}
-                              style={[
-                                styles.dayButtonText,
-                                selectedDaysOfWeek.includes(day) &&
-                                  styles.selectedDayButtonText,
-                              ]}>
-                              {day}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
+                            {day}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
                     </View>
-                  </>
-                )}
-              </Toggle>
-            </ScrollView>
-          </View>
+                  </View>
+                </>
+              )}
+            </Toggle>
+          </ScrollView>
         </View>
       )}
       {isCameraOpen && device !== null ? (
-        <TouchableOpacity onPress={onCameraButton} style={styles.addContainer}>
+        <TouchableOpacity onPress={onPressButton} style={styles.addContainer}>
           <View style={styles.addTab}>
             <Text style={styles.addtext}>찰칵찰칵</Text>
           </View>
@@ -630,7 +668,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
-    flex: 0,
     height: '10%',
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -649,7 +686,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {},
   healthheader: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',

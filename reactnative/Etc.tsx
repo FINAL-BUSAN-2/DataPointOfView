@@ -12,8 +12,8 @@ import {
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
-import {EaddRoutine} from './api';
-
+//import {EaddRoutine} from './api';
+import axios from 'axios';
 import {Alert} from 'react-native';
 
 interface RoutineAddProps {
@@ -118,7 +118,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
-      // 'addRoutine' 함수가 비동기로 작동하도록 'await' 키워드를 사용합니다.
       try {
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
@@ -126,48 +125,35 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         const selectedTime = `${hours}:${minutes}`;
         const daysString = selectedDaysOfWeek.toString();
         const ertn_alram = notificationEnabled ? 1 : 0;
-        console.log('111111111111111111111111');
 
         const requestData = {
-          ertn_nm: routineName, // 루틴명
-          ertn_set: parseInt(set), // 세트
-          ertn_reps: parseInt(reps), // 횟수
-          ertn_day: daysString, // 반복요일
-          ertn_sdate: selectedDate || new Date().toDateString(), // 선택된 날짜 또는 현재 날짜, // 날짜선택
-          ertn_time: selectedTime || new Date().toTimeString(), // 시간
-          ertn_alram: ertn_alram, // 알림
+          ertn_nm: routineName,
+          ertn_set: parseInt(set),
+          ertn_reps: parseInt(reps),
+          ertn_day: daysString,
+          ertn_sdate: selectedDate || new Date().toDateString(),
+          ertn_time: selectedTime || new Date().toTimeString(),
+          ertn_alram: ertn_alram,
+          ertn_id: '',
+          ertn_cat: '',
+          ertn_tag: '',
+          ertn_edate: '',
+          ertn_mem: '',
         };
-        console.log('ertn_nm type:', typeof requestData.ertn_nm);
-        console.log('ertn_set type:', typeof requestData.ertn_set);
-        console.log('ertn_reps type:', typeof requestData.ertn_reps);
-        console.log('ertn_day type:', typeof requestData.ertn_day);
-        console.log('ertn_sdate type:', typeof requestData.ertn_sdate);
-        console.log('ertn_time type:', typeof requestData.ertn_time);
-        console.log('ertn_alram type:', typeof requestData.ertn_alram);
-
-        console.log('2222222222222222222222222222');
-        console.log('보내는 데이터:', requestData);
-        console.log('3333333333333333333');
         console.log('44444444444444444444444===', requestData);
-        const response = await fetch('http://43.200.178.131:3344/routines', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        });
+
+        const response = await axios.post(
+          'http://43.200.178.131:3344/routines',
+          requestData,
+          {timeout: 10000}, // 10초 타임아웃
+        );
         console.log('55555555555555555555555555===', response);
         if (response.status >= 200 && response.status < 300) {
-          // 데이터가 성공적으로 서버에 저장되었을 때 성공 메시지를 표시합니다.
           Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
         } else {
-          // 서버에서 오류 응답을 받았을 경우 에러 메시지를 표시합니다.
           Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
-          console.error('서버 응답 오류:', response);
         }
       } catch (error) {
-        // 네트워크 오류 또는 예상치 못한 오류가 발생하면 에러 메시지를 표시할 수 있습니다.
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         console.error('루틴 추가 오류:', error);
       }

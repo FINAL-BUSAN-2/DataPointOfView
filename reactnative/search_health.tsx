@@ -9,19 +9,14 @@ import {
   FlatList,
 } from 'react-native';
 
-// import PropTypes from 'prop-types';
 import {useNavigation} from '@react-navigation/native';
 
 interface autoDatas {
-  city: string;
-  growth_from_2000_to_2013: string;
-  latitude: number;
-  longitude: number;
-  population: string;
-  rank: string;
-  state: string;
+  health_nm: string;
+  health_tag: string;
+  health_emoji: string;
 }
-function Search() {
+function HealthSearch() {
   const navigation = useNavigation();
   const [keyword, setKeyword] = useState<string>('');
   const [keyItems, setKeyItems] = useState<autoDatas[]>([]);
@@ -31,18 +26,22 @@ function Search() {
   };
 
   const fetchData = () => {
-    return fetch(
-      `https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json`,
-    )
-      .then(res => res.json())
-      .then(data => data.slice(0, 100));
+    return fetch('http://43.200.178.131:3344/healthsearch')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
+      .then(data => data); // 필요에 따라 데이터 처리 로직 추가
   };
 
   const updateData = async () => {
     const res = await fetchData();
-    let filteredItems = res
-      .filter((list: autoDatas) => list.city.includes(keyword))
-      .slice(0, 10);
+    let filteredItems = res.filter((list: autoDatas) =>
+      list.health_nm.includes(keyword),
+    );
+    // .slice(0, 10); 최대 10개항목만
     setKeyItems(filteredItems);
   };
 
@@ -65,7 +64,7 @@ function Search() {
           style={styles.search}
           placeholder="검색어 입력"
         />
-        {/* 취소 버튼 */}
+        {/* 취소 버튼
         <TouchableOpacity
           style={styles.cancelButton}
           onPress={() => {
@@ -74,32 +73,32 @@ function Search() {
             navigation.goBack(); //뒤로가기
           }}>
           <Text style={styles.cancelButtonText}>취소</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={{marginTop: 10}}></View>
-      {/* 실선 */}
+      {/* 실선
       <View
         style={{
           borderTopWidth: 1,
           borderTopColor: 'rgb(175, 171, 171)',
           width: '100%', // 화면 전체 너비에 맞춤
         }}
-      />
+      /> */}
 
       {keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
           <FlatList
             data={keyItems}
-            keyExtractor={item => item.city}
+            keyExtractor={item => item.health_nm}
             renderItem={({item}) => (
               <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
-                  setKeyword(item.city);
+                  setKeyword(item.health_nm);
                   setKeyItems([]);
                 }}>
-                <Text>{item.city}</Text>
+                <Text>{item.health_nm}</Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
                   style={styles.arrowIcon}
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 80,
     maxHeight: 200, // 높이를 제한
-    width: 320,
+    width: 360,
     backgroundColor: '#fff',
     padding: 15,
     //borderWidth: 2,
@@ -178,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Search;
+export default HealthSearch;
