@@ -192,9 +192,15 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
             <Text style={styles.fintitletext}>달성률</Text>
           </View>
           {/* 달성률 이모지 영역*/}
-          <View style={styles.finemoji}></View>
-          {/* 달성률 %영역 */}
-          <View style={styles.finper}></View>
+          <View style={styles.finemoji}>
+            {/* 달성률 이모지 스타일 */}
+            <Text style={styles.finemojitext}></Text>
+          </View>
+          {/* 달성률 수치 영역 */}
+          <View style={styles.finper}>
+            {/* 달성률 수치 스타일 */}
+            <Text style={styles.finpertext}></Text>
+          </View>
         </View>
       </View>
 
@@ -429,6 +435,8 @@ const styles = StyleSheet.create({
   toppillemoji: {
     flex: 2,
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '65%',
     marginBottom: 5,
     borderWidth: 1,
@@ -441,6 +449,8 @@ const styles = StyleSheet.create({
   },
   toppillfunc: {
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     marginTop: 10,
     marginBottom: 15,
@@ -467,6 +477,8 @@ const styles = StyleSheet.create({
   finemoji: {
     flex: 2,
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '65%',
     marginBottom: 5,
     borderWidth: 1,
@@ -474,14 +486,23 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     backgroundColor: 'white',
   },
+  finemojitext: {
+    fontSize: 32,
+  },
   finper: {
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     marginTop: 10,
     marginBottom: 15,
     height: 35,
     borderRadius: 15,
     backgroundColor: 'rgb(206,119,119)',
+  },
+  finpertext: {
+    fontSize: 16,
+    color: 'white',
   },
 
   // 선
@@ -498,22 +519,23 @@ const styles = StyleSheet.create({
 
   // 통계제목 영역
   titlecontainer: {
-    flex: 0.5,
-    flexDirection: 'column',
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     top: 30,
   },
   // 운동 타이틀
   titlehealth: {
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     width: '25%',
-    height: '120%',
+    height: '60%',
+    right: 30,
     borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
-    borderRadius: 15,
+    borderRadius: 20,
     backgroundColor: '#fff',
-    right: '100%',
     zIndex: 2,
   },
   // 타이틀 텍스트
@@ -525,14 +547,15 @@ const styles = StyleSheet.create({
   },
   // 영양 타이틀
   titlepill: {
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     width: '25%',
-    height: '120%',
+    height: '60%',
+    left: 30,
     borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
-    borderRadius: 15,
-    left: '100%',
+    borderRadius: 20,
     backgroundColor: '#fff',
     zIndex: 2,
   },
@@ -553,7 +576,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
   },
   healthchart: {
     flex: 5,
