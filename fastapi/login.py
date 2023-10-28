@@ -973,7 +973,25 @@ def get_color_by_func(func):
 
 @app.get("/test")
 def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING)
+    now = datetime.now()
+    today = now.date()
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    # print(f"오늘 날짜: {today}, 요일: {current_day}")
+    testdata = (
+        db.query(func.count(HRTN_SETTING))
+        .filter(
+            and_(
+                current_day.in_(HRTN_SETTING.hrtn_day),
+                or_(HRTN_SETTING.hrtn_day == None),
+            ),
+            and_(
+                HRTN_SETTING.hrtn_edate == today, or_(HRTN_SETTING.hrtn_edate == None)
+            ),
+            and_(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com"),
+        )
+        .group_by(HRTN_SETTING)
+        .all()
+    )
     return testdata
 
 
