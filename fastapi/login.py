@@ -874,11 +874,12 @@ def get_color_by_tag(tag):
 
 @app.get("/pill_piechartdata")
 def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
         .filter(
             and_(
-                PRTN_SETTING.prtn_id.in_(PRTN_FIN.prtn_id),
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                 PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
                 PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
@@ -957,15 +958,46 @@ def get_color_by_func(func):
 
 
 @app.get("/test")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(PILL_CMB).all()
-    return testdata
+def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    func_counts_query = (
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+                PILL_FUNC.func_cd == PILL_CMB.cmb_func,
+            )
+        )
+        .group_by(PILL_FUNC.func_nm)
+        .all()
+    )
+    return func_counts_query
 
 
-# @app.get("/test2")
-# def test2(db: Session = Depends(get_db)):
-#     testdata2 = db.query(PILL_PROD).all()
-#     return testdata2
+@app.get("/test2")
+def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    func_counts_query = (
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(
+            PILL_FUNC,
+            PILL_FUNC.func_cd == PILL_CMB.cmb_func,
+        )
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+            )
+        )
+        .group_by(PILL_FUNC.func_nm)
+        .all()
+    )
+    return func_counts_query
 
 
 @app.get("/test3")
