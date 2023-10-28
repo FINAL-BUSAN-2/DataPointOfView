@@ -1101,7 +1101,7 @@ def test4(db: Session = Depends(get_db)):
         ),
         or_(
             HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
-            HRTN_SETTING.hrtn_edate == today,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+            HRTN_SETTING.hrtn_edate == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
         ),
     )
     return testdata4
