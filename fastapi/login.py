@@ -1106,11 +1106,8 @@ def test4(db: Session = Depends(get_db)):
     }
     current_day = day_name_mapping[now.strftime("%A").upper()].name
     today_str = today.strftime("%Y-%m-%d")
-    testdata4 = db.query(
-        func.count(HRTN_SETTING.hrtn_id)
-    ).filter(  # HRTN_SETTING 테이블의 count값을 조회합니다.
-        HRTN_SETTING.hrtn_mem
-        == "qwert0175@naver.com",  # hrtn_mem이 'abc123@naver.com'인 테이블을 조회합니다.
+    testdata4 = db.query(func.count(HRTN_SETTING.hrtn_id)).filter(
+        HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
         or_(
             HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
             HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
