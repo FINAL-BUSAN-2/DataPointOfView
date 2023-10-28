@@ -21,9 +21,21 @@ import Search from './search';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
+  userName: string;
+  userEmail: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+const RoutineNameBox: React.FC<RoutineAddProps> = ({
+  navigation,
+  userName,
+  userEmail,
+  setLogin,
+  setUserName,
+  setUserEmail,
+}) => {
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();

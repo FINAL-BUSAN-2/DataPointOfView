@@ -27,9 +27,21 @@ import HealthSearch from './search_health';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
+  userName: string;
+  userEmail: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+const RoutineNameBox: React.FC<RoutineAddProps> = ({
+  navigation,
+  userName,
+  userEmail,
+  setLogin,
+  setUserName,
+  setUserEmail,
+}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newFileName, setNewFileName] = useState('');
   const toggleModal = () => {
