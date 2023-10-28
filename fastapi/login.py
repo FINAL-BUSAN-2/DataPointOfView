@@ -8,6 +8,7 @@ from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.sql import null
 from typing import List, Union, Optional
 from pydantic import BaseModel, validator
 from datetime import date, datetime
@@ -1047,8 +1048,10 @@ def test3(db: Session = Depends(get_db)):
     }
     current_day = day_name_mapping[now.strftime("%A").upper()].name
     print("current_day:", current_day)
+    ## 토
     today_str = today.strftime("%Y-%m-%d")
     print("today_str:", today_str)
+    ## 2023-10-28
     testdata3 = (
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
@@ -1074,7 +1077,33 @@ def test3(db: Session = Depends(get_db)):
 
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
-    testdata4 = db.query(HRTN_SETTING).all()
+    now = datetime.now()
+    today = now.date()
+    day_name_mapping = {
+        "MONDAY": Weekday.월,
+        "TUESDAY": Weekday.화,
+        "WEDNESDAY": Weekday.수,
+        "THURSDAY": Weekday.목,
+        "FRIDAY": Weekday.금,
+        "SATURDAY": Weekday.토,
+        "SUNDAY": Weekday.일,
+    }
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    today_str = today.strftime("%Y-%m-%d")
+    testdata4 = db.query(
+        func.count(HRTN_SETTING.hrtn_id)
+    ).filter(  # HRTN_SETTING 테이블의 count값을 조회합니다.
+        HRTN_SETTING.hrtn_mem
+        == "qwert0175@naver.com",  # hrtn_mem이 'abc123@naver.com'인 테이블을 조회합니다.
+        or_(
+            HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
+            HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+        ),
+        or_(
+            HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
+            HRTN_SETTING.hrtn_edate == today,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+        ),
+    )
     return testdata4
 
 
