@@ -598,21 +598,26 @@ class MergedRoutineResponse(BaseModel):
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist")
 def rtnlist(db: Session = Depends(get_db)):
-    email_filter = "qwert0175@naver.com"
-
-    ertn_subquery = (
-        db.query(ERTN_SETTING).filter(ERTN_SETTING.ertn_mem == email_filter).subquery()
+    # ertn_setting 테이블에서 조회
+    ertn_list = (
+        db.query(ERTN_SETTING)
+        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .all()
     )
-    prtn_subquery = (
-        db.query(PRTN_SETTING).filter(PRTN_SETTING.prtn_mem == email_filter).subquery()
+    # prtn_setting 테이블에서 조회
+    prtn_list = (
+        db.query(PRTN_SETTING)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
     )
-    hrtn_subquery = (
-        db.query(HRTN_SETTING).filter(HRTN_SETTING.hrtn_mem == email_filter).subquery()
+    # hrtn_setting 테이블에서조회
+    hrtn_list = (
+        db.query(HRTN_SETTING)
+        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .all()
     )
-
-    combined_query = union(ertn_subquery, prtn_subquery, hrtn_subquery)
-
-    combined_list = db.execute(combined_query).all()
+    # 세 결과를 합침
+    combined_list = ertn_list + prtn_list + hrtn_list
 
     return combined_list
 
