@@ -1014,19 +1014,32 @@ def test2(db: Session = Depends(get_db)):
 
 ##test
 @app.get("/test3")
-def get_pill_chart_data(db: Session = Depends(get_db)):
-    testdata3 = (
-        db.query(ERTN_SETTING, HRTN_SETTING, PRTN_SETTING)
+def test3(db: Session = Depends(get_db)):
+    now = datetime.now()
+    today = now.date()
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    today_str = today.strftime("%Y-%m-%d")
+    test3 = (
+        db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
             and_(
-                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == "abc123@naver.com",
+                or_(
+                    HRTN_SETTING.hrtn_day.is_(None),
+                    HRTN_SETTING.hrtn_day.contains(
+                        current_day
+                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                ),
+                or_(
+                    HRTN_SETTING.hrtn_edate.is_(None),
+                    func.date(HRTN_SETTING.hrtn_edate)
+                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                ),
             )
         )
         .all()
     )
-    return testdata3
+    return test3
 
 
 @app.get("/test4")
