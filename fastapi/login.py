@@ -891,4 +891,11 @@ def pill_prod_search(db: Session = Depends(get_db)):
 
 @app.post("/imageSearch")
 async def image_search(image: UploadFile):
-    return FileResponse(image.file, media_type="image/jpeg")
+    # return FileResponse(image.file, media_type="image/jpeg")
+    image_info = {
+            "filename": image.filename,
+            "content_type": image.content_type,
+            "content_length": image.file.__sizeof__(),
+            # 추가 정보를 필요에 따라 포함합니다.
+        }
+    return image_info
