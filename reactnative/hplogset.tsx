@@ -12,16 +12,20 @@ import {RootStackPageList} from './CommonType';
 
 type HplogSetProps = {
   navigation: StackNavigationProp<RootStackPageList, 'hplogset'>;
-  userInfo: string;
+  userName: string;
+  userEmail: string;
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const HplogSet: React.FC<HplogSetProps> = ({
   navigation,
-  userInfo,
+  userName,
+  userEmail,
   setLogin,
-  setUserInfo,
+  setUserName,
+  setUserEmail,
 }) => {
   const handleBackPress = () => {
     navigation.goBack();
@@ -40,7 +44,8 @@ const HplogSet: React.FC<HplogSetProps> = ({
         if (data && data.message) {
           Alert.alert('message', data.message); // "로그아웃 되었습니다." 메시지 표시
           setLogin(false);
-          setUserInfo(null);
+          setUserName(null);
+          setUserEmail(null);
         }
       } else {
         console.error('로그아웃 오류:', response.status);

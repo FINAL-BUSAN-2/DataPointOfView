@@ -232,7 +232,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               keyboardType="numeric"
             />
             <Text style={styles.setrepstext}>회</Text>
-            <Text>{userEmail}</Text>
           </View>
 
           {/* 날짜 선택 (달력 호출) */}
@@ -367,7 +366,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         {/* 추가하기 */}
         <TouchableOpacity onPress={handleSubmit} style={styles.addContainer}>
           <View style={styles.addTab}>
-            <Text style={styles.addtext}>추가하기</Text>
+            <Text style={styles.addtext}>추가하기{userEmail}</Text>
           </View>
         </TouchableOpacity>
       </View>
