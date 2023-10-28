@@ -25,7 +25,6 @@ import RNFS from 'react-native-fs';
 import axios from 'axios';
 import HealthSearch from './search_health';
 
-
 interface RoutineAddProps {
   navigation: NavigationProp;
 }
@@ -402,9 +401,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               source={require('./android/app/src/img/camera.png')}
                               style={styles.cameraicon}
                             />
-
                           </TouchableOpacity>
-
                         </View>
                       </View>
                     </View>
@@ -503,7 +500,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               <Text style={{color: 'white'}}>유산소</Text>
                             </TouchableOpacity>
                           </View>
-
                         </View>
                       </View>
                     </View>
