@@ -193,7 +193,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
-          // hrtn_mem: this.props.email, 
+          hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
 
