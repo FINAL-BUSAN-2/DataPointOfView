@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from urllib.parse import quote
 import httpx
 
-from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
+from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_, union
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from typing import List, Union, Optional
+from typing import List, Optional
 from pydantic import BaseModel, validator
 from datetime import date, datetime
 from enum import Enum
@@ -150,8 +150,8 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         new_user = Mem_Detail(
             mem_email=user_info["kakao_account"]["email"],
             mem_name=user_info["kakao_account"]["profile"]["nickname"],
-            mem_age=user_info["kakao_account"]["age_range"],
-            mem_gen=user_info["kakao_account"]["gender"],
+            mem_age=user_info["kakao_account"]["age_range"] if user_info and "kakao_account" in user_info and "age_range" in user_info["kakao_account"] else None,
+            mem_gen=user_info["kakao_account"]["gender"] if user_info and "kakao_account" in user_info and "gender" in user_info["kakao_account"] else None,
             mem_sday=sday,
             mem_delete=0,
         )
@@ -498,7 +498,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
+            # db.refresh(db_routine)
             logger.error("7777777777777777777777777")
 
         return db_routine
@@ -507,65 +507,63 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_건강
-# @app.post("/h_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: HRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         hrtn_id = generate_unique_hrtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = HRTN_SETTING(
-#                 hrtn_mem=email,
-#                 hrtn_id=generate_unique_hrtn_id(
-#                     request.session["user_email"]
-#                 ),  # 로그인아이디필요
-#                 hrtn_nm=routine.hrtn_nm,
-#                 hrtn_cat="건강",
-#                 hrtn_tag=routine.hrtn_tag,
-#                 hrtn_set=routine.hrtn_set,
-#                 hrtn_reps=routine.hrtn_reps,
-#                 hrtn_sdate=routine.hrtn_sdate,
-#                 hrtn_time=routine.hrtn_time,
-#                 hrtn_alram=routine.hrtn_alram,
-#                 hrtn_day=routine.hrtn_day,
-#             )
+# 루틴추가_건강
+@app.post("/h_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: HRoutineCreate, request: Request):
+    # email = request.session["user_email"]
+    try:
+        hrtn_id = generate_unique_hrtn_id("qwert0175@naver.com")  # email
+        with SessionLocal() as db:
+            db_routine = HRTN_SETTING(
+                hrtn_mem="qwert0175@naver.com",
+                hrtn_id=hrtn_id,
+                hrtn_nm=routine.hrtn_nm,
+                hrtn_cat="건강",
+                hrtn_tag=routine.hrtn_tag,
+                hrtn_set=routine.hrtn_set,
+                hrtn_reps=routine.hrtn_reps,
+                hrtn_sdate=routine.hrtn_sdate,
+                hrtn_time=routine.hrtn_time,
+                hrtn_alram=routine.hrtn_alram,
+                hrtn_day=routine.hrtn_day,
+            )
 
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#             return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+            return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_영양
-# @app.post("/p_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: PRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         prtn_id = generate_unique_prtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = PRTN_SETTING(
-#                 prtn_mem=email,  # 로그인아이디필요
-#                 prtn_id="",
-#                 prtn_nm=routine.prtn_nm,
-#                 prtn_cat="영양",
-#                 prtn_tag="영양",
-#                 prtn_set=routine.prtn_set,
-#                 prtn_reps=routine.prtn_reps,
-#                 prtn_sdate=routine.prtn_sdate,
-#                 prtn_time=routine.prtn_time,
-#                 prtn_alram=routine.prtn_alram,
-#                 prtn_day=routine.prtn_day,
-#             )
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#         return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+# 루틴추가_영양
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: PRoutineCreate, request: Request):
+    # email = request.session["user_email"]
+    try:
+        prtn_id = generate_unique_prtn_id("qwert0175@naver.com")  # email
+        with SessionLocal() as db:
+            db_routine = PRTN_SETTING(
+                prtn_mem="qwert0175@naver.com",  # 로그인아이디필요
+                prtn_id=prtn_id,
+                prtn_nm=routine.prtn_nm,
+                prtn_cat="영양",
+                prtn_tag="영양",
+                prtn_set=routine.prtn_set,
+                prtn_reps=routine.prtn_reps,
+                prtn_sdate=routine.prtn_sdate,
+                prtn_time=routine.prtn_time,
+                prtn_alram=routine.prtn_alram,
+                prtn_day=routine.prtn_day,
+            )
+            db.add(db_routine)
+            db.commit()
+            db.refresh(db_routine)
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        # return {"error": "데이터 삽입 중 오류 발생"}
 
 
 ####################################################### 루틴리스트 받아오기
@@ -603,167 +601,31 @@ class MergedRoutineResponse(BaseModel):
     rtn_day: str
 
 
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-class Weekday(Enum):
-    월 = 0
-    화 = 1
-    수 = 2
-    목 = 3
-    금 = 4
-    토 = 5
-    일 = 6
-
-
-# Define a mapping from English to Korean day names
-day_name_mapping = {
-    "MONDAY": Weekday.월,
-    "TUESDAY": Weekday.화,
-    "WEDNESDAY": Weekday.수,
-    "THURSDAY": Weekday.목,
-    "FRIDAY": Weekday.금,
-    "SATURDAY": Weekday.토,
-    "SUNDAY": Weekday.일,
-}
-
-
-# 데이터베이스에서 루틴 데이터 가져오는 함수
-def get_merged_routines_from_database(email):
-    # 현재 날짜와 요일을 가져옵니다.
-    now = datetime.now()
-    today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    # print(f"오늘 날짜: {today}, 요일: {current_day}")
-
-    with SessionLocal() as db:
-        e_routines = db.query(ERTN_SETTING).filter_by(ertn_mem=email).all()
-        p_routines = db.query(PRTN_SETTING).filter_by(ertn_mem=email).all()
-        h_routines = db.query(HRTN_SETTING).filter_by(ertn_mem=email).all()
-
-        merged_routines = []
-
-        for routine in e_routines:
-            routine_start_date = datetime.strptime(
-                routine.ertn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.ertn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.ertn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.ertn_time,
-                                rtn_name=routine.ertn_nm,
-                                rtn_tag=routine.ertn_tag,
-                                rtn_sdate=routine.ertn_sdate,
-                                rtn_day=routine.ertn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.ertn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.ertn_time,
-                            rtn_name=routine.ertn_nm,
-                            rtn_tag=routine.ertn_tag,
-                            rtn_sdate=routine.ertn_sdate,
-                            rtn_day=routine.ertn_day,
-                        )
-                    )
-
-        for routine in p_routines:
-            routine_start_date = datetime.strptime(
-                routine.prtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.prtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.prtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.prtn_time,
-                                rtn_name=routine.prtn_nm,
-                                rtn_tag=routine.prtn_tag,
-                                rtn_sdate=routine.prtn_sdate,
-                                rtn_day=routine.prtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.prtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.prtn_time,
-                            rtn_name=routine.prtn_nm,
-                            rtn_tag=routine.prtn_tag,
-                            rtn_sdate=routine.prtn_sdate,
-                            rtn_day=routine.prtn_day,
-                        )
-                    )
-
-        for routine in h_routines:
-            routine_start_date = datetime.strptime(
-                routine.hrtn_sdate, "%Y-%m-%d"
-            ).date()  # 형식을 맞추기 위해 날짜 형식을 지정
-            # print(f"루틴 시작 날짜: {routine_start_date}")
-            if today >= routine_start_date:
-                if routine.hrtn_day:
-                    # 반복 요일 문자열을 파싱합니다.
-                    repeat_days = [day.strip() for day in routine.hrtn_day.split(",")]
-                    # print(f"반복 요일: {repeat_days}")
-                    if current_day in repeat_days or today == routine_start_date:
-                        merged_routines.append(
-                            MergedRoutineResponse(
-                                rtn_time=routine.hrtn_time,
-                                rtn_name=routine.hrtn_nm,
-                                rtn_tag=routine.hrtn_tag,
-                                rtn_sdate=routine.hrtn_sdate,
-                                rtn_day=routine.hrtn_day,
-                            )
-                        )
-                        # 루틴 정보 출력
-                        # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-                elif today == routine_start_date:
-                    merged_routines.append(
-                        MergedRoutineResponse(
-                            rtn_time=routine.hrtn_time,
-                            rtn_name=routine.hrtn_nm,
-                            rtn_tag=routine.hrtn_tag,
-                            rtn_sdate=routine.hrtn_sdate,
-                            rtn_day=routine.hrtn_day,
-                        )
-                    )
-
-                    # 루틴 정보 출력
-                    # print(f"루틴이 merged_routines에 추가되었습니다: {routine.hrtn_nm}")
-
-        merged_routines.sort(key=lambda x: (x.rtn_sdate, x.rtn_time))
-        # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
-
-    return merged_routines
-
-
 # 루틴 데이터 가져오는 엔드포인트
-@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-async def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database(
-        "qwert0175@naver.com"
-    )  # request.session["mem_email"]
-    return merged_routines
+@app.get("/rtnlist")
+def rtnlist(db: Session = Depends(get_db)):
+    # ertn_setting 테이블에서 조회
+    ertn_list = (
+        db.query(ERTN_SETTING)
+        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    # prtn_setting 테이블에서 조회
+    prtn_list = (
+        db.query(PRTN_SETTING)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    # hrtn_setting 테이블에서조회
+    hrtn_list = (
+        db.query(HRTN_SETTING)
+        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    # 세 결과를 합침
+    combined_list = ertn_list + prtn_list + hrtn_list
 
-
-# # 루틴 데이터 가져오는 엔드포인트
-# @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-# def read_routines(request: Request, db: Session = Depends(get_db)):
-#     email = request.session["user_email"]
-#     merged_routines = get_merged_routines_from_database(email)
-#     return merged_routines
+    return combined_list
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
@@ -1029,13 +891,16 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
     return testdata3
 
 
+
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     testdata4 = db.query(HRTN_SETTING).all()
     return testdata4
 
 
-############################################################## pill_prod((영양검색창활용)
+
+############################################################## pill_prod ,health ((영양검색창활용)
+
 class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
     pill_nm: str
@@ -1049,3 +914,26 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
+
+
+class HEALTH_SEARCH(BaseModel):
+    health_nm: str
+    health_tag: str
+    health_emoji: str
+
+
+@app.get("/healthsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    healthsearch = db.query(HEALTH).all()
+    return healthsearch
+
+@app.post("/imageSearch")
+async def image_search(image: UploadFile):
+    # return FileResponse(image.file, media_type="image/jpeg")
+    image_info = {
+            "filename": image.filename,
+            "content_type": image.content_type,
+            "content_length": image.file.__sizeof__(),
+            # 추가 정보를 필요에 따라 포함합니다.
+        }
+    return image_info
