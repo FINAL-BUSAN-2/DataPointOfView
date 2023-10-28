@@ -190,6 +190,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
+          
           hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
@@ -649,7 +650,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
       {isCameraOpen && device !== null ? (
         <TouchableOpacity onPress={onCameraButton} style={styles.addContainer}>
           <View style={styles.addTab}>
-            <Text style={styles.addtext}>찰칵찰칵</Text>
+            <Text style={styles.addtext}>사진검색</Text>
           </View>
         </TouchableOpacity>
       ) : (
