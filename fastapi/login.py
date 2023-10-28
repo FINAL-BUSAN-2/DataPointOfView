@@ -8,6 +8,7 @@ from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.sql import null
 from typing import List, Union, Optional
 from pydantic import BaseModel, validator
 from datetime import date, datetime
@@ -140,7 +141,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
+
     encoded_user_info = quote(str(request.session["user_name"],request.session["user_email"]))
+
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
     if existing_user:
         return RedirectResponse(login_url_scheme)
@@ -467,7 +470,9 @@ def generate_unique_prtn_id(prtn_mem):
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
-    email = request.session["user_email"]
+    email = request.session.get("user_email")
+    # print(session.get("user_email", None))
+    # email = session.get("user_email", None)
     print(email)
     # 라우터에 전달된 데이터 출력
     logging.error(f"Received: {request}")
@@ -775,7 +780,6 @@ def rtnlist(db: Session = Depends(get_db)):
     combined_list = ertn_list + prtn_list + hrtn_list
 
 
-
 # # 루틴 데이터 가져오는 엔드포인트
 # @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
 # def read_routines(request: Request, db: Session = Depends(get_db)):
@@ -1035,7 +1039,6 @@ def test2(db: Session = Depends(get_db)):
 def test3(db: Session = Depends(get_db)):
     now = datetime.now()
     today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
     day_name_mapping = {
         "MONDAY": Weekday.월,
         "TUESDAY": Weekday.화,
@@ -1045,7 +1048,12 @@ def test3(db: Session = Depends(get_db)):
         "SATURDAY": Weekday.토,
         "SUNDAY": Weekday.일,
     }
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    print("current_day:", current_day)
+    ## 토
     today_str = today.strftime("%Y-%m-%d")
+    print("today_str:", today_str)
+    ## 2023-10-28
     testdata3 = (
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
@@ -1071,7 +1079,33 @@ def test3(db: Session = Depends(get_db)):
 
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
-    testdata4 = db.query(HRTN_SETTING).all()
+    now = datetime.now()
+    today = now.date()
+    day_name_mapping = {
+        "MONDAY": Weekday.월,
+        "TUESDAY": Weekday.화,
+        "WEDNESDAY": Weekday.수,
+        "THURSDAY": Weekday.목,
+        "FRIDAY": Weekday.금,
+        "SATURDAY": Weekday.토,
+        "SUNDAY": Weekday.일,
+    }
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    today_str = today.strftime("%Y-%m-%d")
+    testdata4 = db.query(func.count(HRTN_SETTING.hrtn_id)).filter(
+        HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+        or_(
+            HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
+            HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+        ),
+        or_(
+            HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
+            HRTN_SETTING.hrtn_edate == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+        ),
+    )
+    print(testdata4)
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug("debug")
     return testdata4
 
 
