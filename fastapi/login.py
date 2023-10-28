@@ -600,17 +600,17 @@ class MergedRoutineResponse(BaseModel):
 def rtnlist(db: Session = Depends(get_db)):
     rtnlist = (
         db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
-        # .join(Mem_Detail,Mem_Detail.mem_email==HRTN_SETTING.hrtn_mem)
         .filter(
             and_(
                 ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                 HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
             )
-        ).all()
+        )
+        .all()
     )
 
-    return rtnlist
+    return {"email": "qwert0175@naver.com", "data": rtnlist}
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
