@@ -1044,7 +1044,9 @@ def test3(db: Session = Depends(get_db)):
         "SUNDAY": Weekday.일,
     }
     current_day = day_name_mapping[now.strftime("%A").upper()].name
+    print("current_day:", current_day)
     today_str = today.strftime("%Y-%m-%d")
+    print("today_str:", today_str)
     testdata3 = (
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
