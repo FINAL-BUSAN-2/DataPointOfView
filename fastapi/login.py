@@ -598,19 +598,28 @@ class MergedRoutineResponse(BaseModel):
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist")
 def rtnlist(db: Session = Depends(get_db)):
-    rtnlist = (
-        db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
-        .filter(
-            and_(
-                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-            )
-        )
+    # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    ertn_list = (
+        db.query(ERTN_SETTING)
+        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
         .all()
     )
+    # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    prtn_list = (
+        db.query(PRTN_SETTING)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    hrtn_list = (
+        db.query(HRTN_SETTING)
+        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .all()
+    )
+    # 세 결과를 합침
+    combined_list = ertn_list + prtn_list + hrtn_list
 
-    return {"email": "qwert0175@naver.com", "data": rtnlist}
+    return combined_list
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
