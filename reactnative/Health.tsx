@@ -20,9 +20,11 @@ import {
   useCameraDevice,
   // useCameraDevices,
 } from 'react-native-vision-camera';
+
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import HealthSearch from './search_health';
+
 
 interface RoutineAddProps {
   navigation: NavigationProp;
@@ -376,6 +378,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                       {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                       <View style={{flex: 5, flexDirection: 'column'}}>
                         {/* 위쪽 공간 */}
+
                         <View
                           style={{
                             flex: 2.6,
@@ -399,7 +402,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               source={require('./android/app/src/img/camera.png')}
                               style={styles.cameraicon}
                             />
+
                           </TouchableOpacity>
+
                         </View>
                       </View>
                     </View>
@@ -498,6 +503,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                               <Text style={{color: 'white'}}>유산소</Text>
                             </TouchableOpacity>
                           </View>
+
                         </View>
                       </View>
                     </View>

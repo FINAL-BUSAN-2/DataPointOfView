@@ -150,8 +150,8 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         new_user = Mem_Detail(
             mem_email=user_info["kakao_account"]["email"],
             mem_name=user_info["kakao_account"]["profile"]["nickname"],
-            mem_age=user_info["kakao_account"]["age_range"],
-            mem_gen=user_info["kakao_account"]["gender"],
+            mem_age=user_info["kakao_account"]["age_range"] if user_info and "kakao_account" in user_info and "age_range" in user_info["kakao_account"] else None,
+            mem_gen=user_info["kakao_account"]["gender"] if user_info and "kakao_account" in user_info and "gender" in user_info["kakao_account"] else None,
             mem_sday=sday,
             mem_delete=0,
         )
@@ -600,17 +600,17 @@ class MergedRoutineResponse(BaseModel):
 def rtnlist(db: Session = Depends(get_db)):
     rtnlist = (
         db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
-        # .join(Mem_Detail,Mem_Detail.mem_email==HRTN_SETTING.hrtn_mem)
         .filter(
             and_(
                 ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                 HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
             )
-        ).all()
+        )
+        .all()
     )
 
-    return rtnlist
+    return {"email": "qwert0175@naver.com", "data": rtnlist}
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
@@ -727,14 +727,12 @@ def get_color_by_tag(tag):
 
 @app.get("/pill_piechartdata")
 def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
-        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .filter(
             and_(
-                PRTN_SETTING.prtn_id.in_(PRTN_FIN.prtn_id),
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                 PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
                 PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
@@ -744,6 +742,15 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .group_by(PILL_FUNC.func_nm)
         .all()
     )
+    #     db.query(PILL_CMB)
+    # .filter(
+    #     and_(
+    #         PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+    #         PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+    #         PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+    #     ),
+    # )
+    # .all()
 
     pill_chart_data = [
         {
@@ -804,15 +811,46 @@ def get_color_by_func(func):
 
 
 @app.get("/test")
-def test(db: Session = Depends(get_db)):
-    testdata = db.query(PILL_CMB).all()
-    return testdata
+def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    func_counts_query = (
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+                PILL_FUNC.func_cd == PILL_CMB.cmb_func,
+            )
+        )
+        .group_by(PILL_FUNC.func_nm)
+        .all()
+    )
+    return func_counts_query
 
 
-# @app.get("/test2")
-# def test2(db: Session = Depends(get_db)):
-#     testdata2 = db.query(PILL_PROD).all()
-#     return testdata2
+@app.get("/test2")
+def get_pill_chart_data(db: Session = Depends(get_db)):
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    func_counts_query = (
+        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(
+            PILL_FUNC,
+            PILL_FUNC.func_cd == PILL_CMB.cmb_func,
+        )
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+            )
+        )
+        .group_by(PILL_FUNC.func_nm)
+        .all()
+    )
+    return func_counts_query
 
 
 @app.get("/test3")
