@@ -601,7 +601,7 @@ def rtnlist(db: Session = Depends(get_db)):
     rtnlist = (
         db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
         .filter(
-            and_(
+            or_(
                 ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                 HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
