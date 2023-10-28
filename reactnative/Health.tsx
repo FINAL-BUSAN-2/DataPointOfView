@@ -18,7 +18,7 @@ import {HaddRoutine} from './api';
 import {
   Camera,
   useCameraDevice,
-  useCameraDevices,
+  // useCameraDevices,
 } from 'react-native-vision-camera';
 import RNFS from 'react-native-fs';
 
@@ -203,6 +203,34 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
     setNewFileName(newFileName);
   };
 
+  const imageSearch = async () => {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: cameraImgPath,
+      type: 'image/jpeg', // 이미지 형식에 따라 변경
+      name: 'image.jpg', // 이미지 파일 이름
+    });
+
+    // FastAPI 서버 URL
+    const serverUrl = 'http://43.200.178.131:3344/imageSearch';
+
+    // POST 요청 보내기
+    fetch(serverUrl, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(newFileName, data.filename);
+      })
+      .catch(error => {
+        console.error('오류:', error);
+      });
+  };
+
   return (
     <>
       {isCameraOpen && device !== null ? (
@@ -236,7 +264,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                 source={{
                   uri: `file://${internalStoragePath}/${newFileName}`,
                 }}
-                style={{width: 300, height: 300}}
+                style={{
+                  width: 300,
+                  height: 300,
+                  transform: [{rotate: '-90deg'}],
+                }}
               />
               <View
                 style={{
@@ -245,7 +277,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={imageSearch}>
                   <View
                     style={{
                       width: 120,
@@ -257,7 +289,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
                       alignItems: 'center',
                     }}>
                     <Text style={{textAlign: 'center', color: 'white'}}>
-                      전송
+                      검색
                     </Text>
                   </View>
                 </TouchableOpacity>
