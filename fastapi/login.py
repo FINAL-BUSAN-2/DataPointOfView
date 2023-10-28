@@ -835,7 +835,7 @@ def get_color_by_func(func):
 
 @app.get("/test")
 def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING).all()
+    testdata = db.query(HRTN_SETTING)
     return testdata
 
 
@@ -858,16 +858,10 @@ def test2(db: Session = Depends(get_db)):
 ##test
 @app.get("/test3")
 def get_pill_chart_data(db: Session = Depends(get_db)):
-    ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     testdata3 = (
         db.query(ERTN_SETTING, HRTN_SETTING, PRTN_SETTING)
         .filter(
             and_(
-                ERTN_SETTING.ertn_id.in_(ertn_ids_query),
-                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                 ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                 HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
