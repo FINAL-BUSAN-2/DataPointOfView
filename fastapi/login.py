@@ -14,6 +14,8 @@ from datetime import date, datetime
 from enum import Enum
 import logging
 
+from sqlalchemy.sql import null
+
 app = FastAPI()
 app.add_middleware(
     SessionMiddleware,
