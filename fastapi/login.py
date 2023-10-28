@@ -973,7 +973,7 @@ def get_color_by_func(func):
 
 @app.get("/test")
 def test(db: Session = Depends(get_db)):
-    testdata = db.query(HRTN_SETTING).all()
+    testdata = db.query(HRTN_SETTING)
     return testdata
 
 
