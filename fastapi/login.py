@@ -14,6 +14,7 @@ from pydantic import BaseModel, validator
 from datetime import date, datetime
 from enum import Enum
 import logging
+import pdb
 
 app = FastAPI()
 app.add_middleware(
@@ -141,7 +142,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
-    encoded_user_info = quote(str(request.session["user_name"]),str(request.session["user_email"]))
+    encoded_user_info = quote(
+        str(request.session["user_name"]), str(request.session["user_email"])
+    )
 
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
     if existing_user:
@@ -1110,8 +1113,7 @@ def test4(db: Session = Depends(get_db)):
         .all()
     )
     print(testdata4)
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug("debug")
+    pdb.set_trace()
     return testdata4
 
 
