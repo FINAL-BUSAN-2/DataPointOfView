@@ -775,7 +775,6 @@ def rtnlist(db: Session = Depends(get_db)):
     combined_list = ertn_list + prtn_list + hrtn_list
 
 
-
 # # 루틴 데이터 가져오는 엔드포인트
 # @app.get("/rtnlist", response_model=List[MergedRoutineResponse])
 # def read_routines(request: Request, db: Session = Depends(get_db)):
@@ -1035,7 +1034,6 @@ def test2(db: Session = Depends(get_db)):
 def test3(db: Session = Depends(get_db)):
     now = datetime.now()
     today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
     day_name_mapping = {
         "MONDAY": Weekday.월,
         "TUESDAY": Weekday.화,
@@ -1045,6 +1043,7 @@ def test3(db: Session = Depends(get_db)):
         "SATURDAY": Weekday.토,
         "SUNDAY": Weekday.일,
     }
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
     today_str = today.strftime("%Y-%m-%d")
     testdata3 = (
         db.query(func.count(HRTN_SETTING.hrtn_mem))
