@@ -38,9 +38,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   navigation,
   userName,
   userEmail,
-  setLogin,
-  setUserName,
-  setUserEmail,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newFileName, setNewFileName] = useState('');

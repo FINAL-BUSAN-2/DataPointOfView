@@ -41,9 +41,9 @@ function App() {
     const url = event.url;
 
     // URL 디코딩을 통해 사용자 정보 추출
-    const decodedUserInfo = decodeURIComponent(url.split('?user_info=')[1]);
-    const decodedUserName = decodedUserInfo.split(',')[0];
-    const decodedUserEmail = decodedUserInfo.split(',')[1];
+    const decodedUserInfo = decodeURIComponent(url.split('?')[1]);
+    const decodedUserName = decodedUserInfo.split('&')[0].split('=')[1];
+    const decodedUserEmail = decodedUserInfo.split('&')[1].split('=')[1];
 
     // 추출된 사용자 정보를 상태에 설정하고 로그인 상태로 변경합니다.
     setUserName(decodedUserName);
@@ -107,29 +107,11 @@ function App() {
   }
 
   function HealthWrapper(props) {
-    return (
-      <Health
-        {...props}
-        userName={userName}
-        userEmail={userEmail}
-        setLogin={setLogin}
-        setUserName={setUserName}
-        setUserEmail={setUserEmail}
-      />
-    );
+    return <Health {...props} userName={userName} userEmail={userEmail} />;
   }
 
   function PillWrapper(props) {
-    return (
-      <Pill
-        {...props}
-        userName={userName}
-        userEmail={userEmail}
-        setLogin={setLogin}
-        setUserName={setUserName}
-        setUserEmail={setUserEmail}
-      />
-    );
+    return <Pill {...props} userName={userName} userEmail={userEmail} />;
   }
 
   return (

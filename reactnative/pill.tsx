@@ -32,9 +32,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   navigation,
   userName,
   userEmail,
-  setLogin,
-  setUserName,
-  setUserEmail,
 }) => {
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
