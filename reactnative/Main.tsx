@@ -173,7 +173,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
-        <Text style={styles.memtex}>{userEmail}님 Daily routine</Text>
+        <Text style={styles.memtex}>{userName}님 Daily routine</Text>
       </View>
 
       {/* 루틴리스트 */}
