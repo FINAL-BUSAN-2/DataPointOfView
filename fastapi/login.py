@@ -304,6 +304,12 @@ class PRTN_FIN(Base):
     fin_prtn_time = Column(String(8), primary_key=True)
 
 
+class ERTN_FIN(Base):
+    __tablename__ = "ertn_fin"
+    ertn_id = Column(String(100), primary_key=True)
+    fin_ertn_time = Column(String(8), primary_key=True)
+
+
 ##### 로그인정보 (이메일)
 def get_current_user_email(request: Request):
     user_email = request.session.get("user_email")
@@ -768,16 +774,6 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .group_by(PILL_FUNC.func_nm)
         .all()
     )
-    #     db.query(PILL_CMB)
-    # .filter(
-    #     and_(
-    #         PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-    #         PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
-    #         PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
-    #     ),
-    # )
-    # .all()
-
     pill_chart_data = [
         {
             "func": func_count[0],
@@ -836,76 +832,6 @@ def get_color_by_func(func):
     return color_mapping.get(func, "#808080")  # 기본값은 회색
 
 
-@app.get("/test")
-def get_pill_chart_data(db: Session = Depends(get_db)):
-    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-    func_counts_query = (
-        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .filter(
-            and_(
-                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
-                PILL_FUNC.func_cd == PILL_CMB.cmb_func,
-            )
-        )
-        .group_by(PILL_FUNC.func_nm)
-        .all()
-    )
-    return func_counts_query
-
-
-@app.get("/test2")
-def get_pill_chart_data(db: Session = Depends(get_db)):
-    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-    func_counts_query = (
-        db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .join(
-            PILL_FUNC,
-            PILL_FUNC.func_cd == PILL_CMB.cmb_func,
-        )
-        .filter(
-            and_(
-                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
-            )
-        )
-        .group_by(PILL_FUNC.func_nm)
-        .all()
-    )
-    return func_counts_query
-
-
-@app.get("/test3")
-def test3(db: Session = Depends(get_db)):
-    testdata3 = (
-        db.query(PILL_PROD)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
-        .all()
-    )
-    return testdata3
-
-
-@app.get("/test4")
-def test4(db: Session = Depends(get_db)):
-    testdata4 = (
-        db.query(PILL_CMB)
-        .filter(
-            and_(
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
-                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
-            ),
-        )
-        .all()
-    )
-    return testdata4
-
-
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
     testdata2 = (
@@ -922,17 +848,26 @@ def test2(db: Session = Depends(get_db)):
     return testdata2
 
 
-@app.get("/test5")
-def test5(db: Session = Depends(get_db)):
-    testdata5 = (
-        db.query(PILL_FUNC)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
-        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+@app.get("/test3")
+def get_pill_chart_data(db: Session = Depends(get_db)):
+    ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    testdata3 = (
+        db.query(ERTN_SETTING, HRTN_SETTING, PRTN_SETTING)
+        .filter(
+            and_(
+                ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+            )
+        )
         .all()
     )
-    return testdata5
+    return testdata3
 
 
 ############################################################## pill_prod ,health ((영양검색창활용)
