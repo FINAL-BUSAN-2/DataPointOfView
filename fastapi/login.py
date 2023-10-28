@@ -766,20 +766,25 @@ def rtnlist(db: Session = Depends(get_db)):
         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(ertn_list)
     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(prtn_list)
     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(hrtn_list)
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
+    print(combined_list)
+    return combined_list
 
 
 # # 루틴 데이터 가져오는 엔드포인트
@@ -1131,3 +1136,15 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
+
+
+class HEALTH_SEARCH(BaseModel):
+    health_nm: str
+    health_tag: str
+    health_emoji: str
+
+
+@app.get("/healthsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    healthsearch = db.query(HEALTH).all()
+    return healthsearch
