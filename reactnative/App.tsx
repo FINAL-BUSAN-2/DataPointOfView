@@ -6,13 +6,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Main from './Main';
 import Health from './Health';
-import pill from './pill';
 import Etc from './Etc';
 import HplogSet from './hplogset';
 import Access from './Access';
 import Social from './Social';
 import NewsInfo from './NewsInfo';
 import Search from './search';
+import Pill from './pill';
 
 const Stack = createStackNavigator();
 
@@ -86,6 +86,32 @@ function App() {
     );
   }
 
+  function HealthWrapper(props) {
+    return (
+      <Health
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        setLogin={setLogin}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
+      />
+    );
+  }
+
+  function pillWrapper(props) {
+    return (
+      <Pill
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        setLogin={setLogin}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
+      />
+    );
+  }
+
   useEffect(() => {
     // 1초 후에 로고 화면을 숨기고 로그인 화면 보이기
     const timer = setTimeout(() => {
@@ -127,8 +153,8 @@ function App() {
           <>
             <Stack.Screen name="Main" component={MainWrapper} />
             <Stack.Screen name="hplogset" component={SetWrapper} />
-            <Stack.Screen name="Health" component={Health} />
-            <Stack.Screen name="pill" component={pill} />
+            <Stack.Screen name="Health" component={HealthWrapper} />
+            <Stack.Screen name="pill" component={pillWrapper} />
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="Etc" component={EtcWrapper} />
 
