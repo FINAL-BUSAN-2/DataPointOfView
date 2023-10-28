@@ -29,9 +29,15 @@ type MainProps = {
 //DB에서 루틴정보받아오기
 interface RoutineData {
   id: number; //임시로number해놓음
-  rtn_name: string;
-  rtn_time: string;
-  rtn_tag: string;
+  ertn_time: string;
+  hrtn_time: string;
+  prtn_time: string;
+  ertn_tag: string;
+  hrtn_tag: string;
+  prtn_tag: string;
+  ertn_nm: string;
+  prtn_nm: string;
+  hrtn_nm: string;
 }
 
 const Main: React.FC<MainProps> = ({
@@ -69,7 +75,7 @@ const Main: React.FC<MainProps> = ({
         const data = response.data;
         // 정렬 없이 데이터를 설정함
         setData(data);
-        console.log(response);
+        //console.log(response);
         console.log(data);
       } else {
         console.error('데이터가 없습니다.');
@@ -185,21 +191,21 @@ const Main: React.FC<MainProps> = ({
           <View style={styles.routineItem2}>
             <View style={styles.routineItemSection}>
               <Text style={[styles.routineInfo, {color: 'black'}]}>
-                {item.rtn_time}
+                {item.ertn_time || item.prtn_time || item.hrtn_time}
               </Text>
             </View>
 
             <View style={styles.routineItemSection}>
               <View style={styles.tagContainer}>
                 <Text style={[styles.routineInfo, {color: 'white'}]}>
-                  {item.rtn_tag}
+                  {item.ertn_tag || item.prtn_tag || item.hrtn_tag}
                 </Text>
               </View>
             </View>
 
             <View style={styles.routineItemSection}>
               <Text style={[styles.routineInfo, {color: 'black'}]}>
-                {item.rtn_name}
+                {item.ertn_nm || item.prtn_nm || item.hrtn_nm}
               </Text>
             </View>
 
