@@ -860,22 +860,17 @@ def get_health_chart_data(db: Session = Depends(get_db)):
 def get_color_by_tag(tag):
     # 태그별로 색상 지정 로직 구현하기 (예: 상체 - 빨강색 / 하체 - 파랑색 등)
     if tag == "상체":
-        return "#D64D40"  # 빨강색
-
+        return "#FF7A7A"  # 밝은 붉은색
     elif tag == "하체":
-        return "#8F5550"  # 파랑색
-
+        return "#5E5A5A"  # 짙은 회색
     elif tag == "코어":
-        return "#1C488A"  # 초록색
-
+        return "#7BCCB5"  # 청록색
     elif tag == "유산소":
-        return "#B2D667"  # 노랑색
-
+        return "#FFF18C"  # 연한 노랑
     elif tag == "스트레칭":
-        return "#808A6A"  # 보라색
-
+        return "#AE8BD9"  # 밝은 자주
     else:
-        return "#808080"  # 기타는 회색으로 설정
+        return "#808080"  # 기타는 회색
 
 
 @app.get("/pill_piechartdata")
@@ -900,7 +895,7 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
             "func": func_count[0],
             "count1": func_count[1],
             "emoji1": func_count[2],
-            "color1": get_color_by_tag(func_count[0]),
+            "color1": get_color_by_func(func_count[0]),
         }
         for func_count in func_counts_query
     ]
@@ -918,39 +913,62 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
 
 def get_color_by_func(func):
     # 기능별로 색상 지정 로직 구현하기
-    color_mapping = {
-        "피로감": "#D64D40",  # 빨강색
-        "눈 건강": "#8F5550",  # 파랑색
-        "피부 건강": "#FFA500",  # 주황색
-        "체지방": "#008000",  # 녹색
-        "혈관 & 혈액순환": "#800080",  # 보라색
-        "간 건강": "#FFFF00",  # 노랑색
-        "장 건강": "#00FFFF",  # 하늘색
-        "스트레스 & 수면": "#FFC0CB",  # 분홍색
-        "면역기능": "#FFD700",  # 금색
-        "혈중 콜레스테롤": "#FF4500",  # 오렌지색
-        "뼈 건강": "#228B22",  # 초록색
-        "노화 & 항산화": "#8B4513",  # 갈색
-        "여성 건강": "#FF69B4",  # 핑크색
-        "소화 & 위식도 건강": "#8B008B",  # 보라색
-        "남성 건강": "#4B0082",  # 아이보리색
-        "혈압": "#DC143C",  # 검정색
-        "운동 능력 & 근육량": "#2E8B57",  # 남색
-        "두뇌활동": "#00FF00",  # 연두색
-        "혈당": "#FFFFE0",  # 연한 노랑색
-        "혈중 중성지방": "#00008B",  # 초록색
-        "치아 & 잇몸": "#9400D3",  # 보라색
-        "임산부 & 태아 건강": "#87CEEB",  # 하늘색
-        "탈모 & 손톱 건강": "#9370DB",  # 자주색
-        "관절 건강": "#7B68EE",  # 파랑색
-        "여성 갱년기": "#FA8072",  # 적색
-        "호흡기 건강": "#32CD32",  # 라임색
-        "갑상선 건강": "#ADFF2F",  # 초록색
-        "빈혈": "#FF6347",  # 토마토색
-        # 기타
-    }
-    # 딕셔너리에서 찾아 반환하거나 기타는 회색
-    return color_mapping.get(func, "#808080")  # 기본값은 회색
+    if func == "피로감":
+        return "#FF7A7A"  # 밝은 붉은색
+    elif func == "눈 건강":
+        return "#5E5A5A"  # 짙은 회색
+    elif func == "피부 건강":
+        return "#F7D7A3"  # 밝은 베이지
+    elif func == "체지방":
+        return "#A1D3A2"  # 밝은 녹색
+    elif func == "혈관 & 혈액순환":
+        return "#9055A0"  # 보라색
+    elif func == "간 건강":
+        return "#FFCA4D"  # 밝은 노랑
+    elif func == "장 건강":
+        return "#4AB4E8"  # 청록색
+    elif func == "스트레스 & 수면":
+        return "#FF9EDF"  # 밝은 핑크
+    elif func == "면역기능":
+        return "#FFD55B"  # 밝은 주황
+    elif func == "혈중 콜레스테롤":
+        return "#FF7F4F"  # 연한 붉은 주황
+    elif func == "뼈 건강":
+        return "#7BCCB5"  # 청록색
+    elif func == "노화 & 항산화":
+        return "#C0A875"  # 밝은 갈색
+    elif func == "여성 건강":
+        return "#FF96AB"  # 연한 핑크
+    elif func == "소화 & 위식도 건강":
+        return "#775288"  # 보라색
+    elif func == "남성 건강":
+        return "#5663E2"  # 짙은 파랑
+    elif func == "혈압":
+        return "#D8856A"  # 연한 갈색
+    elif func == "운동 능력 & 근육량":
+        return "#4E9378"  # 청록색
+    elif func == "두뇌활동":
+        return "#6CA35E"  # 연한 초록
+    elif func == "혈당":
+        return "#FFF18C"  # 연한 노랑
+    elif func == "혈중 중성지방":
+        return "#6EC28A"  # 연한 초록
+    elif func == "치아 & 잇몸":
+        return "#D667ED"  # 보라색
+    elif func == "임산부 & 태아 건강":
+        return "#71B0C5"  # 청록색
+    elif func == "탈모 & 손톱 건강":
+        return "#AE8BD9"  # 밝은 자주
+    elif func == "관절 건강":
+        return "#6D7EDB"  # 짙은 파랑
+    elif func == "여성 갱년기":
+        return "#FF8764"  # 연한 붉은색
+    elif func == "호흡기 건강":
+        return "#82FF84"  # 밝은 초록
+    elif func == "갑상선 건강":
+        return "#D4E4FF"  # 연한 하늘
+    else:
+        return "#FF817A"  # 연한 붉은색
 
 
 @app.get("/test")
