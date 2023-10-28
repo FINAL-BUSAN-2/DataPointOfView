@@ -19,15 +19,18 @@ const Stack = createStackNavigator();
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
   const [isLogin, setLogin] = useState(false);
-  const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
+  const [userName, setUserName] = useState(null); // 사용자 정보 상태 추가
+  const [userEmail, setUserEmail] = useState(null); // 사용자 정보 상태 추가
 
   function SetWrapper(props) {
     return (
       <HplogSet
         {...props}
-        userInfo={userInfo}
+        userName={userName}
+        userEmail={userEmail}
         setLogin={setLogin}
-        setUserInfo={setUserInfo}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
       />
     );
   }
@@ -36,9 +39,11 @@ function App() {
     return (
       <Main
         {...props}
-        userInfo={userInfo}
+        userName={userName}
+        userEmail={userEmail}
         setLogin={setLogin}
-        setUserInfo={setUserInfo}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
       />
     );
   }
@@ -46,9 +51,11 @@ function App() {
     return (
       <Access
         {...props}
-        userInfo={userInfo}
+        userName={userName}
+        userEmail={userEmail}
         setLogin={setLogin}
-        setUserInfo={setUserInfo}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
       />
     );
   }
@@ -57,9 +64,24 @@ function App() {
     return (
       <Social
         {...props}
-        userInfo={userInfo}
+        userName={userName}
+        userEmail={userEmail}
         setLogin={setLogin}
-        setUserInfo={setUserInfo}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
+      />
+    );
+  }
+
+  function EtcWrapper(props) {
+    return (
+      <Etc
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        setLogin={setLogin}
+        setUserName={setUserName}
+        setUserEmail={setUserEmail}
       />
     );
   }
@@ -85,9 +107,12 @@ function App() {
 
     // URL 디코딩을 통해 사용자 정보 추출
     const decodedUserInfo = decodeURIComponent(url.split('?user_info=')[1]);
+    const decodedUserName = decodedUserInfo.split(',')[0];
+    const decodedUserEmail = decodedUserInfo.split(',')[1];
 
     // 추출된 사용자 정보를 상태에 설정하고 로그인 상태로 변경합니다.
-    setUserInfo(decodedUserInfo);
+    setUserName(decodedUserName);
+    setUserEmail(decodedUserEmail);
     setLogin(true);
   };
 
@@ -105,7 +130,7 @@ function App() {
             <Stack.Screen name="Health" component={Health} />
             <Stack.Screen name="pill" component={pill} />
             <Stack.Screen name="Search" component={Search} />
-            <Stack.Screen name="Etc" component={Etc} />
+            <Stack.Screen name="Etc" component={EtcWrapper} />
 
             <Stack.Screen name="Access" component={AccessWrapper} />
             <Stack.Screen name="Social" component={SocialWrapper} />
