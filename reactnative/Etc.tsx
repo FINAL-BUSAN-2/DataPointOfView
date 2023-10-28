@@ -150,7 +150,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           ertn_cat: '',
           ertn_tag: '',
           ertn_edate: '',
-          ertn_mem: '',
+          ertn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
 
