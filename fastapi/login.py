@@ -981,13 +981,15 @@ def test(db: Session = Depends(get_db)):
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
             and_(
-                current_day.in_(HRTN_SETTING.hrtn_day),
-                or_(HRTN_SETTING.hrtn_day == None),
-            ),
-            and_(
-                HRTN_SETTING.hrtn_edate == today, or_(HRTN_SETTING.hrtn_edate == None)
-            ),
-            and_(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com"),
+                or_(
+                    HRTN_SETTING.hrtn_day.in_(current_day),
+                    HRTN_SETTING.hrtn_day.is_(None),
+                ),
+                or_(
+                    HRTN_SETTING.hrtn_edate == today, HRTN_SETTING.hrtn_edate.is_(None)
+                ),
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+            )
         )
         .all()
     )
