@@ -750,12 +750,48 @@ def get_merged_routines_from_database(email):
 
 
 # 루틴 데이터 가져오는 엔드포인트
-@app.get("/rtnlist", response_model=List[MergedRoutineResponse])
-async def read_routines(request: Request):
-    merged_routines = get_merged_routines_from_database(
-        "qwert0175@naver.com"
-    )  # request.session["mem_email"]
-    return merged_routines
+def rtnlist(db: Session = Depends(get_db)):
+    today_date = datetime.today().date()  # Get today's date
+    today_day = (
+        datetime.today().weekday()
+    )  # Get today's day (0=Monday, 1=Tuesday, ..., 6=Sunday)
+
+    # Filter for ertn_setting table
+    ertn_list = (
+        db.query(ERTN_SETTING)
+        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .filter(
+            (ERTN_SETTING.ertn_sdate == today_date)
+            | (ERTN_SETTING.ertn_day == today_day)
+        )
+        .all()
+    )
+
+    # Filter for prtn_setting table
+    prtn_list = (
+        db.query(PRTN_SETTING)
+        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(
+            (PRTN_SETTING.prtn_sdate == today_date)
+            | (PRTN_SETTING.prtn_day == today_day)
+        )
+        .all()
+    )
+
+    # Filter for hrtn_setting table
+    hrtn_list = (
+        db.query(HRTN_SETTING)
+        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .filter(
+            (HRTN_SETTING.hrtn_sdate == today_date)
+            | (HRTN_SETTING.hrtn_day == today_day)
+        )
+        .all()
+    )
+
+    # Combine the results
+    combined_list = ertn_list + prtn_list + hrtn_list
+
 
 
 # # 루틴 데이터 가져오는 엔드포인트
