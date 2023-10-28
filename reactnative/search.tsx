@@ -64,7 +64,7 @@ function Search() {
           style={styles.search}
           placeholder="검색어 입력"
         />
-        {/* 취소 버튼 */}
+        {/* 취소 버튼
         <TouchableOpacity
           style={styles.cancelButton}
           onPress={() => {
@@ -73,18 +73,18 @@ function Search() {
             navigation.goBack(); //뒤로가기
           }}>
           <Text style={styles.cancelButtonText}>취소</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={{marginTop: 10}}></View>
-      {/* 실선 */}
+      {/* 실선
       <View
         style={{
           borderTopWidth: 1,
           borderTopColor: 'rgb(175, 171, 171)',
           width: '100%', // 화면 전체 너비에 맞춤
         }}
-      />
+      /> */}
 
       {keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 80,
     maxHeight: 200, // 높이를 제한
-    width: 320,
+    width: 370,
     backgroundColor: '#fff',
     padding: 15,
     //borderWidth: 2,
