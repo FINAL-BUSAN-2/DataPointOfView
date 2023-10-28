@@ -12,12 +12,14 @@ import {RootStackPageList} from './CommonType';
 
 type SocialProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Social'>;
-  userInfo: string;
+  userName: string;
+  userEmail: string;
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
+const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
   // 개인 페이지 이동 함수
   const movetest3 = () => {
     navigation.navigate('Access');
@@ -75,7 +77,7 @@ const Social: React.FC<SocialProps> = ({navigation, userInfo}) => {
                 }}
               />
             </TouchableOpacity>
-            <Text style={styles.title}>HP-log / {userInfo}님</Text>
+            <Text style={styles.title}>HP-log / {userName}님</Text>
           </View>
           {/* 우측 상단 */}
           <View style={styles.rightContainer}>

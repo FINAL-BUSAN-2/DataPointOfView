@@ -20,15 +20,17 @@ type AccessProps = {
   // 다른 화면으로 전환 혹은 스택 내의 화면 관리
   navigation: StackNavigationProp<RootStackPageList, 'Access'>;
   // 로그인된 사용자의 정보를 문자열 형태로 저장
-  userInfo: string;
+  userName: string;
+  userEmail: string;
   // 로그인 상태를 변경시킬 수 있음(boolean값)
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   // 사용자 정보를 변경시킬 수 있음
-  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 // React 함수 컴포넌트 정의
-const Access: React.FC<AccessProps> = ({userInfo}) => {
+const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
   const navigation =
     useNavigation<StackNavigationProp<RootStackPageList, 'Access'>>();
@@ -109,7 +111,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
               }}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>HP-log / {userInfo}님</Text>
+          <Text style={styles.title}>HP-log / {userName}님</Text>
         </View>
 
         {/* 우측 상단 */}
@@ -137,7 +139,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>📍{userInfo}님의 오늘의 기록</Text>
+        <Text style={styles.usertext}>📍{userName}님의 오늘의 기록</Text>
       </View>
 
       <View style={styles.titletop}>
