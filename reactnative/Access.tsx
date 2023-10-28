@@ -51,10 +51,10 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    fetch('http://43.200.178.131:3344/test2')
-      .then(response => response.json())
-      .then(test => setChartData3(test))
-      .catch(error => console.error('Error:', error));
+    // fetch('http://43.200.178.131:3344/test2')
+    //   .then(response => response.json())
+    //   .then(test => setChartData3(test))
+    //   .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
@@ -277,7 +277,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
           <View style={styles.articleTab}>
             <View style={styles.articleTab2}>
               <Text style={styles.articleemoji}>📰</Text>
-              <Text style={styles.navText}>아티클</Text>
+              <Text style={styles.navarticleText}>아티클</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -308,7 +308,7 @@ const Access: React.FC<AccessProps> = ({userInfo}) => {
           <View style={styles.accTab}>
             <View style={styles.accTab2}>
               <Text style={styles.accemoji}>🙋</Text>
-              <Text style={styles.navText}>개인</Text>
+              <Text style={styles.navText}>개 인</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -664,8 +664,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 55,
+    width: 58,
     borderRadius: 35,
+    margin: 5,
     backgroundColor: 'rgb(245,235,224)',
   },
   // 개인 이모지
@@ -674,8 +675,13 @@ const styles = StyleSheet.create({
   },
   // 네비게이션 텍스트
   navText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 13,
+    // fontWeight: 'bold',
+    color: 'black',
+  },
+  navarticleText: {
+    fontSize: 13,
+    // fontWeight: 'bold',
     color: 'black',
   },
 });
