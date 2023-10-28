@@ -69,6 +69,8 @@ const Main: React.FC<MainProps> = ({
         const data = response.data;
         // 정렬 없이 데이터를 설정함
         setData(data);
+        //console.log(response);
+        console.log(data);
       } else {
         console.error('데이터가 없습니다.');
       }
