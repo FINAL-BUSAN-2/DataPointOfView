@@ -971,29 +971,29 @@ def get_color_by_func(func):
         return "#FF817A"  # 연한 붉은색
 
 
-@app.get("/test")
-def test(db: Session = Depends(get_db)):
-    now = datetime.now()
-    today = now.date()
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    # print(f"오늘 날짜: {today}, 요일: {current_day}")
-    testdata = (
-        db.query(func.count(HRTN_SETTING.hrtn_mem))
-        .filter(
-            and_(
-                or_(
-                    HRTN_SETTING.hrtn_day.in_(current_day),
-                    HRTN_SETTING.hrtn_day.is_(None),
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate == today, HRTN_SETTING.hrtn_edate.is_(None)
-                ),
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-            )
-        )
-        .all()
-    )
-    return testdata
+# @app.get("/test")
+# def test(db: Session = Depends(get_db)):
+#     now = datetime.now()
+#     today = now.date()
+#     current_day = day_name_mapping[now.strftime("%A").upper()].name
+#     # print(f"오늘 날짜: {today}, 요일: {current_day}")
+#     testdata = (
+#         db.query(func.count(HRTN_SETTING.hrtn_mem))
+#         .filter(
+#             and_(
+#                 or_(
+#                     text(f"HRTN_SETTING.hrtn_day::jsonb ? {current_day_json}"),
+#                     HRTN_SETTING.hrtn_day.is_(None),
+#                 ),
+#                 or_(
+#                     HRTN_SETTING.hrtn_edate == today, HRTN_SETTING.hrtn_edate.is_(None)
+#                 ),
+#                 HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+#             )
+#         )
+#         .all()
+#     )
+#     return testdata
 
 
 @app.get("/test2")
@@ -1027,6 +1027,12 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .all()
     )
     return testdata3
+
+
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    testdata4 = db.query(HRTN_SETTING).all()
+    return testdata4
 
 
 ############################################################## pill_prod((영양검색창활용)
