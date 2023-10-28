@@ -27,9 +27,18 @@ import HealthSearch from './search_health';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
+  userName: string;
+  userEmail: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+const RoutineNameBox: React.FC<RoutineAddProps> = ({
+  navigation,
+  userName,
+  userEmail,
+}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newFileName, setNewFileName] = useState('');
   const toggleModal = () => {
@@ -181,7 +190,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
-          // hrtn_mem: this.props.email,
+          
+          hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
 
