@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(true);
+  const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 상태 추가
 
   function SetWrapper(props) {
