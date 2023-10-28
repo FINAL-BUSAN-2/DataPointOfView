@@ -142,9 +142,10 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
-    encoded_user_info = quote(str(request.session["user_name"]),str(user_info["kakao_account"]["email"]))
+    encodedUserName = quote(request.session["user_name"])
+    encodedUserEmail = quote(request.session["user_email"])
 
-    login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
+    login_url_scheme = f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
     if existing_user:
         return RedirectResponse(login_url_scheme)
 
