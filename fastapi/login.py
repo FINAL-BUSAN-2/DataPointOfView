@@ -14,6 +14,7 @@ from pydantic import BaseModel, validator
 from datetime import date, datetime
 from enum import Enum
 import logging
+import pdb
 
 app = FastAPI()
 app.add_middleware(
@@ -141,7 +142,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
-    encoded_user_info = quote(str(request.session["user_name"]),str(request.session["user_email"]))
+    encoded_user_info = quote(
+        str(request.session["user_name"]), str(request.session["user_email"])
+    )
 
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
     if existing_user:
@@ -759,20 +762,25 @@ def rtnlist(db: Session = Depends(get_db)):
         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(ertn_list)
     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(prtn_list)
     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(hrtn_list)
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
+    print(combined_list)
+    return combined_list
 
 
 # # 루틴 데이터 가져오는 엔드포인트
@@ -1032,83 +1040,85 @@ def test2(db: Session = Depends(get_db)):
 ##test
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
-    now = datetime.now()
-    today = now.date()
-    day_name_mapping = {
-        "MONDAY": Weekday.월,
-        "TUESDAY": Weekday.화,
-        "WEDNESDAY": Weekday.수,
-        "THURSDAY": Weekday.목,
-        "FRIDAY": Weekday.금,
-        "SATURDAY": Weekday.토,
-        "SUNDAY": Weekday.일,
-    }
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    print("current_day:", current_day)
-    ## 토
-    today_str = today.strftime("%Y-%m-%d")
-    print("today_str:", today_str)
-    ## 2023-10-28
-    testdata3 = (
-        db.query(func.count(HRTN_SETTING.hrtn_mem))
-        .filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day.is_(None),
-                    HRTN_SETTING.hrtn_day.like(
-                        f"%{current_day}%"
-                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate.is_(None),
-                    func.date(HRTN_SETTING.hrtn_edate)
-                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
-                ),
+    try:
+        now = datetime.now()
+        today = now.date()
+        day_name_mapping = {
+            "MONDAY": Weekday.월,
+            "TUESDAY": Weekday.화,
+            "WEDNESDAY": Weekday.수,
+            "THURSDAY": Weekday.목,
+            "FRIDAY": Weekday.금,
+            "SATURDAY": Weekday.토,
+            "SUNDAY": Weekday.일,
+        }
+        current_day = day_name_mapping[now.strftime("%A").upper()].name
+        print("current_day:", current_day)
+        ## 토
+        today_str = today.strftime("%Y-%m-%d")
+        print("today_str:", today_str)
+        ## 2023-10-28
+        testdata3 = (
+            db.query(func.count(HRTN_SETTING.hrtn_mem))
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.is_(None),
+                        HRTN_SETTING.hrtn_day.like(
+                            f"%{current_day}%"
+                        ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                        func.date(HRTN_SETTING.hrtn_edate)
+                        == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                    ),
+                )
             )
+            .all()
         )
-        .all()
-    )
-    return testdata3
+        return testdata3
+    except Exception as e:
+        print(e)
 
 
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
-    now = datetime.now()
-    today = now.date()
-    day_name_mapping = {
-        "MONDAY": Weekday.월,
-        "TUESDAY": Weekday.화,
-        "WEDNESDAY": Weekday.수,
-        "THURSDAY": Weekday.목,
-        "FRIDAY": Weekday.금,
-        "SATURDAY": Weekday.토,
-        "SUNDAY": Weekday.일,
-    }
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    today_str = today.strftime("%Y-%m-%d")
-    testdata4 = (
-        db.query(func.count(HRTN_SETTING.hrtn_id))
-        .filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
-                    HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
-                    HRTN_SETTING.hrtn_edate
-                    == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
-                ),
+    try:
+        now = datetime.now()
+        today = now.date()
+        day_name_mapping = {
+            "MONDAY": Weekday.월,
+            "TUESDAY": Weekday.화,
+            "WEDNESDAY": Weekday.수,
+            "THURSDAY": Weekday.목,
+            "FRIDAY": Weekday.금,
+            "SATURDAY": Weekday.토,
+            "SUNDAY": Weekday.일,
+        }
+        current_day = day_name_mapping[now.strftime("%A").upper()].name
+        today_str = today.strftime("%Y-%m-%d")
+        testdata4 = (
+            db.query(func.count(HRTN_SETTING.hrtn_id))
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.contains(current_day),  ## 토
+                        HRTN_SETTING.hrtn_day == null(),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == null(),
+                        HRTN_SETTING.hrtn_edate == today_str,  ## 2023-10-28
+                    ),
+                )
             )
+            .all()
         )
-        .all()
-    )
-    print(testdata4)
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug("debug")
-    return testdata4
+        return testdata4
+    except Exception as e:
+        print(e)
 
 
 ############################################################## pill_prod((영양검색창활용)
@@ -1125,3 +1135,15 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
+
+
+class HEALTH_SEARCH(BaseModel):
+    health_nm: str
+    health_tag: str
+    health_emoji: str
+
+
+@app.get("/healthsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    healthsearch = db.query(HEALTH).all()
+    return healthsearch
