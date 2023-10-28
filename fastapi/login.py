@@ -1044,44 +1044,47 @@ def test2(db: Session = Depends(get_db)):
 ##test
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
-    now = datetime.now()
-    today = now.date()
-    day_name_mapping = {
-        "MONDAY": Weekday.월,
-        "TUESDAY": Weekday.화,
-        "WEDNESDAY": Weekday.수,
-        "THURSDAY": Weekday.목,
-        "FRIDAY": Weekday.금,
-        "SATURDAY": Weekday.토,
-        "SUNDAY": Weekday.일,
-    }
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    print("current_day:", current_day)
-    ## 토
-    today_str = today.strftime("%Y-%m-%d")
-    print("today_str:", today_str)
-    ## 2023-10-28
-    testdata3 = (
-        db.query(func.count(HRTN_SETTING.hrtn_mem))
-        .filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day.is_(None),
-                    HRTN_SETTING.hrtn_day.like(
-                        f"%{current_day}%"
-                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate.is_(None),
-                    func.date(HRTN_SETTING.hrtn_edate)
-                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
-                ),
+    try:
+        now = datetime.now()
+        today = now.date()
+        day_name_mapping = {
+            "MONDAY": Weekday.월,
+            "TUESDAY": Weekday.화,
+            "WEDNESDAY": Weekday.수,
+            "THURSDAY": Weekday.목,
+            "FRIDAY": Weekday.금,
+            "SATURDAY": Weekday.토,
+            "SUNDAY": Weekday.일,
+        }
+        current_day = day_name_mapping[now.strftime("%A").upper()].name
+        print("current_day:", current_day)
+        ## 토
+        today_str = today.strftime("%Y-%m-%d")
+        print("today_str:", today_str)
+        ## 2023-10-28
+        testdata3 = (
+            db.query(func.count(HRTN_SETTING.hrtn_mem))
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.is_(None),
+                        HRTN_SETTING.hrtn_day.like(
+                            f"%{current_day}%"
+                        ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                        func.date(HRTN_SETTING.hrtn_edate)
+                        == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                    ),
+                )
             )
+            .all()
         )
-        .all()
-    )
-    return testdata3
+        return testdata3
+    except Exception as e:
+        print(e)
 
 
 @app.get("/test4")
@@ -1106,22 +1109,17 @@ def test4(db: Session = Depends(get_db)):
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day
-                        == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
-                        HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+                        HRTN_SETTING.hrtn_day.contains(current_day),  ## 토
+                        HRTN_SETTING.hrtn_day == null(),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
-                        HRTN_SETTING.hrtn_edate
-                        == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+                        HRTN_SETTING.hrtn_edate == null(),
+                        HRTN_SETTING.hrtn_edate == today_str,  ## 2023-10-28
                     ),
                 )
             )
             .all()
         )
-        print(testdata4)
-        pdb.set_trace()
-        print()
         return testdata4
     except Exception as e:
         print(e)
