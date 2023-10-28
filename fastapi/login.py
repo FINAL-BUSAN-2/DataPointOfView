@@ -832,19 +832,8 @@ def rtnlist(userEmail: str, db: Session = Depends(get_db)):
 
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
-
-    # 시간 순서대로 정렬하는 부분
-    def get_time_from_item(item):
-        if "ertn_time" in item:
-            return item["ertn_time"]
-        elif "prtn_time" in item:
-            return item["prtn_time"]
-        elif "hrtn_time" in item:
-            return item["hrtn_time"]
-
-    sorted_combined_list = sorted(combined_list, key=get_time_from_item)
-
-    return sorted_combined_list
+    print(combined_list)
+    return combined_list
 
 
 # # 루틴 데이터 가져오는 엔드포인트
