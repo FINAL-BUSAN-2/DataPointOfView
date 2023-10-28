@@ -753,29 +753,77 @@ def get_merged_routines_from_database(email):
 
 
 # 루틴 데이터 가져오는 엔드포인트
+# @app.get("/rtnlist")
+# def rtnlist(db: Session = Depends(get_db)):
+#     # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     ertn_list = (
+#         db.query(ERTN_SETTING)
+#         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(ertn_list)
+#     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     prtn_list = (
+#         db.query(PRTN_SETTING)
+#         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(prtn_list)
+#     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     hrtn_list = (
+#         db.query(HRTN_SETTING)
+#         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(hrtn_list)
+#     # 세 결과를 합침
+#     combined_list = ertn_list + prtn_list + hrtn_list
+#     print(combined_list)
+#     return combined_list
+
+
 @app.get("/rtnlist")
 def rtnlist(db: Session = Depends(get_db)):
-    # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    # 현재 날짜와 요일 얻기
+    today = datetime.today().date()
+    day_of_week = datetime.today().strftime("%a")
+
+    # ertn_setting 테이블에서 조건에 맞는 레코드 조회
     ertn_list = (
         db.query(ERTN_SETTING)
         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .filter(
+            (ERTN_SETTING.ertn_sdate == today)
+            | (ERTN_SETTING.ertn_day.contains(day_of_week))
+        )
         .all()
     )
     print(ertn_list)
-    # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+
+    # prtn_setting 테이블에서 조건에 맞는 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(
+            (PRTN_SETTING.prtn_sdate == today)
+            | (PRTN_SETTING.prtn_day.contains(day_of_week))
+        )
         .all()
     )
     print(prtn_list)
-    # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+
+    # hrtn_setting 테이블에서 조건에 맞는 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .filter(
+            (HRTN_SETTING.hrtn_sdate == today)
+            | (HRTN_SETTING.hrtn_day.contains(day_of_week))
+        )
         .all()
     )
     print(hrtn_list)
+
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
     print(combined_list)
