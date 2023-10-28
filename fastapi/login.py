@@ -1091,16 +1091,23 @@ def test4(db: Session = Depends(get_db)):
     }
     current_day = day_name_mapping[now.strftime("%A").upper()].name
     today_str = today.strftime("%Y-%m-%d")
-    testdata4 = db.query(func.count(HRTN_SETTING.hrtn_id)).filter(
-        HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-        or_(
-            HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
-            HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
-        ),
-        or_(
-            HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
-            HRTN_SETTING.hrtn_edate == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
-        ),
+    testdata4 = (
+        db.query(func.count(HRTN_SETTING.hrtn_id))
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                or_(
+                    HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
+                    HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+                ),
+                or_(
+                    HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
+                    HRTN_SETTING.hrtn_edate
+                    == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+                ),
+            )
+        )
+        .all()
     )
     print(testdata4)
     logging.basicConfig(level=logging.DEBUG)
