@@ -139,8 +139,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["access_token"] = token_data["access_token"]
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
-    print(request.session["user_email"])
-    encoded_user_info = quote(str(request.session["user_name"]))
+
+    encoded_user_info = quote(str(request.session["user_name"]),str(request.session["user_email"]))
+
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
     if existing_user:
         return RedirectResponse(login_url_scheme)
@@ -607,21 +608,25 @@ def rtnlist(db: Session = Depends(get_db)):
         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(ertn_list)
     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(prtn_list)
     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
         .all()
     )
+    print(hrtn_list)
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
-
+    print(combined_list)
+    print(len(combined_list))
     return combined_list
 
 
@@ -960,7 +965,40 @@ def test5(db: Session = Depends(get_db)):
     return testdata5
 
 
+<<<<<<< Updated upstream
 ############################################################## pill_prod ,health ((영양검색창활용)
+=======
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    now = datetime.now()
+    today = now.date()
+    day_name_mapping = {
+        "MONDAY": Weekday.월,
+        "TUESDAY": Weekday.화,
+        "WEDNESDAY": Weekday.수,
+        "THURSDAY": Weekday.목,
+        "FRIDAY": Weekday.금,
+        "SATURDAY": Weekday.토,
+        "SUNDAY": Weekday.일,
+    }
+    current_day = day_name_mapping[now.strftime("%A").upper()].name
+    today_str = today.strftime("%Y-%m-%d")
+    testdata4 = db.query(func.count(HRTN_SETTING.hrtn_id)).filter(
+        HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+        or_(
+            HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
+            HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+        ),
+        or_(
+            HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
+            HRTN_SETTING.hrtn_edate == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+        ),
+    )
+    print(testdata4)
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug("debug")
+    return testdata4
+>>>>>>> Stashed changes
 
 
 class PILL_PROD_SEARCH(BaseModel):

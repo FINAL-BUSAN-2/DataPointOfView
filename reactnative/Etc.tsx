@@ -18,9 +18,21 @@ import {Alert} from 'react-native';
 
 interface RoutineAddProps {
   navigation: NavigationProp;
+  userName: string;
+  userEmail: string;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
+const RoutineNameBox: React.FC<RoutineAddProps> = ({
+  navigation,
+  userName,
+  userEmail,
+  setLogin,
+  setUserName,
+  setUserEmail,
+}) => {
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();
@@ -172,6 +184,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.etcheader}>
             {/* 루틴명 입력 */}
+
             <View style={styles.Routinename}>
               <TextInput
                 style={styles.Routineinput}
@@ -219,6 +232,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({navigation}) => {
               keyboardType="numeric"
             />
             <Text style={styles.setrepstext}>회</Text>
+            <Text>{userEmail}</Text>
           </View>
 
           {/* 날짜 선택 (달력 호출) */}

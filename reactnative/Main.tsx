@@ -19,9 +19,11 @@ import axios from 'axios';
 // 화면 관리
 type MainProps = {
   navigation: StackNavigationProp<RootStackPageList, 'Main'>;
-  userInfo: string; //로그인된 사용자ID
+  userName: string;
+  userEmail: string;
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserInfo: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 //DB에서 루틴정보받아오기
@@ -34,9 +36,11 @@ interface RoutineData {
 
 const Main: React.FC<MainProps> = ({
   navigation,
-  userInfo,
+  userName,
+  userEmail,
   setLogin,
-  setUserInfo,
+  setUserName,
+  setUserEmail,
 }) => {
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
@@ -169,7 +173,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
-        <Text style={styles.memtex}>{userInfo}님 Daily routine</Text>
+        <Text style={styles.memtex}>{userName}님 Daily routine</Text>
       </View>
 
       {/* 루틴리스트 */}
