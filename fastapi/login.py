@@ -871,73 +871,7 @@ def get_color_by_tag(tag):
 
 
 @app.get("/pill_piechartdata")
-# def get_pill_chart_data(db: Session = Depends(get_db)):
-#     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-#     func_counts_query = (
-#         db.query(
-#             PILL_FUNC.func_nm,
-#             func.count(PILL_FUNC.func_nm).label("count"),
-#             func.first_value(PILL_FUNC.func_nm)
-#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-#             .label("top_func_nm"),
-#             func.first_value(PILL_FUNC.func_emoji)
-#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-#             .label("top_func_emoji"),
-#         )
-#         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-#         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-#         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
-#         .filter(
-#             and_(
-#                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-#                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-#             )
-#         )
-#         .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
-#         .all()
-#     )
-
-
-#     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-#     pill_chart_data = [
-#         {
-#             "func": func_count[0],
-#             "count1": func_count[1],
-#             "top_func_nm": func_count[2],
-#             "top_func_emoji": func_count[3],
-#             "color1": get_color_by_func(func_count[0]),
-#         }
-#         for func_count in func_counts_query
-#     ]
-# def get_pill_chart_data(db: Session = Depends(get_db)):
-#     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-#     func_counts_query = (
-#         db.query(
-#             PILL_FUNC.func_nm,
-#             func.count(PILL_FUNC.func_nm).label("count"),
-#             func.first_value(PILL_FUNC.func_nm)
-#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-#             .label("top_func_nm"),
-#             func.first_value(PILL_FUNC.func_emoji)
-#             .over(order_by=func.count(PILL_FUNC.func_nm).desc())
-#             .label("top_func_emoji"),
-#         )
-#         .join(PILL_CMB, PILL_FUNC.func_cd == PILL_CMB.cmb_func)
-#         .join(PILL_PROD, PILL_CMB.cmb_pill == PILL_PROD.pill_cd)
-#         .join(PRTN_SETTING, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
-#         .filter(
-#             and_(
-#                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-#                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-#             )
-#         )
-#         .group_by(PILL_FUNC.func_nm, PILL_FUNC.func_emoji)
-#         .all()
-#     )
 def get_pill_chart_data(db: Session = Depends(get_db)):
-    # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
-    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-    # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
@@ -945,28 +879,17 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .filter(
             and_(
-                PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                PRTN_SETTING.prtn_id.in_(PRTN_FIN.prtn_id),
                 PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+                PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+                PILL_FUNC.func_cd == PILL_CMB.cmb_func,
             )
         )
         .group_by(PILL_FUNC.func_nm)
         .all()
     )
-    # # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    # pill_chart_data = [
-    #     {
-    #         "func": func_count[0],
-    #         "count1": func_count[1],
-    #         "top_func_nm": func_count[2],
-    #         "top_func_emoji": func_count[3],
-    #         "color1": get_color_by_func(func_count[0]),
-    #     }
-    #     for func_count in func_counts_query
-    # ]
 
-    # return pill_chart_data
-
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
     pill_chart_data = [
         {
             "func": func_count[0],
@@ -982,7 +905,7 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
     top_emoji1 = top_item1["emoji1"]
 
     return {
-        "pie_chart_data": pill_chart_data,
+        "pill_chart_data": pill_chart_data,
         "top_func1": top_func1,
         "top_emoji1": top_emoji1,
     }
