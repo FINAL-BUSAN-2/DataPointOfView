@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
