@@ -7,7 +7,7 @@ export type RootStackPageList = {
   Main: undefined;
   Health: undefined;
   Etc: undefined;
-  pill: undefined;
+  Pill: undefined;
   hplogset: undefined;
   Access: undefined;
   Social: undefined;
