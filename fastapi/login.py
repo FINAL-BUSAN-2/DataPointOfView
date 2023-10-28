@@ -140,7 +140,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
-    encoded_user_info = quote(str(request.session["user_name"]),str(request.session["user_email"]))
+    encoded_user_info = quote(
+        str(request.session["user_name"]), str(request.session["user_email"])
+    )
 
     login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
     if existing_user:
@@ -909,6 +911,29 @@ def get_color_by_func(func):
 #     return testdata2
 
 
+# 데이터베이스에서 루틴 데이터 가져오는 함수
+class Weekday(Enum):
+    월 = 0
+    화 = 1
+    수 = 2
+    목 = 3
+    금 = 4
+    토 = 5
+    일 = 6
+
+
+# Define a mapping from English to Korean day names
+day_name_mapping = {
+    "MONDAY": Weekday.월,
+    "TUESDAY": Weekday.화,
+    "WEDNESDAY": Weekday.수,
+    "THURSDAY": Weekday.목,
+    "FRIDAY": Weekday.금,
+    "SATURDAY": Weekday.토,
+    "SUNDAY": Weekday.일,
+}
+
+
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
     testdata3 = (
@@ -965,9 +990,6 @@ def test5(db: Session = Depends(get_db)):
     return testdata5
 
 
-<<<<<<< Updated upstream
-############################################################## pill_prod ,health ((영양검색창활용)
-=======
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     now = datetime.now()
@@ -998,7 +1020,6 @@ def test4(db: Session = Depends(get_db)):
     logging.basicConfig(level=logging.DEBUG)
     logging.debug("debug")
     return testdata4
->>>>>>> Stashed changes
 
 
 class PILL_PROD_SEARCH(BaseModel):
