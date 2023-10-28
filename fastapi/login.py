@@ -4,11 +4,11 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote
 import httpx
 
-from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
+from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_, union
 from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from typing import List, Union, Optional
+from typing import List, Optional
 from pydantic import BaseModel, validator
 from datetime import date, datetime
 from enum import Enum
@@ -598,45 +598,23 @@ class MergedRoutineResponse(BaseModel):
 # 루틴 데이터 가져오는 엔드포인트
 @app.get("/rtnlist")
 def rtnlist(db: Session = Depends(get_db)):
-    rtnlist = (
-        db.query(ERTN_SETTING, PRTN_SETTING, HRTN_SETTING)
-        .filter(
-            or_(
-                ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-            )
-        )
-        .all()
+    email_filter = "qwert0175@naver.com"
+
+    ertn_subquery = (
+        db.query(ERTN_SETTING).filter(ERTN_SETTING.ertn_mem == email_filter).subquery()
+    )
+    prtn_subquery = (
+        db.query(PRTN_SETTING).filter(PRTN_SETTING.prtn_mem == email_filter).subquery()
+    )
+    hrtn_subquery = (
+        db.query(HRTN_SETTING).filter(HRTN_SETTING.hrtn_mem == email_filter).subquery()
     )
 
-    return {"email": "qwert0175@naver.com", "data": rtnlist}
+    combined_query = union(ertn_subquery, prtn_subquery, hrtn_subquery)
 
+    combined_list = db.execute(combined_query).all()
 
-# @app.get("/rtnlist")
-# def rtnlist(db: Session = Depends(get_db)):
-#     # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     ertn_list = (
-#         db.query(ERTN_SETTING)
-#         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     prtn_list = (
-#         db.query(PRTN_SETTING)
-#         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     hrtn_list = (
-#         db.query(HRTN_SETTING)
-#         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     # 세 결과를 합침
-#     combined_list = ertn_list + prtn_list + hrtn_list
-
-#     return combined_list
+    return combined_list
 
 
 # @app.get("/naver/news/", response_model=List[News_DataInDB])
