@@ -848,6 +848,7 @@ def test2(db: Session = Depends(get_db)):
     return testdata2
 
 
+##test
 @app.get("/test3")
 def get_pill_chart_data(db: Session = Depends(get_db)):
     ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
