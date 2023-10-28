@@ -1028,15 +1028,15 @@ def test3(db: Session = Depends(get_db)):
         "SUNDAY": Weekday.일,
     }
     today_str = today.strftime("%Y-%m-%d")
-    test3 = (
+    testdata3 = (
         db.query(func.count(HRTN_SETTING.hrtn_mem))
         .filter(
             and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == "abc123@naver.com",
                 or_(
                     HRTN_SETTING.hrtn_day.is_(None),
-                    HRTN_SETTING.hrtn_day.contains(
-                        current_day
+                    HRTN_SETTING.hrtn_day.like(
+                        f"%{current_day}%"
                     ),  # hrtn_day에 current_day가 포함되어 있는지 검사
                 ),
                 or_(
@@ -1048,7 +1048,7 @@ def test3(db: Session = Depends(get_db)):
         )
         .all()
     )
-    return test3
+    return testdata3
 
 
 @app.get("/test4")
