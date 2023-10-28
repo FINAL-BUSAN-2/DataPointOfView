@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from urllib.parse import quote
 import httpx
 
@@ -898,3 +898,7 @@ class HEALTH_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
+
+@app.post("/imageSearch")
+async def image_search(image: UploadFile):
+    return FileResponse(image.file, media_type="image/jpeg")
