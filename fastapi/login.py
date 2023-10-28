@@ -876,9 +876,6 @@ def get_color_by_tag(tag):
 def get_pill_chart_data(db: Session = Depends(get_db)):
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .join(PILL_PROD, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
-        .join(PILL_CMB, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .filter(
             and_(
                 PRTN_SETTING.prtn_id.in_(PRTN_FIN.prtn_id),
@@ -891,6 +888,15 @@ def get_pill_chart_data(db: Session = Depends(get_db)):
         .group_by(PILL_FUNC.func_nm)
         .all()
     )
+    #     db.query(PILL_CMB)
+    # .filter(
+    #     and_(
+    #         PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+    #         PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
+    #         PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
+    #     ),
+    # )
+    # .all()
 
     pill_chart_data = [
         {
