@@ -63,8 +63,8 @@ const Main: React.FC<MainProps> = ({
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://43.200.178.131:3344/rtnlist');
-
+      const fetchDataUrl = `http://43.200.178.131:3344/rtnlist/?userEmail=${userEmail}`;
+      const response = await axios.get(fetchDataUrl);
       if (response.data) {
         const data = response.data;
         // 정렬 없이 데이터를 설정함
@@ -89,7 +89,7 @@ const Main: React.FC<MainProps> = ({
   };
   // 영양 페이지 이동 함수
   const movetest1 = () => {
-    navigation.navigate('pill');
+    navigation.navigate('Pill');
   };
   // 기타 페이지 이동 함수
   const movetest2 = () => {

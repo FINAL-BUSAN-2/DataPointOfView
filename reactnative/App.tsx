@@ -107,29 +107,11 @@ function App() {
   }
 
   function HealthWrapper(props) {
-    return (
-      <Health
-        {...props}
-        userName={userName}
-        userEmail={userEmail}
-        setLogin={setLogin}
-        setUserName={setUserName}
-        setUserEmail={setUserEmail}
-      />
-    );
+    return <Health {...props} userName={userName} userEmail={userEmail} />;
   }
 
   function PillWrapper(props) {
-    return (
-      <Pill
-        {...props}
-        userName={userName}
-        userEmail={userEmail}
-        setLogin={setLogin}
-        setUserName={setUserName}
-        setUserEmail={setUserEmail}
-      />
-    );
+    return <Pill {...props} userName={userName} userEmail={userEmail} />;
   }
 
   return (
