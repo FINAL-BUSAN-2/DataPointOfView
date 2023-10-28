@@ -1081,40 +1081,45 @@ def test3(db: Session = Depends(get_db)):
 
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
-    now = datetime.now()
-    today = now.date()
-    day_name_mapping = {
-        "MONDAY": Weekday.월,
-        "TUESDAY": Weekday.화,
-        "WEDNESDAY": Weekday.수,
-        "THURSDAY": Weekday.목,
-        "FRIDAY": Weekday.금,
-        "SATURDAY": Weekday.토,
-        "SUNDAY": Weekday.일,
-    }
-    current_day = day_name_mapping[now.strftime("%A").upper()].name
-    today_str = today.strftime("%Y-%m-%d")
-    testdata4 = (
-        db.query(func.count(HRTN_SETTING.hrtn_id))
-        .filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
-                    HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
-                    HRTN_SETTING.hrtn_edate
-                    == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
-                ),
+    try:
+        now = datetime.now()
+        today = now.date()
+        day_name_mapping = {
+            "MONDAY": Weekday.월,
+            "TUESDAY": Weekday.화,
+            "WEDNESDAY": Weekday.수,
+            "THURSDAY": Weekday.목,
+            "FRIDAY": Weekday.금,
+            "SATURDAY": Weekday.토,
+            "SUNDAY": Weekday.일,
+        }
+        current_day = day_name_mapping[now.strftime("%A").upper()].name
+        today_str = today.strftime("%Y-%m-%d")
+        testdata4 = (
+            db.query(func.count(HRTN_SETTING.hrtn_id))
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day
+                        == current_day,  # hrtn_day가 오늘 요일인 값을 조회합니다.
+                        HRTN_SETTING.hrtn_day == null(),  # hrtn_day가 없는 값을 조회합니다.
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == null(),  # hrtn_edate가 없는 값을 조회합니다.
+                        HRTN_SETTING.hrtn_edate
+                        == today_str,  # hrtn_edate가 오늘 날짜인 값을 조회합니다.
+                    ),
+                )
             )
+            .all()
         )
-        .all()
-    )
-    print(testdata4)
-    pdb.set_trace()
-    return testdata4
+        print(testdata4)
+        pdb.set_trace()
+        print()
+        return testdata4
+    except Exception as e:
+        print(e)
 
 
 ############################################################## pill_prod((영양검색창활용)
