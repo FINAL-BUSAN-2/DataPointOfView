@@ -111,6 +111,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   // const [tagsEnabled, setTagsEnabled] = useState<string>('');
   // 초기 상태에서는 빈 문자열 배열로 설정
   const [tagsEnabled, setTagsEnabled] = useState<string[]>([]);
+  console.log(`입력된 루틴명: ${tagsEnabled}`);
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -190,7 +191,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
-          
           hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
