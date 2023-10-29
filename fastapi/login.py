@@ -145,7 +145,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     encodedUserName = quote(request.session["user_name"])
     encodedUserEmail = quote(request.session["user_email"])
 
-    login_url_scheme = f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
+    login_url_scheme = (
+        f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
+    )
     if existing_user:
         return RedirectResponse(login_url_scheme)
 
@@ -1071,43 +1073,11 @@ def get_color_by_func(func):
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
-    testdata2 = (
-        db.query(PILL_CMB)
-        .join(PRTN_SETTING, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
-        .filter(
-            and_(
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
-                PILL_CMB.cmb_pill.in_(PILL_PROD.pill_cd),
-            )
-        )
-        .all()
-    )
-    return testdata2
-
-
-##test
-@app.get("/test3")
-def test3(db: Session = Depends(get_db)):
     try:
-        now = datetime.now()
-        today = now.date()
-        day_name_mapping = {
-            "MONDAY": Weekday.월,
-            "TUESDAY": Weekday.화,
-            "WEDNESDAY": Weekday.수,
-            "THURSDAY": Weekday.목,
-            "FRIDAY": Weekday.금,
-            "SATURDAY": Weekday.토,
-            "SUNDAY": Weekday.일,
-        }
-        current_day = day_name_mapping[now.strftime("%A").upper()].name
-        print("current_day:", current_day)
-        ## 토
-        today_str = today.strftime("%Y-%m-%d")
-        print("today_str:", today_str)
-        ## 2023-10-28
-        testdata3 = (
-            db.query(func.count(HRTN_SETTING.hrtn_mem))
+        current_day = "토"
+        today_str = "2023-10-28"
+        testdata2 = (
+            db.query(HRTN_SETTING)
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
@@ -1124,7 +1094,51 @@ def test3(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .all()
+            .count()
+        )
+        return testdata2
+    except Exception as e:
+        print(e)
+
+
+##test
+@app.get("/test3")
+def test3(db: Session = Depends(get_db)):
+    try:
+        # now = datetime.now()
+        # today = now.date()
+        # day_name_mapping = {
+        #     "MONDAY": Weekday.월,
+        #     "TUESDAY": Weekday.화,
+        #     "WEDNESDAY": Weekday.수,
+        #     "THURSDAY": Weekday.목,
+        #     "FRIDAY": Weekday.금,
+        #     "SATURDAY": Weekday.토,
+        #     "SUNDAY": Weekday.일,
+        # }
+        # current_day = day_name_mapping[now.strftime("%A").upper()].name
+        # ## 토
+        # today_str = today.strftime("%Y-%m-%d")
+        ## 2023-10-28
+        # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        # today_day = datetime.today().strftime("%a")
+        current_day = "토"
+        today_str = "2023-10-28"
+        testdata3 = db.query(func.count(HRTN_SETTING)).filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                or_(
+                    HRTN_SETTING.hrtn_day.is_(None),
+                    HRTN_SETTING.hrtn_day.like(
+                        f"%{current_day}%"
+                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                ),
+                or_(
+                    HRTN_SETTING.hrtn_edate.is_(None),
+                    func.date(HRTN_SETTING.hrtn_edate)
+                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                ),
+            )
         )
         return testdata3
     except Exception as e:
@@ -1145,7 +1159,7 @@ def test4(db: Session = Depends(get_db)):
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        func.find_in_set(today_day, HRTN_SETTING.hrtn_day) != 0,  ## 일
+                        HRTN_SETTING.hrtn_day.like(f"%{today_day}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
