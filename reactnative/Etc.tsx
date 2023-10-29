@@ -20,18 +20,12 @@ interface RoutineAddProps {
   navigation: NavigationProp;
   userName: string;
   userEmail: string;
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
-  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({
   navigation,
   userName,
   userEmail,
-  setLogin,
-  setUserName,
-  setUserEmail,
 }) => {
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
@@ -150,9 +144,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           ertn_cat: '',
           ertn_tag: '',
           ertn_edate: '',
-          ertn_mem: '',
+          ertn_mem: userEmail,
         };
-        console.log('44444444444444444444444===', requestData);
+        console.log({userEmail}, requestData);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/routines',
@@ -232,7 +226,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               keyboardType="numeric"
             />
             <Text style={styles.setrepstext}>회</Text>
-            <Text>{userEmail}</Text>
           </View>
 
           {/* 날짜 선택 (달력 호출) */}

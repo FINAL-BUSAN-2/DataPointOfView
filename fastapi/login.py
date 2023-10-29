@@ -142,11 +142,10 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     request.session["user_email"] = user_info["kakao_account"]["email"]
     request.session["user_name"] = user_info["kakao_account"]["profile"]["nickname"]
 
-    encoded_user_info = quote(
-        str(request.session["user_name"]), str(request.session["user_email"])
-    )
+    encodedUserName = quote(request.session["user_name"])
+    encodedUserEmail = quote(request.session["user_email"])
 
-    login_url_scheme = f"hplog://callback?user_info={encoded_user_info}"
+    login_url_scheme = f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
     if existing_user:
         return RedirectResponse(login_url_scheme)
 
@@ -472,21 +471,17 @@ def generate_unique_prtn_id(prtn_mem):
 @app.post("/routines")
 def create_routine(routine: ERoutineCreate, request: Request):
     logger.error(f"111111111111111111111111111111")
-    email = request.session.get("user_email")
-    # print(session.get("user_email", None))
-    # email = session.get("user_email", None)
-    print(email)
     # 라우터에 전달된 데이터 출력
     logging.error(f"Received: {request}")
     try:
         # Create a unique ertn_id
         logging.error(f"Received routine: {routine}")
-        ertn_id = generate_unique_ertn_id(email)
+        ertn_id = generate_unique_ertn_id(routine.ertn_mem)
         logger.error(f"33333333333333333333333333")
         # logging.error(f"Received routine: {routine}")l
         with SessionLocal() as db:
             db_routine = ERTN_SETTING(
-                ertn_mem=email,  # 로그인아이디필요
+                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
                 ertn_id=ertn_id,
                 ertn_nm=routine.ertn_nm,
                 ertn_cat="기타",
@@ -758,28 +753,82 @@ def get_merged_routines_from_database(email):
 
 
 # 루틴 데이터 가져오는 엔드포인트
+# @app.get("/rtnlist")
+# def rtnlist(db: Session = Depends(get_db)):
+#     # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     ertn_list = (
+#         db.query(ERTN_SETTING)
+#         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(ertn_list)
+#     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     prtn_list = (
+#         db.query(PRTN_SETTING)
+#         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(prtn_list)
+#     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+#     hrtn_list = (
+#         db.query(HRTN_SETTING)
+#         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+#         .all()
+#     )
+#     print(hrtn_list)
+#     # 세 결과를 합침
+#     combined_list = ertn_list + prtn_list + hrtn_list
+#     print(combined_list)
+#     return combined_list
+
+
 @app.get("/rtnlist")
-def rtnlist(db: Session = Depends(get_db)):
-    # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+def rtnlist(userEmail: str, db: Session = Depends(get_db)):
+    # 현재 날짜와 요일 얻기
+    today = datetime.today().date()
+    korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+    day_of_week = korean_days[today.weekday()]
+
+    # ertn_setting 테이블에서 조건에 맞는 레코드 조회
     ertn_list = (
         db.query(ERTN_SETTING)
-        .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
+        .filter(ERTN_SETTING.ertn_mem == userEmail)
+        .filter(
+            (ERTN_SETTING.ertn_sdate == today)
+            | (ERTN_SETTING.ertn_day.contains(day_of_week))
+        )
         .all()
     )
-    # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    print(ertn_list)
+
+    # prtn_setting 테이블에서 조건에 맞는 레코드 조회
     prtn_list = (
         db.query(PRTN_SETTING)
-        .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
+        .filter(PRTN_SETTING.prtn_mem == userEmail)
+        .filter(
+            (PRTN_SETTING.prtn_sdate == today)
+            | (PRTN_SETTING.prtn_day.contains(day_of_week))
+        )
         .all()
     )
-    # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
+    print(prtn_list)
+
+    # hrtn_setting 테이블에서 조건에 맞는 레코드 조회
     hrtn_list = (
         db.query(HRTN_SETTING)
-        .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
+        .filter(HRTN_SETTING.hrtn_mem == userEmail)
+        .filter(
+            (HRTN_SETTING.hrtn_sdate == today)
+            | (HRTN_SETTING.hrtn_day.contains(day_of_week))
+        )
         .all()
     )
+    print(hrtn_list)
+
     # 세 결과를 합침
     combined_list = ertn_list + prtn_list + hrtn_list
+    print(combined_list)
+    return combined_list
 
 
 # # 루틴 데이터 가져오는 엔드포인트
@@ -1126,3 +1175,15 @@ class PILL_PROD_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     pillsearch = db.query(PILL_PROD).all()
     return pillsearch
+
+
+class HEALTH_SEARCH(BaseModel):
+    health_nm: str
+    health_tag: str
+    health_emoji: str
+
+
+@app.get("/healthsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    healthsearch = db.query(HEALTH).all()
+    return healthsearch
