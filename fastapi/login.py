@@ -1145,12 +1145,11 @@ def test3(db: Session = Depends(get_db)):
         print(e)
 
 
+## 운동루틴 count 조회
+## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     try:
-        # today = datetime.today().date()
-        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
-        # day_of_week = korean_days[today.weekday()]
         today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
         today_day = datetime.today().strftime("%a")  # '일'
         testdata4 = (
