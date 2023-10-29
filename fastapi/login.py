@@ -1134,35 +1134,27 @@ def test3(db: Session = Depends(get_db)):
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     try:
-        now = datetime.now()
-        today = now.date()
-        day_name_mapping = {
-            "MONDAY": Weekday.월,
-            "TUESDAY": Weekday.화,
-            "WEDNESDAY": Weekday.수,
-            "THURSDAY": Weekday.목,
-            "FRIDAY": Weekday.금,
-            "SATURDAY": Weekday.토,
-            "SUNDAY": Weekday.일,
-        }
-        current_day = day_name_mapping[now.strftime("%A").upper()].name
-        today_str = today.strftime("%Y-%m-%d")
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
+        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        today_day = datetime.today().strftime("%a")  # '일'
         testdata4 = (
-            db.query(func.count(HRTN_SETTING.hrtn_id))
+            db.query(HRTN_SETTING)
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.contains(current_day),  ## 토
-                        HRTN_SETTING.hrtn_day == null(),
+                        func.find_in_set(today_day, HRTN_SETTING.hrtn_day) != 0,  ## 일
+                        HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate == null(),
-                        HRTN_SETTING.hrtn_edate == today_str,  ## 2023-10-28
+                        HRTN_SETTING.hrtn_edate == today_date,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
             )
-            .all()
+            .count()
         )
         return testdata4
     except Exception as e:
