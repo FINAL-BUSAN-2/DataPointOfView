@@ -269,6 +269,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 58,
+    borderRadius: 35,
+    margin: 5,
+    backgroundColor: 'rgb(245,235,224)',
   },
   // 아티클 이모지
   articleemoji: {
@@ -286,10 +290,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 58,
-    borderRadius: 35,
-    margin: 5,
-    backgroundColor: 'rgb(245,235,224)',
   },
   // 홈 이모지
   homeemoji: {
