@@ -502,7 +502,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
-                ertn_edate=null,
+                ertn_edate=None,
             )
             # logging.error(f"Received routine: {routine}")
             logging.error(f"Routine to add: {db_routine}")
