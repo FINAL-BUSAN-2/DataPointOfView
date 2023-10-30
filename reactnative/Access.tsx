@@ -146,7 +146,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>📍{userName}님의 오늘의 기록</Text>
+        <Text style={styles.usertext}>📍{userName}님의 daily log</Text>
       </View>
 
       <View style={styles.titletop}>
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
   usertext: {
-    fontSize: 18,
+    fontSize: 22,
     alignSelf: 'center',
     color: 'black',
     fontWeight: 'bold',
