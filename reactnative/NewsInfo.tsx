@@ -24,9 +24,16 @@ type NewsInfoProps = {
       newsData: NewsData[];
     };
   };
+  userName: string;
+  userEmail: string;
 };
 
-const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
+const NewsInfo: React.FC<NewsInfoProps> = ({
+  navigation,
+  route,
+  userName,
+  userEmail,
+}) => {
   const {newsData, search, icon} = route.params;
   const handleBackPress = () => {
     navigation.goBack();
@@ -69,12 +76,11 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
                   width: 45,
                   height: 45,
                   marginRight: 16,
-                  marginLeft: 16,
                 }}
               />
             </TouchableOpacity>
 
-            <Text style={styles.title}> 웰라밸</Text>
+            <Text style={styles.title}>웰라밸 / {userName}님</Text>
           </View>
 
           {/* 우측 상단 */}

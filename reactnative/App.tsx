@@ -102,6 +102,10 @@ function App() {
     );
   }
 
+  function NewsInfoWrapper(props) {
+    return <NewsInfo {...props} userName={userName} userEmail={userEmail} />;
+  }
+
   function EtcWrapper(props) {
     return <Etc {...props} userName={userName} userEmail={userEmail} />;
   }
@@ -132,7 +136,7 @@ function App() {
 
             <Stack.Screen name="Access" component={AccessWrapper} />
             <Stack.Screen name="Social" component={SocialWrapper} />
-            <Stack.Screen name="NewsInfo" component={NewsInfo} />
+            <Stack.Screen name="NewsInfo" component={NewsInfoWrapper} />
           </>
         )}
       </Stack.Navigator>
