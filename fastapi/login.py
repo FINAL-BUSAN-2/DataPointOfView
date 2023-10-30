@@ -1080,24 +1080,20 @@ def test2(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata2 = (
-            db.query(HRTN_SETTING)
-            .filter(
+            db.query(ERTN_SETTING).filter(
                 and_(
-                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.is_(None),
-                        HRTN_SETTING.hrtn_day.like(
-                            day_of_week
-                        ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate.is_(None),
-                        func.date(HRTN_SETTING.hrtn_edate)
-                        == today,  # hrtn_edate가 오늘 날짜인지 검사
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
                     ),
                 )
             )
-            .count()
+            # .count()
         )
         return testdata2
     except Exception as e:
@@ -1114,8 +1110,7 @@ def test3(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata3 = (
-            db.query(HRTN_SETTING)
-            .filter(
+            db.query(HRTN_SETTING).filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1128,13 +1123,9 @@ def test3(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .count()
+            # .count()
         )
-        return {
-            "testdata3": testdata3,
-            "daydebug": day_of_week,
-            "edatedebug": today,
-        }
+        return testdata3
     except Exception as e:
         print(e)
 
@@ -1148,8 +1139,7 @@ def test4(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata4 = (
-            db.query(HRTN_SETTING)
-            .filter(
+            db.query(HRTN_SETTING).filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1162,13 +1152,9 @@ def test4(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .count()
+            # .count()
         )
-        return {
-            "testdata4": testdata4,
-            "daydebug": f"%{day_of_week}%",
-            "edatedebug": today,
-        }
+        return testdata4
     except Exception as e:
         print(e)
 
@@ -1180,21 +1166,20 @@ def test5(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata5 = (
-            db.query(ERTN_SETTING)
-            .filter(
+            db.query(PRTN_SETTING).filter(
                 and_(
-                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
-                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
-                        ERTN_SETTING.ertn_day.is_(None),
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
                     ),
                     or_(
-                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
-                        ERTN_SETTING.ertn_edate.is_(None),
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
                     ),
                 )
             )
-            .count()
+            # .count()
         )
         return testdata5
     except Exception as e:
