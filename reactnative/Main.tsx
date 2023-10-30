@@ -623,10 +623,11 @@ const styles = StyleSheet.create({
   },
   //회원명
   memTextContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    // flex: 1,
+    height: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 10,
   },
   memtex: {
     fontSize: 17, // Adjust the font size as needed
@@ -640,20 +641,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    borderColor: 'red', // 'rgb(175, 171, 171)'
     marginVertical: 5,
+    //paddingVertical: 30,
+    height: 60,
   },
   routineItemSection: {
     flex: 1,
     justifyContent: 'center',
   },
   routineInfo: {
+    height: 30,
     textAlign: 'center',
     fontSize: 16,
     // borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    //borderBottomWidth: 1,
+    //borderColor: 'blue', // Set the border color
     // Add any other styles you need
+    justifyContent: 'center',
   },
   tagContainer: {
     // borderWidth: 1,
@@ -661,6 +666,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(43,58,85)',
     padding: 0, // Adjust the padding as needed
     borderRadius: 8,
+    height: 40,
+    justifyContent: 'center',
+    width: 50,
   },
 
   routineInfoWithEmoji: {
