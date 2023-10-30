@@ -1365,14 +1365,14 @@ def finfunc(db: Session = Depends(get_db)):
             .all()
             # .count()
         )
-        pos_e = func.position("@", ERTN_FIN.ertn_id)
-        pos_h = func.position("@", HRTN_FIN.hrtn_id)
-        pos_p = func.position("@", PRTN_FIN.prtn_id)
+        pos_e = func.instr(ERTN_FIN.ertn_id, "@")
+        pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
+        pos_p = func.instr(PRTN_FIN.prtn_id, "@")
         efin = (
             db.query(ERTN_FIN).filter(
                 and_(
                     cast(ERTN_FIN.fin_ertn_time, Date) == today,
-                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 2) == "qwert0175@n",
+                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == "qwert0175@n",
                 ),
             )
             # .all()
@@ -1382,7 +1382,7 @@ def finfunc(db: Session = Depends(get_db)):
             db.query(HRTN_FIN).filter(
                 and_(
                     cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 2) == "qwert0175@n",
+                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == "qwert0175@n",
                 ),
             )
             # .all()
@@ -1393,7 +1393,7 @@ def finfunc(db: Session = Depends(get_db)):
             .filter(
                 and_(
                     cast(PRTN_FIN.fin_prtn_time, Date) == today,
-                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 2) == "qwert0175@n",
+                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
                 )
             )
             .all()
@@ -1413,10 +1413,9 @@ def finfunc(db: Session = Depends(get_db)):
 
 @app.get("/testpos")
 def test6(db: Session = Depends(get_db)):
-    pos_p = func.position("@", PRTN_FIN.prtn_id)
+    pos_p = func.instr(PRTN_FIN.prtn_id, "@")
     testpos = (
-        db.query(PRTN_SETTING)
-        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        db.query(PRTN_FIN)
         .filter(func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n")
         .all()
     )
