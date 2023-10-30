@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLogoVisible, setLogoVisible] = useState(true);
-  const [isLogin, setLogin] = useState(true);
+  const [isLogin, setLogin] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
   useEffect(() => {

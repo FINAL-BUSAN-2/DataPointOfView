@@ -145,7 +145,9 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
     encodedUserName = quote(request.session["user_name"])
     encodedUserEmail = quote(request.session["user_email"])
 
-    login_url_scheme = f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
+    login_url_scheme = (
+        f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
+    )
     if existing_user:
         return RedirectResponse(login_url_scheme)
 
@@ -154,8 +156,16 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         new_user = Mem_Detail(
             mem_email=user_info["kakao_account"]["email"],
             mem_name=user_info["kakao_account"]["profile"]["nickname"],
-            mem_age=user_info["kakao_account"]["age_range"],
-            mem_gen=user_info["kakao_account"]["gender"],
+            mem_age=user_info["kakao_account"]["age_range"]
+            if user_info
+            and "kakao_account" in user_info
+            and "age_range" in user_info["kakao_account"]
+            else None,
+            mem_gen=user_info["kakao_account"]["gender"]
+            if user_info
+            and "kakao_account" in user_info
+            and "gender" in user_info["kakao_account"]
+            else None,
             mem_sday=sday,
             mem_delete=0,
         )

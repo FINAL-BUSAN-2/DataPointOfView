@@ -11,18 +11,24 @@ import {
 
 import {useNavigation} from '@react-navigation/native';
 
+interface SearchProps {
+  onKeywordChange: (newKeyword: string) => void;
+}
+
 interface autoDatas {
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
 }
-function Search() {
+function Search(props: SearchProps) {
   const navigation = useNavigation();
   const [keyword, setKeyword] = useState<string>('');
   const [keyItems, setKeyItems] = useState<autoDatas[]>([]);
 
   const onChangeData = (e: any) => {
-    setKeyword(e.nativeEvent.text);
+    const newKeyword = e.nativeEvent.text;
+    setKeyword(newKeyword);
+    props.onKeywordChange(newKeyword); // 새로운 검색어를 부모 컴포넌트로 전달
   };
 
   const fetchData = () => {
