@@ -41,9 +41,6 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState([]);
-  const [chartData4, setChartData4] = useState([]);
-  const [chartData5, setChartData5] = useState([]);
-  const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
     fetch(
       `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
@@ -57,10 +54,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    // fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
-    //   .then(response => response.json())
-    //   .then(test => setChartData3(test))
-    //   .catch(error => console.error('Error:', error));
+    fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(finfunc => setChartData3(finfunc))
+      .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
@@ -85,6 +82,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
+  const finfunc = chartData3;
 
   console.log('hcount:', pcount);
   console.log('hcolor:', pcolor);
@@ -205,7 +203,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 달성률 수치 영역 */}
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
-            <Text style={styles.finpertext}></Text>
+            <Text style={styles.finpertext}>{finfunc}</Text>
           </View>
         </View>
       </View>
