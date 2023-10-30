@@ -128,7 +128,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        const selectedTime = `${hours}:${minutes}`;
+        const currentTime = `${hours}:${minutes}`;
         const daysString = selectedDaysOfWeek.toString();
         const ertn_alram = notificationEnabled ? 1 : 0;
 
@@ -138,7 +138,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           ertn_reps: parseInt(reps),
           ertn_day: daysString || null,
           ertn_sdate: selectedDate || new Date().toDateString(),
-          ertn_time: selectedTime || new Date().toTimeString(),
+          ertn_time: selectedTime || currentTime,
           ertn_alram: ertn_alram,
           ertn_id: '',
           ertn_cat: '',
@@ -146,22 +146,26 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           ertn_edate: '',
           ertn_mem: userEmail,
         };
-        console.log({userEmail}, requestData);
-
         const response = await axios.post(
           'http://43.200.178.131:3344/routines',
           requestData,
-          {timeout: 10000}, // 10초 타임아웃
+          // {timeout: 10000}, // 10초 타임아웃
         );
-        console.log('55555555555555555555555555===', response);
         if (response.status >= 200 && response.status < 300) {
-          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
-        } else {
-          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
+          Alert.alert(
+            '성공', // 제목
+            '루틴이 성공적으로 추가되었습니다!', // 메시지
+            [
+              {
+                text: '확인',
+                onPress: () => navigation.navigate('Main'),
+              },
+            ],
+          );
         }
       } catch (error) {
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
-        console.error('루틴 추가 오류:', error);
+        // console.error('루틴 추가 오류:', error);
       }
     }
   };

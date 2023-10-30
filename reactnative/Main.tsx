@@ -215,6 +215,7 @@ const Main: React.FC<MainProps> = ({
           </View>
         )}
       />
+      <View style={styles.emptySpace}></View>
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -625,7 +626,8 @@ const styles = StyleSheet.create({
   },
   //회원명
   memTextContainer: {
-    flex: 1,
+    // flex: 1,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
@@ -642,20 +644,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    borderColor: 'red', // 'rgb(175, 171, 171)'
     marginVertical: 5,
+    //paddingVertical: 30,
+    height: 60,
   },
   routineItemSection: {
     flex: 1,
     justifyContent: 'center',
   },
   routineInfo: {
+    height: 30,
     textAlign: 'center',
     fontSize: 16,
     // borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(175, 171, 171)', // Set the border color
+    //borderBottomWidth: 1,
+    //borderColor: 'blue', // Set the border color
     // Add any other styles you need
+    justifyContent: 'center',
   },
   tagContainer: {
     // borderWidth: 1,
@@ -663,6 +669,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(43,58,85)',
     padding: 0, // Adjust the padding as needed
     borderRadius: 8,
+    height: 40,
+    justifyContent: 'center',
+    width: 50,
   },
 
   routineInfoWithEmoji: {
@@ -672,6 +681,11 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Make it a circle by setting border radius to half the width/height
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  emptySpace: {
+    height: '10%',
+    backgroundColor: 'blue.',
   },
 });
 export default Main;
