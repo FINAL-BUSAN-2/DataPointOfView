@@ -66,6 +66,19 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   const handleCameraButtonClick = () => {
     setIsCameraOpen(true);
   };
+
+  //검색창
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  // 검색어가 변경될 때 호출될 함수
+  const handleKeywordChange = (newKeyword: string) => {
+    // 이곳에서 새로운 검색어를 사용할 수 있습니다.
+    console.log('새로운 검색어:', newKeyword);
+  };
+  const handleSearchSelect = (selectedValue: string) => {
+    console.log('Selected value:', selectedValue);
+    setSelectedValue(selectedValue);
+  };
+
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();
@@ -111,6 +124,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   // const [tagsEnabled, setTagsEnabled] = useState<string>('');
   // 초기 상태에서는 빈 문자열 배열로 설정
   const [tagsEnabled, setTagsEnabled] = useState<string[]>([]);
+  console.log(`태그 : ${tagsEnabled}`);
 
   // 루틴명 입력 핸들러
   const handleRoutineNameChange = (text: string) => {
@@ -166,7 +180,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps) {
+    if (!selectedValue || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
@@ -179,21 +193,21 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const ertn_alram = notificationEnabled ? 1 : 0;
 
         const requestData = {
-          hrtn_nm: routineName,
+          hrtn_nm: selectedValue,
           hrtn_set: parseInt(set),
           hrtn_reps: parseInt(reps),
-          hrtn_day: daysString,
+          hrtn_day: daysString || '',
           hrtn_sdate: selectedDate || new Date().toDateString(),
           hrtn_time: selectedTime || new Date().toTimeString(),
           hrtn_alram: ertn_alram,
           hrtn_id: '',
           hrtn_cat: '',
-          hrtn_tag: tagsEnabled,
+          hrtn_tag: tagsEnabled.toString(),
           hrtn_edate: '',
-
           hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
+        console.log('tag:', typeof requestData.hrtn_tag);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/h_routines',
@@ -252,28 +266,28 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     const formData = new FormData();
     formData.append('image', {
       uri: cameraImgPath,
-      type: 'image/jpeg', // 이미지 형식에 따라 변경
-      name: 'image.jpg', // 이미지 파일 이름
+      type: 'image/jpeg',
+      name: newFileName,
     });
 
     // FastAPI 서버 URL
-    const serverUrl = 'http://43.200.178.131:3344/imageSearch';
+    const serverUrl = 'https://www.dpv-project.com:5000/upload';
 
-    // POST 요청 보내기
-    fetch(serverUrl, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(newFileName, data.filename);
-      })
-      .catch(error => {
-        console.error('오류:', error);
-      });
+    try {
+      const response = await axios.post(serverUrl, formData);
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log('Received Data:', data);
+        // "data" 변수에 전체 JSON 응답이 저장되어 있습니다.
+      } else {
+        console.error('HTTP 오류:', response.status);
+        // 오류 처리
+      }
+    } catch (error) {
+      console.error('오류:', error);
+      // 오류 처리
+    }
   };
 
   return (
@@ -451,9 +465,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                               alignItems: 'center',
                             }}>
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Upper Body')}
+                              onPress={() => handletagsEnabled('상체')}
                               style={
-                                tagsEnabled.includes('Upper Body')
+                                tagsEnabled.includes('상체')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -461,9 +475,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Lower Body')}
+                              onPress={() => handletagsEnabled('하체')}
                               style={
-                                tagsEnabled.includes('Lower Body')
+                                tagsEnabled.includes('하체')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -471,9 +485,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Core')}
+                              onPress={() => handletagsEnabled('코어')}
                               style={
-                                tagsEnabled.includes('Core')
+                                tagsEnabled.includes('코어')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -481,9 +495,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('etc')}
+                              onPress={() => handletagsEnabled('기타')}
                               style={
-                                tagsEnabled.includes('etc')
+                                tagsEnabled.includes('기타')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -504,9 +518,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             }}>
                             {/* <Text>태그3</Text> */}
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Stretching')}
+                              onPress={() => handletagsEnabled('스트레칭')}
                               style={
-                                tagsEnabled.includes('Stretching')
+                                tagsEnabled.includes('스트레칭')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -514,9 +528,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Cardio')}
+                              onPress={() => handletagsEnabled('유산소')}
                               style={
-                                tagsEnabled.includes('Cardio')
+                                tagsEnabled.includes('유산소')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -540,7 +554,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                   placeholder="루틴 이름을 설정해주세요"
                 /> */}
               <View style={{zIndex: 1}}>
-                <HealthSearch />
+                <HealthSearch
+                  onKeywordChange={handleKeywordChange}
+                  onSelect={handleSearchSelect}
+                />
               </View>
               {/* 카메라 아이콘
               <TouchableOpacity

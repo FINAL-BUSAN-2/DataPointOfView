@@ -33,11 +33,9 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
     navigation.navigate('hplogset');
   };
 
-  const newsInfo = async search => {
+  const newsInfo = async ({search, icon}) => {
     try {
       let response = await fetch(
-        // 서버
-        // `http://43.200.178.131:3344/naver/news/?search=${search}`,
         `http://43.200.178.131:3344/naver/news/?search=${search}`,
       );
 
@@ -47,7 +45,11 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
 
       let data = await response.json();
       console.log(data);
-      navigation.navigate('NewsInfo', {newsData: data});
+      navigation.navigate('NewsInfo', {
+        newsData: data,
+        search: search,
+        icon: icon,
+      });
     } catch (error) {
       console.error('Error fetching the news:', error);
       // 추가적인 에러 처리를 여기에 할 수 있습니다.
@@ -60,6 +62,7 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
         <View style={styles.header}>
           {/* 앱 로고 및 이름 */}
           <View style={styles.leftContainer}>
+            {/* 로고 클릭 이벤트 */}
             <TouchableOpacity
               onPress={() => {
                 console.log('제발');
@@ -77,8 +80,10 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
                 }}
               />
             </TouchableOpacity>
+
             <Text style={styles.title}>웰라밸 / {userName}님</Text>
           </View>
+
           {/* 우측 상단 */}
           <View style={styles.rightContainer}>
             {/* 알림 아이콘 */}
@@ -89,7 +94,6 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
                 height: 30,
               }}
             />
-
             {/* 환경설정 아이콘 */}
             <TouchableOpacity onPress={goHplogSet}>
               <Image
@@ -102,42 +106,52 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.bestChallenge}>
-          <Text style={styles.challengeText}>뉴스</Text>
-          <View style={styles.bestChallenge1}>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('건강기능식품')}>
-              <Text style={styles.bestChallengeText}>건강기능식품</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('루틴')}>
-              <Text style={styles.bestChallengeText}>루틴</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('헬스케어')}>
-              <Text style={styles.bestChallengeText}>헬스케어</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bestChallenge2}>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('건강')}>
-              <Text style={styles.bestChallengeText}>건강</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('운동법')}>
-              <Text style={styles.bestChallengeText}>운동법</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.bestChallengeButton}
-              onPress={() => newsInfo('박성호')}>
-              <Text style={styles.bestChallengeText}>박성호</Text>
-            </TouchableOpacity>
-          </View>
+
+        <View style={styles.newsTitleContainer}>
+          <Text style={styles.newsTitleText1}>📰 Daily article</Text>
+          <Text style={styles.newsTitleText2}>하루 아티클</Text>
+        </View>
+        <View style={styles.newsContent}>
+          <TouchableOpacity
+            style={styles.newsContentButton}
+            onPress={() => newsInfo({search: '건강기능식품', icon: '💊'})}>
+            <Text style={styles.newsContentText}>건강기능식품</Text>
+            <View style={styles.newsIcon}>
+              <Text style={styles.newsContentIcon}>💊</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.newsContentButton}
+            onPress={() => newsInfo({search: '헬스케어', icon: '🔋'})}>
+            <Text style={styles.newsContentText}>헬스케어</Text>
+            <View style={styles.newsIcon}>
+              <Text style={styles.newsContentIcon}>🔋</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.newsContentButton}
+            onPress={() => newsInfo({search: '건강', icon: '💪'})}>
+            <Text style={styles.newsContentText}>건강</Text>
+            <View style={styles.newsIcon}>
+              <Text style={styles.newsContentIcon}>💪</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.newsContentButton}
+            onPress={() => newsInfo({search: '운동법', icon: '🏋️‍♀️'})}>
+            <Text style={styles.newsContentText}>운동법</Text>
+            <View style={styles.newsIcon}>
+              <Text style={styles.newsContentIcon}>🏋️‍♀️</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.newsContentButton}
+            onPress={() => newsInfo({search: '루틴', icon: '✨'})}>
+            <Text style={styles.newsContentText}>루틴</Text>
+            <View style={styles.newsIcon}>
+              <Text style={styles.newsContentIcon}>✨</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* 네비게이션바 */}
@@ -197,7 +211,7 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: 'white',
   },
 
   header: {
@@ -243,7 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     zIndex: 2,
   },
-  // 아티클 영역
+  // 아티클
   articleTab: {
     flex: 3,
     width: 70,
@@ -251,7 +265,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // 아티클 영역2
   articleTab2: {
     flex: 1,
     alignItems: 'center',
@@ -266,13 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
   },
-  // 아티클 텍스트
-  navarticleText: {
-    fontSize: 13,
-    // fontWeight: 'bold',
-    color: 'black',
-  },
-  // 홈 영역
+  // 홈
   homeTab: {
     flex: 3,
     width: 70,
@@ -280,7 +287,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // 홈 영역2
   homeTab2: {
     flex: 1,
     alignItems: 'center',
@@ -291,7 +297,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
   },
-  // 개인 영역
+  // 개인
   accTab: {
     flex: 3,
     width: 70,
@@ -299,7 +305,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // 개인 영역2
   accTab2: {
     flex: 1,
     alignItems: 'center',
@@ -316,68 +321,82 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     color: 'black',
   },
-
-  challengeRank: {
-    height: 300,
-    margin: 20,
+  navarticleText: {
+    fontSize: 13,
+    // fontWeight: 'bold',
+    color: 'black',
   },
 
-  challengeRankTitle: {
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 20,
-  },
-
-  challengeText: {
-    fontSize: 20,
+  newsTitleText1: {
+    color: 'black',
     textAlign: 'center',
-    margin: 10,
+    fontFamily: 'Inter',
+    fontSize: 22,
+    fontStyle: 'italic',
+    fontWeight: '700',
+    margin: 5,
+  },
+  newsTitleText2: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 22,
+    fontWeight: '700',
+    margin: 5,
   },
 
-  rankButtonGroup: {
-    justifyContent: 'space-between',
+  newsTitleContainer: {
+    height: '15%',
+    justifyContent: 'center',
+  },
+  newsContent: {
     padding: 10,
-    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: '5%',
+    marginRight: '5%',
   },
 
-  rankButton: {
+  newsContentButton: {
     width: '100%',
-    height: '30%',
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 20,
-  },
-
-  bestChallenge: {
-    backgroundColor: 'rgb(245,235,224)',
-    margin: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 20,
-  },
-  bestChallenge1: {
-    padding: 10,
+    height: 70,
+    borderTopColor: '#AFABAB',
+    borderTopWidth: 1,
+    borderBottomColor: '#AFABAB',
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  bestChallenge2: {
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 
-  bestChallengeButton: {
-    backgroundColor: 'rgb(245,235,224)',
-    width: 100,
-    height: 100,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 20,
-  },
-
-  bestChallengeText: {
+  newsContentText: {
+    color: 'black',
     textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: '400',
+    width: '70%',
+  },
+
+  newsIcon: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#AFABAB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  newsContentIcon: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 30,
+    fontWeight: '400',
   },
 });
 

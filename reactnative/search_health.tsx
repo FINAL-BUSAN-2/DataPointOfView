@@ -11,20 +11,26 @@ import {
 
 import {useNavigation} from '@react-navigation/native';
 
+interface Search_healthProps {
+  onKeywordChange: (newKeyword: string) => void;
+  onSelect: (selectedValue: string) => void;
+}
+
 interface autoDatas {
   health_nm: string;
   health_tag: string;
   health_emoji: string;
 }
-function HealthSearch() {
+function HealthSearch(props: Search_healthProps) {
   const navigation = useNavigation();
   const [keyword, setKeyword] = useState<string>('');
   const [keyItems, setKeyItems] = useState<autoDatas[]>([]);
 
   const onChangeData = (e: any) => {
-    setKeyword(e.nativeEvent.text);
+    const newKeyword = e.nativeEvent.text;
+    setKeyword(newKeyword);
+    props.onKeywordChange(newKeyword); // 새로운 검색어를 부모 컴포넌트로 전달
   };
-
   const fetchData = () => {
     return fetch('http://43.200.178.131:3344/healthsearch')
       .then(res => {
@@ -97,6 +103,7 @@ function HealthSearch() {
                 onPress={() => {
                   setKeyword(item.health_nm);
                   setKeyItems([]);
+                  props.onSelect(item.health_nm);
                 }}>
                 <Text>{item.health_nm}</Text>
                 {/* <Image
