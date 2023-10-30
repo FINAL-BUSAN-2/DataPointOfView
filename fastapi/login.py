@@ -1114,23 +1114,27 @@ def test3(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata3 = (
-            db.query(PRTN_SETTING)
+            db.query(HRTN_SETTING)
             .filter(
                 and_(
-                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
-                        PRTN_SETTING.prtn_day.is_(None),
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
-                        PRTN_SETTING.prtn_edate.is_(None),
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
             )
             .count()
         )
-        return testdata3
+        return {
+            "testdata3": testdata3,
+            "daydebug": day_of_week,
+            "edatedebug": today,
+        }
     except Exception as e:
         print(e)
 
@@ -1162,8 +1166,8 @@ def test4(db: Session = Depends(get_db)):
         )
         return {
             "testdata4": testdata4,
-            "daydebug": print("day:", f"%{day_of_week}%"),
-            "edatedebug": print("edate:", today),
+            "daydebug": f"%{day_of_week}%",
+            "edatedebug": today,
         }
     except Exception as e:
         print(e)
