@@ -1338,8 +1338,7 @@ def finfunc(db: Session = Depends(get_db)):
             .count()
         )
         prtn = (
-            db.query(PRTN_SETTING)
-            .filter(
+            db.query(PRTN_SETTING).filter(
                 and_(
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1352,8 +1351,8 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .all()
-            # .count()
+            # .all()
+            .count()
         )
         pos_e = func.instr(ERTN_FIN.ertn_id, "@")
         pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
@@ -1379,24 +1378,16 @@ def finfunc(db: Session = Depends(get_db)):
             .count()
         )
         pfin = (
-            db.query(PRTN_FIN)
-            .filter(
+            db.query(PRTN_FIN).filter(
                 and_(
                     cast(PRTN_FIN.fin_prtn_time, Date) == today,
                     func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
                 )
             )
-            .all()
-            # .count()
+            # .all()
+            .count()
         )
-        return (
-            efin,
-            hfin,
-            pfin,
-            ertn,
-            hrtn,
-            prtn,
-        )
+        return (efin, hfin, pfin) / (ertn, hrtn, prtn) * 100
     except Exception as e:
         print(e)
 
