@@ -81,7 +81,7 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
               />
             </TouchableOpacity>
 
-            <Text style={styles.title}> 웰라밸 / {userName}님</Text>
+            <Text style={styles.title}>웰라밸 / {userName}님</Text>
           </View>
 
           {/* 우측 상단 */}
