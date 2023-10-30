@@ -257,7 +257,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     });
 
     // FastAPI 서버 URL
-    const serverUrl = 'http://43.200.178.131:3344/imageSearch';
+    const serverUrl = 'https://www.dpv-project.com:5000/upload';
 
     try {
       const response = await fetch(serverUrl, {
@@ -270,12 +270,15 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
       if (response.ok) {
         const data = await response.json();
-        console.log(newFileName, data.filename);
+        console.log('Received Data:', data);
+        // "data" 변수에 전체 JSON 응답이 저장되어 있습니다.
       } else {
         console.error('HTTP 오류:', response.status);
+        // 오류 처리
       }
     } catch (error) {
       console.error('오류:', error);
+      // 오류 처리
     }
   };
 
