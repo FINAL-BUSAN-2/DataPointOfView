@@ -196,17 +196,18 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_nm: selectedValue,
           hrtn_set: parseInt(set),
           hrtn_reps: parseInt(reps),
-          hrtn_day: daysString || '',
+          hrtn_day: daysString || null,
           hrtn_sdate: selectedDate || new Date().toDateString(),
           hrtn_time: selectedTime || new Date().toTimeString(),
           hrtn_alram: ertn_alram,
           hrtn_id: '',
           hrtn_cat: '',
-          hrtn_tag: tagsEnabled,
+          hrtn_tag: tagsEnabled.toString(),
           hrtn_edate: '',
           hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
+        console.log('tag:', typeof requestData.hrtn_tag);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/h_routines',
