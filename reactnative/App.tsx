@@ -12,7 +12,7 @@ import Access from './Access';
 import Social from './Social';
 import NewsInfo from './NewsInfo';
 import Search from './search';
-import Pill from './pill';
+import Pill from './Pill';
 
 const Stack = createStackNavigator();
 
