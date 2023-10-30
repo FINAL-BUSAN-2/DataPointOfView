@@ -73,6 +73,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
         color1: item.color1,
       }))
     : [];
+
   // 데이터 변수 설정
   const hcount = pieChartData.map(item => item.count);
   const hcolor = pieChartData.map(item => item.color);
@@ -82,7 +83,8 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
-  const finfunc = chartData3;
+  const finper = chartData3.result;
+  const finemoji = chartData3.finemoji;
 
   console.log('hcount:', pcount);
   console.log('hcolor:', pcolor);
@@ -198,12 +200,12 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 달성률 이모지 영역*/}
           <View style={styles.finemoji}>
             {/* 달성률 이모지 스타일 */}
-            <Text style={styles.finemojitext}></Text>
+            <Text style={styles.finemojitext}>{finemoji}</Text>
           </View>
           {/* 달성률 수치 영역 */}
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
-            <Text style={styles.finpertext}>{finfunc}</Text>
+            <Text style={styles.finpertext}>{finper}%</Text>
           </View>
         </View>
       </View>
