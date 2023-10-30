@@ -57,10 +57,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(test => setChartData3(test))
-      .catch(error => console.error('Error:', error));
+    // fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
+    //   .then(response => response.json())
+    //   .then(test => setChartData3(test))
+    //   .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data

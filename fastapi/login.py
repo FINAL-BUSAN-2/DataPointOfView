@@ -1305,7 +1305,8 @@ def fintotal(db: Session = Depends(get_db)):
 
 
 @app.get("/finfunc")
-def finfunc(userEmail: str, db: Session = Depends(get_db)):
+# def finfunc(userEmail: str, db: Session = Depends(get_db)):
+def finfunc(db: Session = Depends(get_db)):
     try:
         hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
         ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
