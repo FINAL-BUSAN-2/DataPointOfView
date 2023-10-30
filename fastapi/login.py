@@ -1094,8 +1094,7 @@ def test2(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .all()
-            # .count()
+            .count()
         )
         return testdata2
     except Exception as e:
@@ -1112,6 +1111,81 @@ def test3(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata3 = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return testdata3
+    except Exception as e:
+        print(e)
+
+
+@app.get("/test4")
+def test4(db: Session = Depends(get_db)):
+    try:
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
+        testdata4 = (
+            db.query(PRTN_SETTING).filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return testdata4
+    except Exception as e:
+        print(e)
+
+
+## 운동루틴 count 조회
+## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
+@app.get("/test5")
+def test4(db: Session = Depends(get_db)):
+    try:
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
+        testdata2 = (
+            db.query(ERTN_SETTING)
+            .filter(
+                and_(
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        testdata3 = (
             db.query(HRTN_SETTING)
             .filter(
                 and_(
@@ -1126,52 +1200,9 @@ def test3(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .all()
-            # .count()
+            .count()
         )
-        return testdata3
-    except Exception as e:
-        print(e)
-
-
-## 운동루틴 count 조회
-## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
-@app.get("/test4")
-def test4(db: Session = Depends(get_db)):
-    try:
-        today = datetime.today().date()
-        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
-        day_of_week = korean_days[today.weekday()]
         testdata4 = (
-            db.query(HRTN_SETTING)
-            .filter(
-                and_(
-                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                    or_(
-                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
-                        HRTN_SETTING.hrtn_day.is_(None),
-                    ),
-                    or_(
-                        func.date(HRTN_SETTING.hrtn_edate) == today,
-                        HRTN_SETTING.hrtn_edate.is_(None),
-                    ),
-                )
-            )
-            .all()
-            # .count()
-        )
-        return testdata4
-    except Exception as e:
-        print(e)
-
-
-@app.get("/test5")
-def test5(db: Session = Depends(get_db)):
-    try:
-        today = datetime.today().date()
-        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
-        day_of_week = korean_days[today.weekday()]
-        testdata5 = (
             db.query(PRTN_SETTING)
             .filter(
                 and_(
@@ -1186,10 +1217,9 @@ def test5(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .all()
-            # .count()
+            .count()
         )
-        return testdata5
+        return testdata2 + testdata3 + testdata4
     except Exception as e:
         print(e)
 
@@ -1206,6 +1236,7 @@ def test5(db: Session = Depends(get_db)):
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    HRTN_SETTING.hrtn_edate == HRTN_FIN.fin_hrtn_time,
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
                         HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
@@ -1217,7 +1248,8 @@ def test5(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            .count()
+            .all()
+            # .count()
         )
         return testdata6
     except Exception as e:
