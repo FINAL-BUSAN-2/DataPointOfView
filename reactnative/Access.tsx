@@ -28,7 +28,10 @@ type AccessProps = {
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
-
+type chartData3 = {
+  result: number;
+  finemoji: string;
+};
 // React 함수 컴포넌트 정의
 const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
@@ -40,7 +43,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   };
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
-  const [chartData3, setChartData3] = useState([]);
+  const [chartData3, setChartData3] = useState<chartData3 | null>(null);
   useEffect(() => {
     fetch(
       `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
@@ -56,7 +59,9 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .catch(error => console.error('Error:', error));
     fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
       .then(response => response.json())
-      .then(finfunc => setChartData3(finfunc))
+      .then(chartData3 =>
+        setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
+      )
       .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
@@ -83,11 +88,9 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
-  const finper = chartData3.result;
-  const finemoji = chartData3.finemoji;
 
-  console.log('hcount:', pcount);
-  console.log('hcolor:', pcolor);
+  console.log('finper:', chartData3?.result, chartData3?.finemoji);
+  // console.log('finemoji:', finfunc);
   // console.log('test:', test);
   // console.log('hcolor:', test);
   return (
@@ -200,12 +203,12 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 달성률 이모지 영역*/}
           <View style={styles.finemoji}>
             {/* 달성률 이모지 스타일 */}
-            <Text style={styles.finemojitext}>{finemoji}</Text>
+            <Text style={styles.finemojitext}>{chartData3?.finemoji}</Text>
           </View>
           {/* 달성률 수치 영역 */}
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
-            <Text style={styles.finpertext}>{finper}%</Text>
+            <Text style={styles.finpertext}>{chartData3?.result}%</Text>
           </View>
         </View>
       </View>
