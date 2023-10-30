@@ -543,7 +543,8 @@ def create_routine(routine: HRoutineCreate, request: Request):
                 hrtn_day=routine.hrtn_day,
                 hrtn_edate=None,
             )
-            logger.error("-----------------------------------", db_routine)
+            logger.error("-----------------------------------")
+            logging.error(f"Routine to add: {db_routine}")
             db.add(db_routine)
             db.commit()
             # db.refresh(db_routine)

@@ -452,9 +452,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                               alignItems: 'center',
                             }}>
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Upper Body')}
+                              onPress={() => handletagsEnabled('상체')}
                               style={
-                                tagsEnabled.includes('Upper Body')
+                                tagsEnabled.includes('상체')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -462,9 +462,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Lower Body')}
+                              onPress={() => handletagsEnabled('하체')}
                               style={
-                                tagsEnabled.includes('Lower Body')
+                                tagsEnabled.includes('하체')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -472,9 +472,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Core')}
+                              onPress={() => handletagsEnabled('코어')}
                               style={
-                                tagsEnabled.includes('Core')
+                                tagsEnabled.includes('코어')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -482,9 +482,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('etc')}
+                              onPress={() => handletagsEnabled('기타')}
                               style={
-                                tagsEnabled.includes('etc')
+                                tagsEnabled.includes('기타')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -505,9 +505,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             }}>
                             {/* <Text>태그3</Text> */}
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Stretching')}
+                              onPress={() => handletagsEnabled('스트레칭')}
                               style={
-                                tagsEnabled.includes('Stretching')
+                                tagsEnabled.includes('스트레칭')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
@@ -515,9 +515,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                              onPress={() => handletagsEnabled('Cardio')}
+                              onPress={() => handletagsEnabled('유산소')}
                               style={
-                                tagsEnabled.includes('Cardio')
+                                tagsEnabled.includes('유산소')
                                   ? styles.selectedButton
                                   : styles.button
                               }>
