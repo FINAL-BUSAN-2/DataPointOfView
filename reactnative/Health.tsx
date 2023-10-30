@@ -188,7 +188,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        const selectedTime = `${hours}:${minutes}`;
+        const currentTime = `${hours}:${minutes}`;
         const daysString = selectedDaysOfWeek.toString();
         const ertn_alram = notificationEnabled ? 1 : 0;
 
@@ -198,7 +198,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_reps: parseInt(reps),
           hrtn_day: daysString || '',
           hrtn_sdate: selectedDate || new Date().toDateString(),
-          hrtn_time: selectedTime || new Date().toTimeString(),
+          hrtn_time: selectedTime || currentTime,
           hrtn_alram: ertn_alram,
           hrtn_id: '',
           hrtn_cat: '',

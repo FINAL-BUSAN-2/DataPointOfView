@@ -152,7 +152,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        const selectedTime = `${hours}:${minutes}`;
+        const currentTime = `${hours}:${minutes}`;
         const daysString = selectedDaysOfWeek.toString();
         const ertn_alram = notificationEnabled ? 1 : 0;
 
@@ -162,7 +162,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           prtn_reps: parseInt(reps),
           prtn_day: daysString || null,
           prtn_sdate: selectedDate || new Date().toDateString(),
-          prtn_time: selectedTime || new Date().toTimeString(),
+          prtn_time: selectedTime || currentTime,
           prtn_alram: ertn_alram,
           prtn_id: '',
           prtn_cat: '',
@@ -171,7 +171,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           prtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
-        console.log('이름', typeof requestData.prtn_nm);
+        console.log('이름', typeof requestData.prtn_alram);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/p_routines',
