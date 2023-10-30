@@ -538,7 +538,7 @@ def create_routine(routine: HRoutineCreate, request: Request):
                 hrtn_time=routine.hrtn_time,
                 hrtn_alram=routine.hrtn_alram,
                 hrtn_day=routine.hrtn_day,
-                hrtn_edate=null,
+                hrtn_edate=None,
             )
 
             db.add(db_routine)
@@ -568,7 +568,7 @@ def create_routine(routine: PRoutineCreate, request: Request):
                 prtn_time=routine.prtn_time,
                 prtn_alram=routine.prtn_alram,
                 prtn_day=routine.prtn_day,
-                prtn_edate=null,
+                prtn_edate=None,
             )
             db.add(db_routine)
             db.commit()
