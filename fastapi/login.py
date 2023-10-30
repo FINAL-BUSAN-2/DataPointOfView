@@ -524,6 +524,8 @@ def create_routine(routine: ERoutineCreate, request: Request):
 @app.post("/h_routines")  # , response_model=RoutineCreate)
 def create_routine(routine: HRoutineCreate, request: Request):
     try:
+        if routine.hrtn_day == "":
+            routine.hrtn_day = None
         hrtn_id = generate_unique_hrtn_id(routine.hrtn_mem)
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
