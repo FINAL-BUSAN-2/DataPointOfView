@@ -206,19 +206,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_edate: '',
           hrtn_mem: userEmail,
         };
-        console.log('44444444444444444444444===', requestData);
-        console.log('tag:', typeof requestData.hrtn_tag);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/h_routines',
           requestData,
-          {timeout: 10000}, // 10초 타임아웃
+          // {timeout: 10000}, // 10초 타임아웃
         );
-        console.log('55555555555555555555555555===', response);
         if (response.status >= 200 && response.status < 300) {
           Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
-        } else {
-          Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
         }
       } catch (error) {
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
