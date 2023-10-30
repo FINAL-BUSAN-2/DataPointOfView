@@ -1080,7 +1080,8 @@ def test2(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata2 = (
-            db.query(ERTN_SETTING).filter(
+            db.query(ERTN_SETTING)
+            .filter(
                 and_(
                     ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
@@ -1093,6 +1094,7 @@ def test2(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            .all()
             # .count()
         )
         return testdata2
@@ -1110,7 +1112,8 @@ def test3(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata3 = (
-            db.query(HRTN_SETTING).filter(
+            db.query(HRTN_SETTING)
+            .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1123,6 +1126,7 @@ def test3(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            .all()
             # .count()
         )
         return testdata3
@@ -1139,7 +1143,8 @@ def test4(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata4 = (
-            db.query(HRTN_SETTING).filter(
+            db.query(HRTN_SETTING)
+            .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1152,6 +1157,7 @@ def test4(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            .all()
             # .count()
         )
         return testdata4
@@ -1166,7 +1172,8 @@ def test5(db: Session = Depends(get_db)):
         korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         day_of_week = korean_days[today.weekday()]
         testdata5 = (
-            db.query(PRTN_SETTING).filter(
+            db.query(PRTN_SETTING)
+            .filter(
                 and_(
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1179,6 +1186,7 @@ def test5(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            .all()
             # .count()
         )
         return testdata5
