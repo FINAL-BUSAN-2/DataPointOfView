@@ -39,6 +39,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     console.log('새로운 검색어:', newKeyword);
   };
 
+  const handleSearchSelect = (selectedValue: string) => {
+    console.log('Selected value:', selectedValue);
+    // 이제 selectedValue에 선택된 검색 결과가 있습니다.
+    // 원하는 로직을 여기에 추가하세요.
+  };
+
   /// 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();
@@ -196,7 +202,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         <ScrollView style={styles.scrollView}>
           {/* 루틴입력 */}
           <View style={{zIndex: 1}}>
-            <Search onKeywordChange={handleKeywordChange} />
+            <Search
+              onKeywordChange={handleKeywordChange}
+              onSelect={handleSearchSelect}
+              h
+            />
           </View>
           {/* 
           <View style={styles.Routinename}>
