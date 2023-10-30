@@ -1305,7 +1305,7 @@ def fintotal(db: Session = Depends(get_db)):
 
 
 @app.get("/finfunc")
-def finfunc(db: Session = Depends(get_db)):
+def finfunc(userEmail: str, db: Session = Depends(get_db)):
     try:
         hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
         ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
@@ -1362,11 +1362,17 @@ def finfunc(db: Session = Depends(get_db)):
             .all()
             # .count()
         )
+        pos_e = func.position("@", ERTN_FIN.ertn_id)
+        pos_h = func.position("@", HRTN_FIN.hrtn_id)
+        pos_p = func.position("@", PRTN_FIN.prtn_id)
         efin = (
             db.query(ERTN_SETTING).filter(
                 and_(
                     ERTN_SETTING.ertn_id.in_(ertn_ids_query),
-                    cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                    and_(
+                        cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                        func.substr(ERTN_FIN.ertn_id, 1, pos_e - 1) == "qwert0175@n",
+                    ),
                     ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
                         ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
@@ -1385,7 +1391,10 @@ def finfunc(db: Session = Depends(get_db)):
             db.query(HRTN_SETTING).filter(
                 and_(
                     HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                    cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                    and_(
+                        cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                        func.substr(HRTN_FIN.hrtn_id, 1, pos_h - 1) == "qwert0175@n",
+                    ),
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
                         HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
@@ -1405,7 +1414,10 @@ def finfunc(db: Session = Depends(get_db)):
             .filter(
                 and_(
                     PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-                    cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                    and_(
+                        cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                        func.substr(PRTN_FIN.prtn_id, 1, pos_p - 1) == "qwert0175@n",
+                    ),
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
                         PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
@@ -1420,7 +1432,15 @@ def finfunc(db: Session = Depends(get_db)):
             .all()
             # .count()
         )
-        return efin, hfin, pfin, ertn, hrtn, prtn
+        return (
+            efin,
+            hfin,
+            pfin,
+            ertn,
+            hrtn,
+            prtn,
+            func.substr(PRTN_FIN.prtn_id, 1, pos_p - 1),
+        )
     except Exception as e:
         print(e)
 

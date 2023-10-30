@@ -45,18 +45,22 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
-    fetch('http://43.200.178.131:3344/health_piechartdata')
+    fetch(
+      `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
+    )
       .then(response => response.json())
       .then(healthdata => setChartData(healthdata))
       .catch(error => console.error('Error:', error));
-    fetch('http://43.200.178.131:3344/pill_piechartdata')
+    fetch(
+      `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
+    )
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    // fetch('http://43.200.178.131:3344/test2')
-    //   .then(response => response.json())
-    //   .then(test => setChartData3(test))
-    //   .catch(error => console.error('Error:', error));
+    fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(test => setChartData3(test))
+      .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
@@ -72,7 +76,6 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
         color1: item.color1,
       }))
     : [];
-
   // 데이터 변수 설정
   const hcount = pieChartData.map(item => item.count);
   const hcolor = pieChartData.map(item => item.color);
