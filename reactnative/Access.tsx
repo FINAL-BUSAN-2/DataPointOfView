@@ -113,12 +113,12 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
                 width: 45,
                 height: 45,
                 marginRight: 16,
-                marginLeft: 16,
+                // marginLeft: 16,
               }}
             />
           </TouchableOpacity>
 
-          <Text style={styles.title}> 웰라밸 / {userName}님</Text>
+          <Text style={styles.title}>웰라밸 / {userName}님</Text>
         </View>
 
         {/* 우측 상단 */}
@@ -208,7 +208,9 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 달성률 수치 영역 */}
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
-            <Text style={styles.finpertext}>{chartData3?.result}%</Text>
+            <Text style={styles.finpertext}>
+              {chartData3?.result.toFixed(0)}%
+            </Text>
           </View>
         </View>
       </View>
@@ -338,8 +340,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   header: {
-    flex: 1.3,
+    // flex: 1.3,
     backgroundColor: '#fff',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#fff',
     flexDirection: 'row',
@@ -359,7 +363,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 80,
-    right: 20,
+    // right: 20,
   },
   // user 정보
   userinfo: {
@@ -410,6 +414,7 @@ const styles = StyleSheet.create({
   },
   tophealthemojitext: {
     fontSize: 32,
+    color: 'black',
   },
   tophealthtag: {
     alignSelf: 'center',
@@ -455,6 +460,7 @@ const styles = StyleSheet.create({
   },
   toppillemojitext: {
     fontSize: 32,
+    color: 'black',
   },
   toppillfunc: {
     alignSelf: 'center',
@@ -497,6 +503,7 @@ const styles = StyleSheet.create({
   },
   finemojitext: {
     fontSize: 32,
+    color: 'black',
   },
   finper: {
     alignSelf: 'center',
@@ -665,6 +672,7 @@ const styles = StyleSheet.create({
   // 아티클 이모지
   articleemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 홈
   homeTab: {
@@ -682,6 +690,7 @@ const styles = StyleSheet.create({
   // 홈 이모지
   homeemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 개인
   accTab: {
@@ -703,6 +712,7 @@ const styles = StyleSheet.create({
   // 개인 이모지
   accemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 네비게이션 텍스트
   navText: {
