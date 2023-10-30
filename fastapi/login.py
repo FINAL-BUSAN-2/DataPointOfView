@@ -1442,7 +1442,6 @@ def finfunc(db: Session = Depends(get_db)):
             ertn,
             hrtn,
             prtn,
-            func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1),
         )
     except Exception as e:
         print(e)
@@ -1451,7 +1450,11 @@ def finfunc(db: Session = Depends(get_db)):
 @app.get("/testpos")
 def test6(db: Session = Depends(get_db)):
     pos_p = func.position("@", PRTN_FIN.prtn_id)
-    testpos = db.query(func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1))
+    testpos = (
+        db.query(PRTN_SETTING)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .filter(func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n")
+    )
     return testpos
 
 
