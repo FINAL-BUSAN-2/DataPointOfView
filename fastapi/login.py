@@ -1146,13 +1146,15 @@ def test4(db: Session = Depends(get_db)):
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        func.date(HRTN_SETTING.hrtn_edate) == today_date,  ## 2023-10-29
+                        func.date(HRTN_SETTING.hrtn_edate) == today_date,
                         HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
             )
             .count()
         )
+        print("day:", f"%{today_day}%")
+        print("edate:", today_date)
         return testdata4
     except Exception as e:
         print(e)
