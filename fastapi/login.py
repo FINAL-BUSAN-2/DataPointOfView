@@ -1074,8 +1074,11 @@ def get_color_by_func(func):
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
     try:
-        current_day = "토"
-        today_str = "2023-10-28"
+        # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        # today_day = datetime.today().strftime("%a")  # '일'
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
         testdata2 = (
             db.query(HRTN_SETTING)
             .filter(
@@ -1084,13 +1087,13 @@ def test2(db: Session = Depends(get_db)):
                     or_(
                         HRTN_SETTING.hrtn_day.is_(None),
                         HRTN_SETTING.hrtn_day.like(
-                            f"%{current_day}%"
+                            day_of_week
                         ),  # hrtn_day에 current_day가 포함되어 있는지 검사
                     ),
                     or_(
                         HRTN_SETTING.hrtn_edate.is_(None),
                         func.date(HRTN_SETTING.hrtn_edate)
-                        == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                        == today,  # hrtn_edate가 오늘 날짜인지 검사
                     ),
                 )
             )
@@ -1105,19 +1108,22 @@ def test2(db: Session = Depends(get_db)):
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
     try:
-        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        today_day = datetime.today().strftime("%a")  # '일'
+        # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        # today_day = datetime.today().strftime("%a")  # '일'
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
         testdata3 = (
             db.query(PRTN_SETTING)
             .filter(
                 and_(
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
-                        PRTN_SETTING.prtn_day.like(f"%{today_day}%"),
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
                         PRTN_SETTING.prtn_day.is_(None),
                     ),
                     or_(
-                        PRTN_SETTING.prtn_edate == today_date,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
                         PRTN_SETTING.prtn_edate.is_(None),
                     ),
                 )
@@ -1134,19 +1140,20 @@ def test3(db: Session = Depends(get_db)):
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     try:
-        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        today_day = datetime.today().strftime("%a")  # '일'
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
         testdata4 = (
             db.query(HRTN_SETTING)
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.like(f"%{today_day}%"),
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        func.date(HRTN_SETTING.hrtn_edate) == today_date,
+                        func.date(HRTN_SETTING.hrtn_edate) == today,
                         HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
@@ -1155,8 +1162,8 @@ def test4(db: Session = Depends(get_db)):
         )
         return {
             "testdata4": testdata4,
-            "daydebug": print("day:", f"%{today_day}%"),
-            "edatedebug": print("edate:", today_date),
+            "daydebug": print("day:", f"%{day_of_week}%"),
+            "edatedebug": print("edate:", today),
         }
     except Exception as e:
         print(e)
@@ -1165,19 +1172,20 @@ def test4(db: Session = Depends(get_db)):
 @app.get("/test5")
 def test5(db: Session = Depends(get_db)):
     try:
-        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        today_day = datetime.today().strftime("%a")  # '일'
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
         testdata5 = (
             db.query(ERTN_SETTING)
             .filter(
                 and_(
                     ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
-                        ERTN_SETTING.ertn_day.like(f"%{today_day}%"),
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
                         ERTN_SETTING.ertn_day.is_(None),
                     ),
                     or_(
-                        ERTN_SETTING.ertn_edate == today_date,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
                         ERTN_SETTING.ertn_edate.is_(None),
                     ),
                 )
@@ -1193,8 +1201,9 @@ def test5(db: Session = Depends(get_db)):
 def test5(db: Session = Depends(get_db)):
     try:
         hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        today_day = datetime.today().strftime("%a")  # '일'
+        today = datetime.today().date()
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
         testdata6 = (
             db.query(HRTN_SETTING)
             .filter(
@@ -1202,11 +1211,11 @@ def test5(db: Session = Depends(get_db)):
                     HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.like(f"%{today_day}%"),
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate == today_date,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
                         HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
