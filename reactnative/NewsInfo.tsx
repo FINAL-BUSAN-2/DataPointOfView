@@ -106,7 +106,9 @@ const NewsInfo: React.FC<NewsInfoProps> = ({
           </View>
         </View>
         <View style={styles.newsTitleContainer}>
-          <Text style={styles.articleTitleText}>📰 Daily article</Text>
+          <TouchableOpacity onPress={handleBackPress}>
+            <Text style={styles.articleTitleText}>📰 Daily article</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.newslabel}>
           <Text style={styles.newsContentText}>{search}</Text>
