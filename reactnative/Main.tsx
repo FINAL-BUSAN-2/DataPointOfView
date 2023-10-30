@@ -215,6 +215,7 @@ const Main: React.FC<MainProps> = ({
           </View>
         )}
       />
+      <View style={styles.emptySpace}></View>
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -623,9 +624,9 @@ const styles = StyleSheet.create({
   //회원명
   memTextContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 50,
   },
   memtex: {
     fontSize: 17, // Adjust the font size as needed
@@ -669,6 +670,11 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Make it a circle by setting border radius to half the width/height
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  emptySpace: {
+    height: '10%',
+    backgroundColor: 'blue.',
   },
 });
 export default Main;

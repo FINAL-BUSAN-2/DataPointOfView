@@ -152,7 +152,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           // {timeout: 10000}, // 10초 타임아웃
         );
         if (response.status >= 200 && response.status < 300) {
-          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+          Alert.alert(
+            '성공', // 제목
+            '루틴이 성공적으로 추가되었습니다!', // 메시지
+            [
+              {
+                text: '확인',
+                onPress: () => navigation.navigate('Main'),
+              },
+            ],
+          );
         }
       } catch (error) {
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
