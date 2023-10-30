@@ -1153,9 +1153,11 @@ def test4(db: Session = Depends(get_db)):
             )
             .count()
         )
-        print("day:", f"%{today_day}%")
-        print("edate:", today_date)
-        return testdata4
+        return {
+            "testdata4": testdata4,
+            "daydebug": print("day:", f"%{today_day}%"),
+            "edatedebug": print("edate:", today_date),
+        }
     except Exception as e:
         print(e)
 
