@@ -193,7 +193,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   //
   return (
-    <>
+    <View style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
           <Text style={styles.backButton}>{'< 영양 루틴 추가하기'}</Text>
@@ -335,7 +335,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           </View>
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -344,54 +344,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: '#fff',
   },
   scrollView: {},
-  pillheader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  Routinename: {
-    marginTop: 20,
-    width: 300,
-    height: 50,
-    borderRadius: 30,
-    borderWidth: 2.5,
-    borderColor: '#000000',
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'center', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  Routineinput: {
-    padding: 8,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  cameraicon: {
-    width: 34,
-    height: 34,
-    marginLeft: 30,
-  },
-  Routineicon: {
-    marginTop: 20, // Adjust this to change the vertical position of the timeline bar
-    left: 0,
-    width: 50,
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    borderWidth: 2.5,
-    borderColor: '#000000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // marginBottom:20,
-  },
-  Routineicon_add: {
-    width: 34,
-    height: 34,
-  },
 
   /// 몇회 & 몇정 설정
   setreps: {
@@ -441,45 +396,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /// 알람 설정
-  notificationcontainer: {
-    marginTop: 0,
-    width: 360,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  notification: {
-    marginLeft: 50,
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#000000',
-  },
-  notificationswitch: {
-    marginRight: 50,
-  },
-
-  /// 반복
-  repeatcontainer: {
-    marginTop: 0,
-    width: 360,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  repeat: {
-    marginLeft: 50,
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#000000',
-  },
-  repeatswitch: {
-    marginRight: 50,
-  },
   dayButtonRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -505,48 +421,6 @@ const styles = StyleSheet.create({
 
   selectedDayButtonText: {
     color: 'rgb(206,119,119)',
-  },
-
-  /// 추가 설정
-  addtioncontainer: {
-    marginTop: 0,
-    width: 360,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  addtion: {
-    marginLeft: 50,
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#000000',
-  },
-  addtionswitch: {
-    marginRight: 50,
-  },
-  button: {
-    padding: 5,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-  },
-
-  selectedButton: {
-    padding: 5,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: '#000',
-    backgroundColor: 'rgb(231,230,230)',
-    borderRadius: 5,
-  },
-
-  checklist: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    height: 200,
   },
 
   //addContainer
@@ -581,7 +455,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    //backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    backgroundColor: '#fff',
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },

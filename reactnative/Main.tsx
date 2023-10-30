@@ -138,7 +138,7 @@ const Main: React.FC<MainProps> = ({
               }}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>웰라밸</Text>
+          <Text style={styles.title}>웰라밸 / {userName}님</Text>
         </View>
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
@@ -480,6 +480,7 @@ const styles = StyleSheet.create({
   // 아티클 이모지
   articleemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 홈
   homeTab: {
@@ -501,6 +502,7 @@ const styles = StyleSheet.create({
   // 홈 이모지
   homeemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 개인
   accTab: {
@@ -518,6 +520,7 @@ const styles = StyleSheet.create({
   // 개인 이모지
   accemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 네비게이션 텍스트
   navText: {
