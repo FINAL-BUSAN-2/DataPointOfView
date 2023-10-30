@@ -562,7 +562,7 @@ def create_routine(routine: PRoutineCreate, request: Request):
         with SessionLocal() as db:
             db_routine = PRTN_SETTING(
                 prtn_mem=routine.prtn_mem,  # 로그인아이디필요
-                prtn_id="",
+                prtn_id=prtn_id,
                 prtn_nm=routine.prtn_nm,
                 prtn_cat="영양",
                 prtn_tag="영양",
