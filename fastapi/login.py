@@ -1200,7 +1200,3 @@ class HEALTH_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
-
-@app.post("/imageSearch")
-async def upload_image(file: UploadFile):
-    return JSONResponse(content={"filename": file.filename})
