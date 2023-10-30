@@ -511,7 +511,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
+            # db.refresh(db_routine)
             logger.error("7777777777777777777777777")
 
         return db_routine
@@ -520,65 +520,63 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_건강
-# @app.post("/h_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: HRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         hrtn_id = generate_unique_hrtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = HRTN_SETTING(
-#                 hrtn_mem=email,
-#                 hrtn_id=generate_unique_hrtn_id(
-#                     request.session["user_email"]
-#                 ),  # 로그인아이디필요
-#                 hrtn_nm=routine.hrtn_nm,
-#                 hrtn_cat="건강",
-#                 hrtn_tag=routine.hrtn_tag,
-#                 hrtn_set=routine.hrtn_set,
-#                 hrtn_reps=routine.hrtn_reps,
-#                 hrtn_sdate=routine.hrtn_sdate,
-#                 hrtn_time=routine.hrtn_time,
-#                 hrtn_alram=routine.hrtn_alram,
-#                 hrtn_day=routine.hrtn_day,
-#             )
+# 루틴추가_건강
+@app.post("/h_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: HRoutineCreate, request: Request):
+    try:
+        hrtn_id = generate_unique_hrtn_id(routine.hrtn_mem)
+        with SessionLocal() as db:
+            db_routine = HRTN_SETTING(
+                hrtn_mem=routine.hrtn_mem,
+                hrtn_id=hrtn_id,
+                hrtn_nm=routine.hrtn_nm,
+                hrtn_cat="건강",
+                hrtn_tag=routine.hrtn_tag,
+                hrtn_set=routine.hrtn_set,
+                hrtn_reps=routine.hrtn_reps,
+                hrtn_sdate=routine.hrtn_sdate,
+                hrtn_time=routine.hrtn_time,
+                hrtn_alram=routine.hrtn_alram,
+                hrtn_day=routine.hrtn_day,
+                hrtn_edate=null,
+            )
 
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#             return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+            db.add(db_routine)
+            db.commit()
+            # db.refresh(db_routine)
+            return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_영양
-# @app.post("/p_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: PRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         prtn_id = generate_unique_prtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = PRTN_SETTING(
-#                 prtn_mem=email,  # 로그인아이디필요
-#                 prtn_id="",
-#                 prtn_nm=routine.prtn_nm,
-#                 prtn_cat="영양",
-#                 prtn_tag="영양",
-#                 prtn_set=routine.prtn_set,
-#                 prtn_reps=routine.prtn_reps,
-#                 prtn_sdate=routine.prtn_sdate,
-#                 prtn_time=routine.prtn_time,
-#                 prtn_alram=routine.prtn_alram,
-#                 prtn_day=routine.prtn_day,
-#             )
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#         return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+# 루틴추가_영양
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: PRoutineCreate, request: Request):
+    try:
+        prtn_id = generate_unique_prtn_id(routine.prtn_mem)
+        with SessionLocal() as db:
+            db_routine = PRTN_SETTING(
+                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_id="",
+                prtn_nm=routine.prtn_nm,
+                prtn_cat="영양",
+                prtn_tag="영양",
+                prtn_set=routine.prtn_set,
+                prtn_reps=routine.prtn_reps,
+                prtn_sdate=routine.prtn_sdate,
+                prtn_time=routine.prtn_time,
+                prtn_alram=routine.prtn_alram,
+                prtn_day=routine.prtn_day,
+                prtn_edate=null,
+            )
+            db.add(db_routine)
+            db.commit()
+            # db.refresh(db_routine)
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}
 
 
 ####################################################### 루틴리스트 받아오기
