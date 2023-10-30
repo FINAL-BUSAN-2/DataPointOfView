@@ -190,7 +190,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_cat: '',
           hrtn_tag: tagsEnabled,
           hrtn_edate: '',
-          
+
           hrtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
@@ -259,21 +259,24 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     // FastAPI 서버 URL
     const serverUrl = 'http://43.200.178.131:3344/imageSearch';
 
-    // POST 요청 보내기
-    fetch(serverUrl, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(newFileName, data.filename);
-      })
-      .catch(error => {
-        console.error('오류:', error);
+    try {
+      const response = await fetch(serverUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(newFileName, data.filename);
+      } else {
+        console.error('HTTP 오류:', response.status);
+      }
+    } catch (error) {
+      console.error('오류:', error);
+    }
   };
 
   return (

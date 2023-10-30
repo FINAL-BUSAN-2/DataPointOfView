@@ -1203,6 +1203,4 @@ def pill_prod_search(db: Session = Depends(get_db)):
 
 @app.post("/imageSearch")
 async def upload_image(file: UploadFile):
-    # 받은 파일을 저장하거나 처리합니다.
-    # 이 예제에서는 파일을 저장하지 않고 파일 이름을 반환합니다.
     return JSONResponse(content={"filename": file.filename})
