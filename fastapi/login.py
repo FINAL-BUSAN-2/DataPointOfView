@@ -1373,7 +1373,7 @@ def finfunc(db: Session = Depends(get_db)):
                     ERTN_SETTING.ertn_id.in_(ertn_ids_query),
                     and_(
                         cast(ERTN_FIN.fin_ertn_time, Date) == today,
-                        func.substr(ERTN_FIN.ertn_id, 1, pos_e - 1) == "qwert0175@n",
+                        func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == "qwert0175@n",
                     ),
                     ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
@@ -1395,7 +1395,7 @@ def finfunc(db: Session = Depends(get_db)):
                     HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
                     and_(
                         cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-                        func.substr(HRTN_FIN.hrtn_id, 1, pos_h - 1) == "qwert0175@n",
+                        func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == "qwert0175@n",
                     ),
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1418,7 +1418,7 @@ def finfunc(db: Session = Depends(get_db)):
                     PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                     and_(
                         cast(PRTN_FIN.fin_prtn_time, Date) == today,
-                        func.substr(PRTN_FIN.prtn_id, 1, pos_p - 1) == "qwert0175@n",
+                        func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
                     ),
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
