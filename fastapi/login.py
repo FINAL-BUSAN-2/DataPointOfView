@@ -1303,8 +1303,7 @@ def finfunc(db: Session = Depends(get_db)):
         ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
         prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
         ertn = (
-            db.query(ERTN_SETTING)
-            .filter(
+            db.query(ERTN_SETTING).filter(
                 and_(
                     ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
@@ -1317,11 +1316,11 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            # .all()
             .count()
         )
         hrtn = (
-            db.query(HRTN_SETTING)
-            .filter(
+            db.query(HRTN_SETTING).filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1334,11 +1333,11 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            # .all()
             .count()
         )
         prtn = (
-            db.query(PRTN_SETTING)
-            .filter(
+            db.query(PRTN_SETTING).filter(
                 and_(
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1351,6 +1350,7 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
+            # .all()
             .count()
         )
         efin = (
@@ -1410,7 +1410,7 @@ def finfunc(db: Session = Depends(get_db)):
             # .all()
             .count()
         )
-        return (efin + hfin + pfin) / (ertn + hrtn + prtn)
+        return efin, hfin, pfin, ertn, hrtn, prtn
     except Exception as e:
         print(e)
 
