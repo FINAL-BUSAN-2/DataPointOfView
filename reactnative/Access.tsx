@@ -57,7 +57,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
-    // fetch('http://43.200.178.131:3344/test2')
+    // fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
     //   .then(response => response.json())
     //   .then(test => setChartData3(test))
     //   .catch(error => console.error('Error:', error));
@@ -76,7 +76,6 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
         color1: item.color1,
       }))
     : [];
-
   // 데이터 변수 설정
   const hcount = pieChartData.map(item => item.count);
   const hcolor = pieChartData.map(item => item.color);

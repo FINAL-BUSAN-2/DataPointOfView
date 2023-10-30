@@ -5,7 +5,7 @@ from urllib.parse import quote
 import httpx
 
 from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
-from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
+from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc, cast
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.sql import null
@@ -156,8 +156,16 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         new_user = Mem_Detail(
             mem_email=user_info["kakao_account"]["email"],
             mem_name=user_info["kakao_account"]["profile"]["nickname"],
-            mem_age=user_info["kakao_account"]["age_range"],
-            mem_gen=user_info["kakao_account"]["gender"],
+            mem_age=user_info["kakao_account"]["age_range"]
+            if user_info
+            and "kakao_account" in user_info
+            and "age_range" in user_info["kakao_account"]
+            else None,
+            mem_gen=user_info["kakao_account"]["gender"]
+            if user_info
+            and "kakao_account" in user_info
+            and "gender" in user_info["kakao_account"]
+            else None,
             mem_sday=sday,
             mem_delete=0,
         )
@@ -494,7 +502,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
                 ertn_time=routine.ertn_time,
                 ertn_alram=routine.ertn_alram,
                 ertn_day=routine.ertn_day,
-                ertn_edate=routine.ertn_edate,
+                ertn_edate=None,
             )
             # logging.error(f"Received routine: {routine}")
             logging.error(f"Routine to add: {db_routine}")
@@ -503,7 +511,7 @@ def create_routine(routine: ERoutineCreate, request: Request):
             logger.error(f"5555555555555555555555555555")
             db.commit()
             logger(f"6666666666666666666666666")
-            db.refresh(db_routine)
+            # db.refresh(db_routine)
             logger.error("7777777777777777777777777")
 
         return db_routine
@@ -512,65 +520,67 @@ def create_routine(routine: ERoutineCreate, request: Request):
         return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_건강
-# @app.post("/h_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: HRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         hrtn_id = generate_unique_hrtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = HRTN_SETTING(
-#                 hrtn_mem=email,
-#                 hrtn_id=generate_unique_hrtn_id(
-#                     request.session["user_email"]
-#                 ),  # 로그인아이디필요
-#                 hrtn_nm=routine.hrtn_nm,
-#                 hrtn_cat="건강",
-#                 hrtn_tag=routine.hrtn_tag,
-#                 hrtn_set=routine.hrtn_set,
-#                 hrtn_reps=routine.hrtn_reps,
-#                 hrtn_sdate=routine.hrtn_sdate,
-#                 hrtn_time=routine.hrtn_time,
-#                 hrtn_alram=routine.hrtn_alram,
-#                 hrtn_day=routine.hrtn_day,
-#             )
+# 루틴추가_건강
+@app.post("/h_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: HRoutineCreate, request: Request):
+    try:
+        if routine.hrtn_day == "":
+            routine.hrtn_day = None
 
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#             return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+        hrtn_id = generate_unique_hrtn_id(routine.hrtn_mem)
+        with SessionLocal() as db:
+            db_routine = HRTN_SETTING(
+                hrtn_mem=routine.hrtn_mem,
+                hrtn_id=hrtn_id,
+                hrtn_nm=routine.hrtn_nm,
+                hrtn_cat="건강",
+                hrtn_tag=routine.hrtn_tag,
+                hrtn_set=routine.hrtn_set,
+                hrtn_reps=routine.hrtn_reps,
+                hrtn_sdate=routine.hrtn_sdate,
+                hrtn_time=routine.hrtn_time,
+                hrtn_alram=routine.hrtn_alram,
+                hrtn_day=routine.hrtn_day,
+                hrtn_edate=None,
+            )
+            logger.error("-----------------------------------")
+            logging.error(f"Routine to add: {db_routine}")
+            db.add(db_routine)
+            db.commit()
+            # db.refresh(db_routine)
+            return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}
 
 
-# # 루틴추가_영양
-# @app.post("/p_routines")  # , response_model=RoutineCreate)
-# def create_routine(routine: PRoutineCreate, request: Request):
-#     email = request.session["user_email"]
-#     try:
-#         prtn_id = generate_unique_prtn_id(email)
-#         with SessionLocal() as db:
-#             db_routine = PRTN_SETTING(
-#                 prtn_mem=email,  # 로그인아이디필요
-#                 prtn_id="",
-#                 prtn_nm=routine.prtn_nm,
-#                 prtn_cat="영양",
-#                 prtn_tag="영양",
-#                 prtn_set=routine.prtn_set,
-#                 prtn_reps=routine.prtn_reps,
-#                 prtn_sdate=routine.prtn_sdate,
-#                 prtn_time=routine.prtn_time,
-#                 prtn_alram=routine.prtn_alram,
-#                 prtn_day=routine.prtn_day,
-#             )
-#             db.add(db_routine)
-#             db.commit()
-#             db.refresh(db_routine)
-#         return db_routine
-#     except Exception as e:
-#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
-#         # return {"error": "데이터 삽입 중 오류 발생"}
+# 루틴추가_영양
+@app.post("/p_routines")  # , response_model=RoutineCreate)
+def create_routine(routine: PRoutineCreate, request: Request):
+    try:
+        prtn_id = generate_unique_prtn_id(routine.prtn_mem)
+        with SessionLocal() as db:
+            db_routine = PRTN_SETTING(
+                prtn_mem=routine.prtn_mem,  # 로그인아이디필요
+                prtn_id="",
+                prtn_nm=routine.prtn_nm,
+                prtn_cat="영양",
+                prtn_tag="영양",
+                prtn_set=routine.prtn_set,
+                prtn_reps=routine.prtn_reps,
+                prtn_sdate=routine.prtn_sdate,
+                prtn_time=routine.prtn_time,
+                prtn_alram=routine.prtn_alram,
+                prtn_day=routine.prtn_day,
+                prtn_edate=None,
+            )
+            db.add(db_routine)
+            db.commit()
+            # db.refresh(db_routine)
+        return db_routine
+    except Exception as e:
+        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        return {"error": "데이터 삽입 중 오류 발생"}
 
 
 ####################################################### 루틴리스트 받아오기
@@ -1070,27 +1080,31 @@ def get_color_by_func(func):
 #     )
 #     return testdata
 
+today = datetime.today().date()
+korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+day_of_week = korean_days[today.weekday()]
+
 
 @app.get("/test2")
 def test2(db: Session = Depends(get_db)):
     try:
-        current_day = "토"
-        today_str = "2023-10-28"
+        # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        # today_day = datetime.today().strftime("%a")  # '일'
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
         testdata2 = (
-            db.query(HRTN_SETTING)
+            db.query(ERTN_SETTING)
             .filter(
                 and_(
-                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.is_(None),
-                        HRTN_SETTING.hrtn_day.like(
-                            f"%{current_day}%"
-                        ),  # hrtn_day에 current_day가 포함되어 있는지 검사
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate.is_(None),
-                        func.date(HRTN_SETTING.hrtn_edate)
-                        == today_str,  # hrtn_edate가 오늘 날짜인지 검사
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
                     ),
                 )
             )
@@ -1105,71 +1119,435 @@ def test2(db: Session = Depends(get_db)):
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
     try:
-        # now = datetime.now()
-        # today = now.date()
-        # day_name_mapping = {
-        #     "MONDAY": Weekday.월,
-        #     "TUESDAY": Weekday.화,
-        #     "WEDNESDAY": Weekday.수,
-        #     "THURSDAY": Weekday.목,
-        #     "FRIDAY": Weekday.금,
-        #     "SATURDAY": Weekday.토,
-        #     "SUNDAY": Weekday.일,
-        # }
-        # current_day = day_name_mapping[now.strftime("%A").upper()].name
-        # ## 토
-        # today_str = today.strftime("%Y-%m-%d")
-        ## 2023-10-28
         # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        # today_day = datetime.today().strftime("%a")
-        current_day = "토"
-        today_str = "2023-10-28"
-        testdata3 = db.query(func.count(HRTN_SETTING)).filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day.is_(None),
-                    HRTN_SETTING.hrtn_day.like(
-                        f"%{current_day}%"
-                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate.is_(None),
-                    func.date(HRTN_SETTING.hrtn_edate)
-                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
-                ),
+        # today_day = datetime.today().strftime("%a")  # '일'
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
+        testdata3 = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
             )
+            # .all()
+            .count()
         )
         return testdata3
     except Exception as e:
         print(e)
 
 
-## 운동루틴 count 조회
-## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
 @app.get("/test4")
 def test4(db: Session = Depends(get_db)):
     try:
-        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        today_day = datetime.today().strftime("%a")  # '일'
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
         testdata4 = (
+            db.query(PRTN_SETTING).filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return testdata4
+    except Exception as e:
+        print(e)
+
+
+## 운동루틴 count 조회
+## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
+@app.get("/rtntotal")
+def rtntotal(db: Session = Depends(get_db)):
+    try:
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
+        ertn = (
+            db.query(ERTN_SETTING)
+            .filter(
+                and_(
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        hrtn = (
             db.query(HRTN_SETTING)
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
-                        HRTN_SETTING.hrtn_day.like(f"%{today_day}%"),
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate == today_date,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
                         HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
             )
             .count()
         )
-        return testdata4
+        prtn = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        return ertn + hrtn + prtn
+    except Exception as e:
+        print(e)
+
+
+@app.get("/fintotal")
+def fintotal(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+        prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+        efin = (
+            db.query(ERTN_SETTING).filter(
+                and_(
+                    ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                    cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        hfin = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        pfin = (
+            db.query(PRTN_SETTING).filter(
+                and_(
+                    PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                    cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return efin + hfin + pfin
+    except Exception as e:
+        print(e)
+
+
+@app.get("/finfunc")
+# def finfunc(userEmail: str, db: Session = Depends(get_db)):
+def finfunc(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+        prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+        ertn = (
+            db.query(ERTN_SETTING).filter(
+                and_(
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        hrtn = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        prtn = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            .all()
+            # .count()
+        )
+        pos_e = func.position("@", ERTN_FIN.ertn_id)
+        pos_h = func.position("@", HRTN_FIN.hrtn_id)
+        pos_p = func.position("@", PRTN_FIN.prtn_id)
+        efin = (
+            db.query(ERTN_SETTING).filter(
+                and_(
+                    ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                    and_(
+                        cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                        func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == "qwert0175@n",
+                    ),
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        hfin = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    and_(
+                        cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                        func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == "qwert0175@n",
+                    ),
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        pfin = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                    and_(
+                        cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                        func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
+                    ),
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            .all()
+            # .count()
+        )
+        return (
+            efin,
+            hfin,
+            pfin,
+            ertn,
+            hrtn,
+            prtn,
+        )
+    except Exception as e:
+        print(e)
+
+
+@app.get("/testpos")
+def test6(db: Session = Depends(get_db)):
+    pos_p = func.position("@", PRTN_FIN.prtn_id)
+    testpos = (
+        db.query(PRTN_SETTING)
+        .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .filter(func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n")
+        .all()
+    )
+    return testpos
+
+
+@app.get("/test6")
+def test6(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
+        testdata6 = (
+            db.query(HRTN_SETTING)
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            .all()
+            # .count()
+        )
+        return testdata6
+    except Exception as e:
+        print(e)
+
+
+@app.get("/test7")
+def test7(db: Session = Depends(get_db)):
+    try:
+        ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+        # today = datetime.today().date()
+        # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        # day_of_week = korean_days[today.weekday()]
+        testdata7 = (
+            db.query(ERTN_SETTING)
+            .filter(
+                and_(
+                    ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                    cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            .all()
+            # .count()
+        )
+        return testdata7
+    except Exception as e:
+        print(e)
+
+
+@app.get("/test8")
+def test8(db: Session = Depends(get_db)):
+    try:
+        prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+        testdata8 = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                    cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            .all()
+            # .count()
+        )
+        return testdata8
     except Exception as e:
         print(e)
 

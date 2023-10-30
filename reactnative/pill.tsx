@@ -33,7 +33,19 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   userName,
   userEmail,
 }) => {
-  // 뒤로 가기 버튼 클릭 시 실행할 함수
+  //검색창
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  // 검색어가 변경될 때 호출될 함수
+  const handleKeywordChange = (newKeyword: string) => {
+    // 이곳에서 새로운 검색어를 사용할 수 있습니다.
+    console.log('새로운 검색어:', newKeyword);
+  };
+  const handleSearchSelect = (selectedValue: string) => {
+    console.log('Selected value:', selectedValue);
+    setSelectedValue(selectedValue);
+  };
+
+  /// 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();
   };
@@ -131,7 +143,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!routineName || !set || !reps) {
+    if (!selectedValue || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
@@ -144,10 +156,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const ertn_alram = notificationEnabled ? 1 : 0;
 
         const requestData = {
-          prtn_nm: routineName,
+          prtn_nm: selectedValue,
           prtn_set: parseInt(set),
           prtn_reps: parseInt(reps),
-          prtn_day: daysString,
+          prtn_day: daysString || null,
           prtn_sdate: selectedDate || new Date().toDateString(),
           prtn_time: selectedTime || new Date().toTimeString(),
           prtn_alram: ertn_alram,
@@ -190,7 +202,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         <ScrollView style={styles.scrollView}>
           {/* 루틴입력 */}
           <View style={{zIndex: 1}}>
-            <Search />
+            <Search
+              onKeywordChange={handleKeywordChange}
+              onSelect={handleSearchSelect}
+            />
           </View>
           {/* 
           <View style={styles.Routinename}>
