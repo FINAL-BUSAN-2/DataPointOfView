@@ -5,7 +5,7 @@ from urllib.parse import quote
 import httpx
 
 from sqlalchemy import create_engine, Column, String, Integer, func, or_, and_
-from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc
+from sqlalchemy import ForeignKey, text, Table, MetaData, Float, Date, desc, cast
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.sql import null
@@ -1242,7 +1242,7 @@ def test5(db: Session = Depends(get_db)):
             .filter(
                 and_(
                     HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                    HRTN_SETTING.hrtn_edate == HRTN_FIN.fin_hrtn_time,
+                    HRTN_SETTING.hrtn_edate == cast(HRTN_FIN.fin_hrtn_time, Date),
                     HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
                     or_(
                         HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
