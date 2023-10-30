@@ -1387,7 +1387,7 @@ def finfunc(db: Session = Depends(get_db)):
             # .all()
             .count()
         )
-        return (efin, hfin, pfin) / (ertn, hrtn, prtn) * 100
+        return (efin + hfin + pfin) / (ertn + hrtn + prtn) * 100
     except Exception as e:
         print(e)
 
