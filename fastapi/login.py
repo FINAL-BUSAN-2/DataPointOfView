@@ -1172,13 +1172,13 @@ def test4(db: Session = Depends(get_db)):
 
 ## 운동루틴 count 조회
 ## 달성된3루틴/(운동루틴 + 영양루틴 + 기타루틴)
-@app.get("/test5")
-def test4(db: Session = Depends(get_db)):
+@app.get("/rtntotal")
+def rtntotal(db: Session = Depends(get_db)):
     try:
         # today = datetime.today().date()
         # korean_days = ["월", "화", "수", "목", "금", "토", "일"]
         # day_of_week = korean_days[today.weekday()]
-        testdata2 = (
+        ertn = (
             db.query(ERTN_SETTING)
             .filter(
                 and_(
@@ -1195,7 +1195,7 @@ def test4(db: Session = Depends(get_db)):
             )
             .count()
         )
-        testdata3 = (
+        hrtn = (
             db.query(HRTN_SETTING)
             .filter(
                 and_(
@@ -1212,7 +1212,7 @@ def test4(db: Session = Depends(get_db)):
             )
             .count()
         )
-        testdata4 = (
+        prtn = (
             db.query(PRTN_SETTING)
             .filter(
                 and_(
@@ -1229,7 +1229,194 @@ def test4(db: Session = Depends(get_db)):
             )
             .count()
         )
-        return testdata2 + testdata3 + testdata4
+        return ertn + hrtn + prtn
+    except Exception as e:
+        print(e)
+
+
+@app.get("/fintotal")
+def fintotal(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+        prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+        efin = (
+            db.query(ERTN_SETTING).filter(
+                and_(
+                    ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                    cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        hfin = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        pfin = (
+            db.query(PRTN_SETTING).filter(
+                and_(
+                    PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                    cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return efin + hfin + pfin
+    except Exception as e:
+        print(e)
+
+
+@app.get("/finfunc")
+def finfunc(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+        prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+        ertn = (
+            db.query(ERTN_SETTING)
+            .filter(
+                and_(
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        hrtn = (
+            db.query(HRTN_SETTING)
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        prtn = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        efin = (
+            db.query(ERTN_SETTING).filter(
+                and_(
+                    ERTN_SETTING.ertn_id.in_(ertn_ids_query),
+                    cast(ERTN_FIN.fin_ertn_time, Date) == today,
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        hfin = (
+            db.query(HRTN_SETTING).filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        pfin = (
+            db.query(PRTN_SETTING).filter(
+                and_(
+                    PRTN_SETTING.prtn_id.in_(prtn_ids_query),
+                    cast(PRTN_FIN.fin_prtn_time, Date) == today,
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
+            )
+            # .all()
+            .count()
+        )
+        return (efin + hfin + pfin) / (ertn + hrtn + prtn)
     except Exception as e:
         print(e)
 
