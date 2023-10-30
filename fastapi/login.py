@@ -1362,7 +1362,7 @@ def finfunc(db: Session = Depends(get_db)):
             db.query(ERTN_FIN).filter(
                 and_(
                     cast(ERTN_FIN.fin_ertn_time, Date) == today,
-                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == "qwert0175@n",
+                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 2) == "qwert0175@n",
                 ),
             )
             # .all()
@@ -1372,7 +1372,7 @@ def finfunc(db: Session = Depends(get_db)):
             db.query(HRTN_FIN).filter(
                 and_(
                     cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == "qwert0175@n",
+                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 2) == "qwert0175@n",
                 ),
             )
             # .all()
@@ -1383,7 +1383,7 @@ def finfunc(db: Session = Depends(get_db)):
             .filter(
                 and_(
                     cast(PRTN_FIN.fin_prtn_time, Date) == today,
-                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
+                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 2) == "qwert0175@n",
                 )
             )
             .all()
