@@ -1454,6 +1454,7 @@ def test6(db: Session = Depends(get_db)):
         db.query(PRTN_SETTING)
         .join(PRTN_FIN, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
         .filter(func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n")
+        .all()
     )
     return testpos
 
