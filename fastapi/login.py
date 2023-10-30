@@ -1105,40 +1105,24 @@ def test2(db: Session = Depends(get_db)):
 @app.get("/test3")
 def test3(db: Session = Depends(get_db)):
     try:
-        # now = datetime.now()
-        # today = now.date()
-        # day_name_mapping = {
-        #     "MONDAY": Weekday.월,
-        #     "TUESDAY": Weekday.화,
-        #     "WEDNESDAY": Weekday.수,
-        #     "THURSDAY": Weekday.목,
-        #     "FRIDAY": Weekday.금,
-        #     "SATURDAY": Weekday.토,
-        #     "SUNDAY": Weekday.일,
-        # }
-        # current_day = day_name_mapping[now.strftime("%A").upper()].name
-        # ## 토
-        # today_str = today.strftime("%Y-%m-%d")
-        ## 2023-10-28
-        # today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
-        # today_day = datetime.today().strftime("%a")
-        current_day = "토"
-        today_str = "2023-10-28"
-        testdata3 = db.query(func.count(HRTN_SETTING)).filter(
-            and_(
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
-                or_(
-                    HRTN_SETTING.hrtn_day.is_(None),
-                    HRTN_SETTING.hrtn_day.like(
-                        f"%{current_day}%"
-                    ),  # hrtn_day에 current_day가 포함되어 있는지 검사
-                ),
-                or_(
-                    HRTN_SETTING.hrtn_edate.is_(None),
-                    func.date(HRTN_SETTING.hrtn_edate)
-                    == today_str,  # hrtn_edate가 오늘 날짜인지 검사
-                ),
+        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        today_day = datetime.today().strftime("%a")  # '일'
+        testdata3 = (
+            db.query(PRTN_SETTING)
+            .filter(
+                and_(
+                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    or_(
+                        PRTN_SETTING.prtn_day.like(f"%{today_day}%"),
+                        PRTN_SETTING.prtn_day.is_(None),
+                    ),
+                    or_(
+                        PRTN_SETTING.prtn_edate == today_date,  ## 2023-10-29
+                        PRTN_SETTING.prtn_edate.is_(None),
+                    ),
+                )
             )
+            .count()
         )
         return testdata3
     except Exception as e:
@@ -1162,7 +1146,7 @@ def test4(db: Session = Depends(get_db)):
                         HRTN_SETTING.hrtn_day.is_(None),
                     ),
                     or_(
-                        HRTN_SETTING.hrtn_edate == today_date,  ## 2023-10-29
+                        func.date(HRTN_SETTING.hrtn_edate) == today_date,  ## 2023-10-29
                         HRTN_SETTING.hrtn_edate.is_(None),
                     ),
                 )
@@ -1170,6 +1154,62 @@ def test4(db: Session = Depends(get_db)):
             .count()
         )
         return testdata4
+    except Exception as e:
+        print(e)
+
+
+@app.get("/test5")
+def test5(db: Session = Depends(get_db)):
+    try:
+        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        today_day = datetime.today().strftime("%a")  # '일'
+        testdata5 = (
+            db.query(ERTN_SETTING)
+            .filter(
+                and_(
+                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    or_(
+                        ERTN_SETTING.ertn_day.like(f"%{today_day}%"),
+                        ERTN_SETTING.ertn_day.is_(None),
+                    ),
+                    or_(
+                        ERTN_SETTING.ertn_edate == today_date,  ## 2023-10-29
+                        ERTN_SETTING.ertn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        return testdata5
+    except Exception as e:
+        print(e)
+
+
+@app.get("/test6")
+def test5(db: Session = Depends(get_db)):
+    try:
+        hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+        today_date = datetime.today().strftime("%Y-%m-%d")  # '2023-10-29'
+        today_day = datetime.today().strftime("%a")  # '일'
+        testdata6 = (
+            db.query(HRTN_SETTING)
+            .filter(
+                and_(
+                    HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    or_(
+                        HRTN_SETTING.hrtn_day.like(f"%{today_day}%"),
+                        HRTN_SETTING.hrtn_day.is_(None),
+                    ),
+                    or_(
+                        HRTN_SETTING.hrtn_edate == today_date,  ## 2023-10-29
+                        HRTN_SETTING.hrtn_edate.is_(None),
+                    ),
+                )
+            )
+            .count()
+        )
+        return testdata6
     except Exception as e:
         print(e)
 
