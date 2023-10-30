@@ -1337,7 +1337,8 @@ def finfunc(db: Session = Depends(get_db)):
             .count()
         )
         prtn = (
-            db.query(PRTN_SETTING).filter(
+            db.query(PRTN_SETTING)
+            .filter(
                 and_(
                     PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
                     or_(
@@ -1350,8 +1351,8 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            # .all()
-            .count()
+            .all()
+            # .count()
         )
         efin = (
             db.query(ERTN_SETTING).filter(
@@ -1392,7 +1393,8 @@ def finfunc(db: Session = Depends(get_db)):
             .count()
         )
         pfin = (
-            db.query(PRTN_SETTING).filter(
+            db.query(PRTN_SETTING)
+            .filter(
                 and_(
                     PRTN_SETTING.prtn_id.in_(prtn_ids_query),
                     cast(PRTN_FIN.fin_prtn_time, Date) == today,
@@ -1407,8 +1409,8 @@ def finfunc(db: Session = Depends(get_db)):
                     ),
                 )
             )
-            # .all()
-            .count()
+            .all()
+            # .count()
         )
         return efin, hfin, pfin, ertn, hrtn, prtn
     except Exception as e:
