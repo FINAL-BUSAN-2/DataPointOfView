@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 
 interface SearchProps {
   onKeywordChange: (newKeyword: string) => void;
-  onSelect: (selectedValue: string) => void;
+  onSelect: (pillName: string, pillCd: string) => void;
 }
 
 interface autoDatas {
@@ -104,7 +104,7 @@ function Search(props: SearchProps) {
                 onPress={() => {
                   setKeyword(item.pill_nm);
                   setKeyItems([]);
-                  props.onSelect(item.pill_nm);
+                  props.onSelect(item.pill_nm, item.pill_cd);
                 }}>
                 <Text>{item.pill_nm}</Text>
                 {/* <Image

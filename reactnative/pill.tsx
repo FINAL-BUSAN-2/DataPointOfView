@@ -33,6 +33,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   userName,
   userEmail,
 }) => {
+  const [selectedPillCd, setSelectedPillCd] = useState<string | null>(null);
   //검색창
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   // 검색어가 변경될 때 호출될 함수
@@ -143,7 +144,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   // 추가하기 핸들러
   const handleSubmit = async () => {
-    if (!selectedValue || !set || !reps) {
+    if (!selectedPillCd || !set || !reps) {
       // 필수 항목 중 하나라도 비어 있을 경우 경고 표시
       Alert.alert('모든 필수 항목을 작성해 주세요.');
     } else {
@@ -156,7 +157,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const ertn_alram = notificationEnabled ? 1 : 0;
 
         const requestData = {
-          prtn_nm: selectedValue,
+          prtn_nm: selectedPillCd,
           prtn_set: parseInt(set),
           prtn_reps: parseInt(reps),
           prtn_day: daysString || null,
@@ -170,6 +171,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           prtn_mem: userEmail,
         };
         console.log('44444444444444444444444===', requestData);
+        console.log('이름', typeof requestData.prtn_nm);
 
         const response = await axios.post(
           'http://43.200.178.131:3344/p_routines',
@@ -204,7 +206,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           <View style={{zIndex: 1}}>
             <Search
               onKeywordChange={handleKeywordChange}
-              onSelect={handleSearchSelect}
+              onSelect={(pillName, pillCd) => {
+                setSelectedPillCd(pillCd);
+                setSelectedValue(pillName);
+              }}
             />
           </View>
           {/* 
