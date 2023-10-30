@@ -66,6 +66,20 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   const handleCameraButtonClick = () => {
     setIsCameraOpen(true);
   };
+
+  //검색창
+  // 검색어가 변경될 때 호출될 함수
+  const handleKeywordChange = (newKeyword: string) => {
+    // 이곳에서 새로운 검색어를 사용할 수 있습니다.
+    console.log('새로운 검색어:', newKeyword);
+  };
+
+  const handleSearchSelect = (selectedValue: string) => {
+    console.log('Selected value:', selectedValue);
+    // 이제 selectedValue에 선택된 검색 결과가 있습니다.
+    // 원하는 로직을 여기에 추가하세요.
+  };
+
   // 뒤로 가기 버튼 클릭 시 실행할 함수
   const handleBackPress = () => {
     navigation.goBack();
@@ -527,7 +541,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                   placeholder="루틴 이름을 설정해주세요"
                 /> */}
               <View style={{zIndex: 1}}>
-                <HealthSearch />
+                <HealthSearch
+                  onKeywordChange={handleKeywordChange}
+                  onSelect={handleSearchSelect}
+                />
               </View>
               {/* 카메라 아이콘
               <TouchableOpacity
