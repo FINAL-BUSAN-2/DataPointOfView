@@ -2,19 +2,15 @@ import React, {Component, useEffect, useState} from 'react';
 import {
   Text,
   View,
-  Image,
   StyleSheet,
   TouchableOpacity,
   Linking,
+  Image,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 
 type NewsData = {
-  // DB 이전
-  // title: string;
-  // href: string;
-  // img: string;
   news_cat: string;
   news_title: string;
   news_link: string;
@@ -31,7 +27,7 @@ type NewsInfoProps = {
 };
 
 const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
-  const {newsData} = route.params;
+  const {newsData, search, icon} = route.params;
   const handleBackPress = () => {
     navigation.goBack();
   };
@@ -56,61 +52,119 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => handleBackPress()}>
-            <Text style={styles.backButton}>{'<'}</Text>
-          </TouchableOpacity>
+          {/* 앱 로고 및 이름 */}
+          <View style={styles.leftContainer}>
+            {/* 로고 클릭 이벤트 */}
+            <TouchableOpacity
+              onPress={() => {
+                console.log('제발');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Main'}],
+                });
+              }}>
+              <Image
+                source={require('./android/app/src/img/red.png')}
+                style={{
+                  width: 45,
+                  height: 45,
+                  marginRight: 16,
+                  marginLeft: 16,
+                }}
+              />
+            </TouchableOpacity>
+
+            <Text style={styles.title}> 웰라밸</Text>
+          </View>
+
+          {/* 우측 상단 */}
+          <View style={styles.rightContainer}>
+            {/* 알림 아이콘 */}
+            <Image
+              source={require('./android/app/src/img/notification.png')}
+              style={{
+                width: 30,
+                height: 30,
+              }}
+            />
+            {/* 환경설정 아이콘 */}
+            <TouchableOpacity onPress={goHplogSet}>
+              <Image
+                source={require('./android/app/src/img/settings.png')}
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.newsTitleContainer}>
+          <Text style={styles.articleTitleText}>📰 Daily article</Text>
+        </View>
+        <View style={styles.newslabel}>
+          <Text style={styles.newsContentText}>{search}</Text>
+          <View style={styles.newsIcon}>
+            <Text style={styles.newsContentIcon}>{icon}</Text>
+          </View>
         </View>
         {newsData &&
           newsData.map((news, index) => (
-            // DB 이전
-            // <TouchableOpacity key={index} onPress={() => openNews(news.href)}>
-            //   <View style={styles.newstab}>
-            //     <Text key={index}>{news.title}</Text>
             <TouchableOpacity
+              style={styles.newstab}
               key={index}
               onPress={() => openNews(news.news_link)}>
-              <View style={styles.newstab}>
-                <Text key={index}>{news.news_title}</Text>
-              </View>
+              <Text style={styles.newsTitleText} key={index}>
+                {news.news_title}
+              </Text>
             </TouchableOpacity>
           ))}
         {/* 네비게이션바 */}
         <View style={styles.navBarContainer}>
-          {/* 소셜 */}
-          <TouchableOpacity onPress={movetest4}>
-            <View style={styles.upTab}>
-              <Image
-                source={require('./android/app/src/img/thumb_up.png')}
-                style={styles.upIcon}
-              />
-              <Text>소셜</Text>
+          {/* 아티클 */}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Social'}],
+              });
+            }}>
+            <View style={styles.articleTab}>
+              <View style={styles.articleTab2}>
+                <Text style={styles.articleemoji}>📰</Text>
+                <Text style={styles.navarticleText}>아티클</Text>
+              </View>
             </View>
           </TouchableOpacity>
           {/* 홈 */}
           <TouchableOpacity
             onPress={() => {
-              console.log('호잇');
               navigation.reset({
                 index: 0,
                 routes: [{name: 'Main'}],
               });
             }}>
             <View style={styles.homeTab}>
-              <Image
-                source={require('./android/app/src/img/home.png')}
-                style={styles.homeIcon}
-              />
-              <Text style={styles.homeText}>홈</Text>
+              <View style={styles.homeTab2}>
+                <Text style={styles.homeemoji}>🏠</Text>
+                <Text style={styles.navText}>홈</Text>
+              </View>
             </View>
           </TouchableOpacity>
+
           {/* 개인 */}
-          <TouchableOpacity onPress={movetest3}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Access'}],
+              });
+            }}>
             <View style={styles.accTab}>
-              <Image
-                source={require('./android/app/src/img/accessibility.png')}
-                style={styles.accIcon}
-              />
-              <Text>개인</Text>
+              <View style={styles.accTab2}>
+                <Text style={styles.accemoji}>🙋</Text>
+                <Text style={styles.navText}>개 인</Text>
+              </View>
             </View>
           </TouchableOpacity>
         </View>
@@ -122,17 +176,34 @@ const NewsInfo: React.FC<NewsInfoProps> = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: 'white',
   },
 
   header: {
+    backgroundColor: '#fff',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
     flexDirection: 'row',
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
-    borderBottomWidth: 0,
-    borderBottomColor: '#ddd',
+  },
+
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  title: {
+    fontSize: 23,
+    fontWeight: 'bold',
+  },
+
+  rightContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 80,
   },
 
   backButton: {
@@ -141,71 +212,159 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 
+  //네비게이션바
   navBarContainer: {
+    flex: 1.5,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 70,
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    elevation: 50, // for Android
+    borderTopColor: 'rgb(231,230,230)',
+    borderTopWidth: 1,
+    height: '8%',
+    backgroundColor: '#fff',
+    zIndex: 2,
   },
-
-  // 추천
-  upTab: {
+  // 아티클 영역
+  articleTab: {
+    flex: 3,
+    width: 70,
+    left: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    left: 15,
   },
-
-  // 추천 아이콘
-  upIcon: {
-    width: 35,
-    height: 35,
+  // 아티클 영역2
+  articleTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 58,
+    borderRadius: 35,
+    margin: 5,
+    backgroundColor: 'rgb(245,235,224)',
   },
-
+  // 아티클 이모지
+  articleemoji: {
+    fontSize: 25,
+  },
+  // 아티클 텍스트
+  navarticleText: {
+    fontSize: 13,
+    // fontWeight: 'bold',
+    color: 'black',
+  },
+  // 홈 영역
   homeTab: {
-    bottom: 20,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    flex: 3,
+    width: 70,
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(43,58,85,0.7)',
   },
-
-  homeIcon: {
-    width: 80,
-    height: 80,
+  // 홈 영역2
+  homeTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
-  homeText: {
-    bottom: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
+  // 홈 이모지
+  homeemoji: {
+    fontSize: 25,
   },
-
+  // 개인 영역
   accTab: {
+    flex: 3,
+    width: 70,
+    right: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    right: 15,
   },
-
-  accIcon: {
-    width: 35,
-    height: 35,
+  // 개인 영역2
+  accTab2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // 개인 이모지
+  accemoji: {
+    fontSize: 25,
+  },
+  // 네비게이션 텍스트
+  navText: {
+    fontSize: 13,
+    // fontWeight: 'bold',
+    color: 'black',
   },
 
   newstab: {
-    height: 100,
-    borderWidth: 1,
-    borderColor: 'black',
-    margin: 15,
+    height: '8%',
+    borderLeftColor: '#AFABAB',
+    borderLeftWidth: 1,
+    marginVertical: 15,
+    marginHorizontal: 30,
+    justifyContent: 'center',
+  },
+
+  articleTitleText: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 22,
+    fontStyle: 'italic',
+    fontWeight: '700',
+    margin: 5,
+  },
+
+  newsTitleText: {fontSize: 16, marginHorizontal: '5%'},
+
+  newsTitleContainer: {
+    height: '7%',
+    justifyContent: 'center',
+  },
+
+  newslabel: {
+    marginVertical: 15,
+    marginHorizontal: 30,
+    height: 70,
+    backgroundColor: '#FEFCF3',
+    borderTopColor: '#AFABAB',
+    borderTopWidth: 1,
+    borderBottomColor: '#AFABAB',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+  },
+
+  newsContentText: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: '400',
+    width: '70%',
+  },
+
+  newsIcon: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#AFABAB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  newsContentIcon: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 30,
+    fontWeight: '400',
   },
 });
 

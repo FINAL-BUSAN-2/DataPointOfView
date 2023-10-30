@@ -45,11 +45,15 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
   useEffect(() => {
-    fetch('http://43.200.178.131:3344/health_piechartdata')
+    fetch(
+      `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
+    )
       .then(response => response.json())
       .then(healthdata => setChartData(healthdata))
       .catch(error => console.error('Error:', error));
-    fetch('http://43.200.178.131:3344/pill_piechartdata')
+    fetch(
+      `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
+    )
       .then(response => response.json())
       .then(pilldata => setChartData2(pilldata))
       .catch(error => console.error('Error:', error));
