@@ -136,7 +136,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           ertn_nm: routineName,
           ertn_set: parseInt(set),
           ertn_reps: parseInt(reps),
-          ertn_day: daysString,
+          ertn_day: daysString || null,
           ertn_sdate: selectedDate || new Date().toDateString(),
           ertn_time: selectedTime || new Date().toTimeString(),
           ertn_alram: ertn_alram,
