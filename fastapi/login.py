@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, File, UploadFile
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from urllib.parse import quote
 import httpx
 
@@ -1200,3 +1200,9 @@ class HEALTH_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
+
+@app.post("/imageSearch")
+async def upload_image(file: UploadFile):
+    # 받은 파일을 저장하거나 처리합니다.
+    # 이 예제에서는 파일을 저장하지 않고 파일 이름을 반환합니다.
+    return JSONResponse(content={"filename": file.filename})
