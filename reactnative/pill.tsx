@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
-    // marginBottom:20,
+    //// marginBottom:20,
   },
   Routineicon_add: {
     width: 34,
