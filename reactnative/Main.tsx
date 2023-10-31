@@ -138,7 +138,7 @@ const Main: React.FC<MainProps> = ({
               }}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>웰라밸</Text>
+          <Text style={styles.title}>웰라밸 / {userName}님</Text>
         </View>
         {/* 우측 상단 */}
         <View style={styles.rightContainer}>
