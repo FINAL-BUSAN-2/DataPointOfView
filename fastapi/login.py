@@ -524,9 +524,6 @@ def create_routine(routine: ERoutineCreate, request: Request):
 @app.post("/h_routines")  # , response_model=RoutineCreate)
 def create_routine(routine: HRoutineCreate, request: Request):
     try:
-        if routine.hrtn_day == "":
-            routine.hrtn_day = None
-
         hrtn_id = generate_unique_hrtn_id(routine.hrtn_mem)
         with SessionLocal() as db:
             db_routine = HRTN_SETTING(
@@ -762,36 +759,6 @@ def get_merged_routines_from_database(email):
         # print(f"merged_routines에 포함된 전체 루틴 수: {len(merged_routines)}")
 
     return merged_routines
-
-
-# 루틴 데이터 가져오는 엔드포인트
-# @app.get("/rtnlist")
-# def rtnlist(db: Session = Depends(get_db)):
-#     # ertn_setting 테이블에서 ertn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     ertn_list = (
-#         db.query(ERTN_SETTING)
-#         .filter(ERTN_SETTING.ertn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     print(ertn_list)
-#     # prtn_setting 테이블에서 prtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     prtn_list = (
-#         db.query(PRTN_SETTING)
-#         .filter(PRTN_SETTING.prtn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     print(prtn_list)
-#     # hrtn_setting 테이블에서 hrtn_mem 값이 "qwert0175@naver.com"인 레코드 조회
-#     hrtn_list = (
-#         db.query(HRTN_SETTING)
-#         .filter(HRTN_SETTING.hrtn_mem == "qwert0175@naver.com")
-#         .all()
-#     )
-#     print(hrtn_list)
-#     # 세 결과를 합침
-#     combined_list = ertn_list + prtn_list + hrtn_list
-#     print(combined_list)
-#     return combined_list
 
 
 @app.get("/rtnlist")
@@ -1196,8 +1163,9 @@ def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
 
-@app.post('/imageSearch')
-def imageSearch(image:UploadFile):
+
+@app.post("/imageSearch")
+def imageSearch(image: UploadFile):
     try:
         image_info = {
             "filename": image.filename,
