@@ -1195,3 +1195,17 @@ class HEALTH_SEARCH(BaseModel):
 def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
+
+@app.post('/imageSearch')
+def imageSearch(image:UploadFile):
+    try:
+        image_info = {
+            "filename": image.filename,
+            "content_type": image.content_type,
+            "file_size": len(image.file.read()),
+        }
+        return JSONResponse(content=image_info)
+
+    except Exception as e:
+        result = {"message": "이미지 처리 중 오류 발생", "error": str(e)}
+        return JSONResponse(content=result, status_code=500)

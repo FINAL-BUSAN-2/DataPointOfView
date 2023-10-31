@@ -358,6 +358,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 10,
   },
   setrepsinput: {
@@ -377,6 +378,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '80%',
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 10,
   },
   defaultText: {
