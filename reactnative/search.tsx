@@ -113,6 +113,7 @@ function Search(props: SearchProps) {
         <View style={styles.autoSearchContainer}>
           <FlatList
             data={keyItems}
+            style={{flex: 1}}
             keyExtractor={item => item.pill_nm}
             renderItem={({item}) => (
               <TouchableOpacity
@@ -140,16 +141,16 @@ function Search(props: SearchProps) {
 const styles = StyleSheet.create({
   //검색창박스
   container: {
-    marginTop: 20, //위로부터 띄우기
+    flex: 0.5,
+    // marginTop: 20, //위로부터 띄우기
     marginHorizontal: 20, //양옆띄우기
-    width: '75%',
+    width: '85%',
     height: 50, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     flexDirection: 'row', // 방향 설정
     alignItems: 'center', // 세로 정렬
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     justifyContent: 'space-between', // 가로 정렬
-    backgroundColor: '#fff',
     borderRadius: 30,
     //borderWidth: 1,
     //borderColor: 'black',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   },
   //검색창
   search: {
-    // flex: 1, // 검색창이 가능한 한 많은 공간을 차지하도록
+    flex: 1, // 검색창이 가능한 한 많은 공간을 차지하도록
     paddingLeft: 40,
     paddingRight: 15,
     backgroundColor: '#fff', //검색창 색상
@@ -179,14 +180,18 @@ const styles = StyleSheet.create({
   },
   //연관검색창
   autoSearchContainer: {
-    position: 'absolute',
+    flex: 1,
+    height: 300,
+    // position: 'absolute',
     alignSelf: 'center',
-    top: 60,
-    maxHeight: '100%', // 높이를 제한
-    width: '70%',
+    // top: 60,
+    maxHeight: 300, // 높이를 제한
+    width: '80%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
-    borderRadius: 15,
+    right: 16,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     borderWidth: 1,
     borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
@@ -196,7 +201,6 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    left: 10,
     justifyContent: 'space-between',
   },
   arrowIcon: {
