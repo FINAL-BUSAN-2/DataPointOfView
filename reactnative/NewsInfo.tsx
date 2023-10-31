@@ -61,38 +61,38 @@ const NewsInfo: React.FC<NewsInfoProps> = ({
         <View style={styles.header}>
           {/* 앱 로고 및 이름 */}
           <View style={styles.leftContainer}>
-            {/* 로고 클릭 이벤트 */}
-            <TouchableOpacity
-              onPress={() => {
-                console.log('제발');
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'Main'}],
-                });
-              }}>
+            {/* 알림 아이콘 */}
+            <TouchableOpacity>
               <Image
-                source={require('./android/app/src/img/red.png')}
+                source={require('./android/app/src/img/notification.png')}
                 style={{
-                  width: 45,
-                  height: 45,
-                  marginRight: 16,
+                  width: 30,
+                  height: 30,
                 }}
               />
             </TouchableOpacity>
 
-            <Text style={styles.title}>웰라밸 / {userName}님</Text>
+            {/* <Text style={styles.title}>웰라밸 / {userName}님</Text> */}
           </View>
-
-          {/* 우측 상단 */}
-          <View style={styles.rightContainer}>
-            {/* 알림 아이콘 */}
+          <TouchableOpacity
+            onPress={() => {
+              console.log('제발');
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Main'}],
+              });
+            }}>
             <Image
-              source={require('./android/app/src/img/notification.png')}
+              source={require('./android/app/src/img/logo.png')}
               style={{
-                width: 30,
-                height: 30,
+                width: 150,
+                height: 50,
+                // marginRight: 16,
               }}
             />
+          </TouchableOpacity>
+          {/* 우측 상단 */}
+          <View style={styles.rightContainer}>
             {/* 환경설정 아이콘 */}
             <TouchableOpacity onPress={goHplogSet}>
               <Image
@@ -211,13 +211,7 @@ const styles = StyleSheet.create({
   rightContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 80,
-  },
-
-  backButton: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginRight: 10,
+    // width: 80,
   },
 
   //네비게이션바
