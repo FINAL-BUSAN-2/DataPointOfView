@@ -1152,19 +1152,31 @@ class PILL_PROD_SEARCH(BaseModel):
 #     return pillsearch
 
 
-@app.get("/pillsearch/{pill_nm}")
-def pill_prod_search(pill_nm: str, db: Session = Depends(get_db)):
-    results = db.execute(
-        """
-        SELECT pill_prod.pill_nm, pill_func.func_emoji 
-        FROM pill_prod
-        INNER JOIN pill_cmb ON pill_prod.pill_cd = pill_cmb.cmb_func
-        INNER JOIN pill_func ON pill_cmb.cmb_func = pill_func.func_cd
-        WHERE pill_prod.pill_nm = :pill_nm  
-    """,
-        {"pill_nm": pill_nm},
-    ).fetchall()
-    return [{"pill_nm": row[0], "func_emoji": row[1]} for row in results]
+@app.get("/pillsearch")
+def pill_prod_search(db: Session = Depends(get_db)):
+    results = (
+        db.query(
+            PILL_PROD.pill_cd,
+            PILL_PROD.pill_nm,
+            PILL_CMB.cmb_func,
+            PILL_FUNC.func_cd,
+            PILL_FUNC.func_emoji,
+        )
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_func)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .all()
+    )
+
+    return [
+        {
+            "pill_cd": item[0],
+            "pill_nm": item[1],
+            "cmb_func": item[2],
+            "func_cd": item[3],
+            "func_emoji": item[4],
+        }
+        for item in results
+    ]
 
 
 class HEALTH_SEARCH(BaseModel):

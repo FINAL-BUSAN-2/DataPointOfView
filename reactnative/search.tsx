@@ -20,6 +20,7 @@ interface autoDatas {
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
+  func_emoji: string;
 }
 function Search(props: SearchProps) {
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ function Search(props: SearchProps) {
   };
 
   const fetchData = () => {
-    return fetch('http://43.200.178.131:3344/pillsearch')
+    return fetch(`http://43.200.178.131:3344/pillsearch`)
       .then(res => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -123,7 +124,9 @@ function Search(props: SearchProps) {
                   setKeyItems([]);
                   props.onSelect(item.pill_nm, item.pill_cd);
                 }}>
-                <Text>{item.pill_nm}</Text>
+                <Text>
+                  {item.func_emoji} {item.pill_nm}
+                </Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
                   style={styles.arrowIcon}
