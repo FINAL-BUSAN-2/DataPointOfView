@@ -1190,7 +1190,7 @@ def pill_prod_search(db: Session = Depends(get_db)):
     healthsearch = db.query(HEALTH).all()
     return healthsearch
 
-@app.get('/imageSearch')
+@app.post('/imageSearch')
 def imageSearch(image:UploadFile):
     try:
         image_info = {
