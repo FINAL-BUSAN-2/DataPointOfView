@@ -177,7 +177,16 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           // {timeout: 10000}, // 10초 타임아웃
         );
         if (response.status >= 200 && response.status < 300) {
-          Alert.alert('성공', '루틴이 성공적으로 추가되었습니다!');
+          Alert.alert(
+            '성공', // 제목
+            '루틴이 성공적으로 추가되었습니다!', // 메시지
+            [
+              {
+                text: '확인',
+                onPress: () => navigation.navigate('Main'),
+              },
+            ],
+          );
         }
       } catch (error) {
         Alert.alert('오류', '루틴을 추가하는 동안 문제가 발생했습니다.');
@@ -340,37 +349,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'center', // 수직 가운데 정렬
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  Routineinput: {
-    padding: 8,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  cameraicon: {
-    width: 34,
-    height: 34,
-    marginLeft: 30,
-  },
-  Routineicon: {
-    marginTop: 20, // Adjust this to change the vertical position of the timeline bar
-    left: 0,
-    width: 50,
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    borderWidth: 2.5,
-    borderColor: '#000000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    //// marginBottom:20,
-  },
-  Routineicon_add: {
-    width: 34,
-    height: 34,
   },
   scrollView: {},
 
