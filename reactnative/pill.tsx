@@ -346,38 +346,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  Routineinput: {
-    padding: 8,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  cameraicon: {
-    width: 34,
-    height: 34,
-    marginLeft: 30,
-  },
-  Routineicon: {
-    marginTop: 20, // Adjust this to change the vertical position of the timeline bar
-    left: 0,
-    width: 50,
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    borderWidth: 2.5,
-    borderColor: '#000000',
     justifyContent: 'center',
-    alignItems: 'center',
-    //// marginBottom:20,
-  },
-  Routineicon_add: {
-    width: 34,
-    height: 34,
+    backgroundColor: '#fff',
   },
   scrollView: {},
 
