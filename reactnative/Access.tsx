@@ -236,7 +236,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           <View style={styles.healthchart}>
             {chartData.pie_chart_data ? (
               <PieChart
-                widthAndHeight={100}
+                widthAndHeight={90}
                 series={hcount}
                 sliceColor={hcolor}
               />
@@ -249,7 +249,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           <View style={styles.pillchart}>
             {chartData2.pill_chart_data ? (
               <PieChart
-                widthAndHeight={100}
+                widthAndHeight={90}
                 series={pcount}
                 sliceColor={pcolor}
               />
@@ -263,20 +263,17 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
         {/* 통계 텍스트 영역 */}
         <View style={styles.statisticstextbox}>
-          {/* 성분 추천 */}
-          <Text style={styles.recotext}>
-            👍 : "비타민"을(를) 섭취하시는 걸 추천드려요
-          </Text>
-          {/* 추천 제품 */}
-          <Text style={styles.recoproducttext}>
-            ㄴ추천 제품 : "레모나","아이셔","레몬"
-          </Text>
-          {/* 부작용 */}
-          <Text style={styles.cautiontext}>
-            ❗ : "제품A"와 "제품B"같이 섭취 시
-          </Text>
-          {/* 부작용 */}
-          <Text style={styles.cautiontext2}>부작용이 있을 수 있어요!</Text>
+          <View style={styles.statictitle}>
+            <Text style={styles.statictitletext}>추천 영양제</Text>
+          </View>
+          {/* 추천 타이틀 */}
+          <Text style={styles.recotext}>다른 사람은 이런 것도 먹어요!</Text>
+          {/* 추천 제품1 */}
+          <Text style={styles.recoproducttext}>🎃 비타민군 - 쏠라c</Text>
+          {/* 추천 제품2 */}
+          <Text style={styles.cautiontext}>🎃 비타민군 - 쏠라c</Text>
+          {/* 추천 제품3 */}
+          <Text style={styles.cautiontext2}>🎃 비타민군 - 쏠라c</Text>
         </View>
       </View>
 
@@ -532,7 +529,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    top: 30,
   },
   // 운동 타이틀
   titlehealth: {
@@ -576,12 +572,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     paddingBottom: '20%',
-    top: 20,
     zIndex: 1,
   },
   // 차트 영역
   chart: {
-    flex: 5,
+    flex: 3,
     width: '80%',
     alignSelf: 'center',
     flexDirection: 'row',
@@ -602,36 +597,50 @@ const styles = StyleSheet.create({
   statisticstextbox: {
     flex: 5,
     height: 100,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     marginTop: 25,
+    marginLeft: 65,
+  },
+  statictitle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 130,
+    height: '20%',
+    borderWidth: 2,
+    borderColor: 'rgb(231,230,230)',
+    borderRadius: 20,
+    backgroundColor: '#fff',
+  },
+  statictitletext: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: 'black',
   },
   recotext: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#000',
-    fontWeight: 'bold',
+    marginTop: 12,
   },
   recoproducttext: {
-    fontSize: 13,
+    fontSize: 16,
     color: '#000',
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 3,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+    marginLeft: 10,
   },
   cautiontext: {
-    top: 5,
-    fontSize: 15,
+    fontSize: 16,
     color: '#000',
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 10,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+    marginLeft: 10,
   },
   cautiontext2: {
-    top: 5,
-    fontSize: 15,
+    fontSize: 16,
     color: '#000',
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 3,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+    marginLeft: 10,
   },
 
   //네비게이션바

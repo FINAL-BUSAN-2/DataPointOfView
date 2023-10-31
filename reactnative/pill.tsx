@@ -7,6 +7,7 @@ import {
   Switch,
   StyleSheet,
   Image,
+  KeyboardAvoidingView,
   TouchableOpacity,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
@@ -200,109 +201,110 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'< 영양 루틴 추가하기'}</Text>
+          <Text style={styles.backButton}>
+            {'<              영양 루틴 추가하기'}
+          </Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          {/* 루틴입력 */}
-          <View style={{zIndex: 1}}>
-            <Search
-              onKeywordChange={handleKeywordChange}
-              onSelect={(pillName, pillCd) => {
-                setSelectedPillCd(pillCd);
-                setSelectedValue(pillName);
-              }}
-            />
-          </View>
-          {/* 
-          <View style={styles.Routinename}>
-            <TextInput
-              style={styles.Routineinput}
-              value={routineName}
-              onChangeText={handleRoutineNameChange}
-              placeholder="루틴명을 입력해 주세요!"
-              onFocus={() => navigation.navigate('Search')}
-            />
-          </View> */}
-
-          {/* 루틴 아이콘 */}
-          {/* <View style={styles.Routineicon}>
-              <TouchableOpacity onPress={handleAddButtonClick}>
-                <Image
-                  source={require('./android/app/src/img/flo_ex.png')}
-                  style={styles.Routineicon_add}
-                />
-              </TouchableOpacity>
-            </View>
-            </View>
-
-          {/*몇회&몇정 입력 박스 */}
-          <View style={styles.setreps}>
-            {/* 몇회 입력 */}
-            <TextInput
-              style={styles.setrepsinput}
-              value={set}
-              onChangeText={handleSetChange}
-              placeholder="       "
-              keyboardType="numeric"
-            />
-            <Text style={styles.setrepstext}>회 X</Text>
-            {/* 몇정 입력 */}
-            <TextInput
-              style={styles.setrepsinput}
-              value={reps}
-              onChangeText={handleRepsChange}
-              placeholder="       "
-              keyboardType="numeric"
-            />
-            <Text style={styles.setrepstext}>정</Text>
-          </View>
-
-          {/* 날짜 선택 (달력 호출) */}
+        {/* <ScrollView style={styles.scrollView}> */}
+        {/* 루틴입력 */}
+        <View
+          style={{
+            zIndex: 1,
+            flex: 0.1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            left: 10,
+          }}>
+          <Text
+            style={{
+              alignSelf: 'center',
+              fontSize: 30,
+              left: 5,
+              bottom: 5,
+            }}>
+            🔍
+          </Text>
+          <Search
+            onKeywordChange={handleKeywordChange}
+            onSelect={(pillName, pillCd) => {
+              setSelectedPillCd(pillCd);
+              setSelectedValue(pillName);
+            }}
+          />
+        </View>
+        {/* <KeyboardAvoidingView style={{flex: 0.15, top: 10}} behavior="padding"> */}
+        {/*몇회&몇정 입력 박스 */}
+        <View style={styles.setreps}>
+          {/* 몇회 입력 */}
+          <TextInput
+            style={styles.setrepsinput}
+            value={set}
+            onChangeText={handleSetChange}
+            placeholder="       "
+            keyboardType="numeric"
+          />
+          <Text style={styles.setrepstext}>회 X</Text>
+          {/* 몇정 입력 */}
+          <TextInput
+            style={styles.setrepsinput}
+            value={reps}
+            onChangeText={handleRepsChange}
+            placeholder="       "
+            keyboardType="numeric"
+          />
+          <Text style={styles.setrepstext}>정</Text>
+        </View>
+        {/* 날짜 선택 (달력 호출) */}
+        <View style={styles.caltotal}>
           <TouchableOpacity
             onPress={() => setShowCalendar(true)}
             style={styles.calendarContainer}>
             {!showCalendar ? (
-              <>
+              <View>
                 <Text style={styles.defaultText}>
                   {selectedDate}
                   <Text style={styles.calendarText}>에 시작할 거예요</Text>
                 </Text>
                 <TouchableOpacity
                   onPress={() => setShowCalendar(true)}></TouchableOpacity>
-              </>
+              </View>
             ) : (
-              <>
+              <View>
                 <Calendar
+                  style={{flex: 0.1}}
                   onDayPress={handleDateSelect}
                   markedDates={{[selectedDate]: {selected: true}}}
                 />
                 <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                  <Text>취소</Text>
+                  <View style={{flex: 0.3}}>
+                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>취소</Text>
+                  </View>
                 </TouchableOpacity>
-              </>
+              </View>
             )}
           </TouchableOpacity>
-          {/* 시간 선택 */}
-          <View style={styles.Timecontainer}>
-            <TimeComponent onTimeChange={handleTimeChange} />
-          </View>
-
+        </View>
+        {/* 시간 선택 */}
+        <View style={styles.Timecontainer}>
+          <TimeComponent onTimeChange={handleTimeChange} />
+        </View>
+        <View style={{flex: 0.1, top: 30}}>
           <Toggle
             label={'알림'}
             value={notificationEnabled}
             onChange={setNotificationEnabled}
           />
-
+        </View>
+        <View style={{flex: 0.1, top: 30}}>
           {/* 반복 설정 */}
           <Toggle
             label={'반복'}
             value={repeatEnabled}
             onChange={setRepeatEnabled}>
             {repeatEnabled && (
-              <>
+              <View>
                 <View style={styles.dayPickerContainer}>
                   <View style={styles.dayButtonRow}>
                     {['월', '화', '수', '목', '금', '토', '일'].map(day => (
@@ -327,11 +329,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     ))}
                   </View>
                 </View>
-              </>
+              </View>
             )}
           </Toggle>
-        </ScrollView>
-
+        </View>
+        {/* </ScrollView> */}
+        {/* </KeyboardAvoidingView> */}
         {/* 추가하기 */}
         <TouchableOpacity onPress={handleSubmit} style={styles.addContainer}>
           <View style={styles.addTab}>
@@ -344,22 +347,41 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 };
 
 const styles = StyleSheet.create({
+  scrollView: {},
   container: {
     flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    alignContent: 'flex-start',
+    zIndex: 1,
     backgroundColor: '#fff',
   },
-  scrollView: {},
+  header: {
+    flex: 0.1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    // padding: 20,
+    // height: 30,
+    // borderBottomWidth: 0,
+    backgroundColor: '#fff',
+    borderBottomColor: '#ddd',
+  },
 
   /// 몇회 & 몇정 설정
   setreps: {
+    flex: 0.08,
     width: 300,
     flexDirection: 'row',
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 10,
+    bottom: 5,
+    // backgroundColor: 'red',
+    // marginBottom: 10,
+    // bottom: 200,
   },
   setrepsinput: {
     padding: 8,
@@ -374,12 +396,20 @@ const styles = StyleSheet.create({
   },
 
   /// 캘린더
+  caltotal: {
+    flex: 0.1,
+  },
   calendarContainer: {
-    marginTop: 10,
+    flex: 1,
+    marginTop: 5,
     width: '80%',
+    position: 'absolute',
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 10,
+    // marginBottom: 50,
+    zIndex: 2,
+    // top: 140,
+    // bottom: 200,
   },
   defaultText: {
     fontSize: 18,
@@ -398,8 +428,14 @@ const styles = StyleSheet.create({
 
   // 시간 설정
   Timecontainer: {
+    flex: 0.2,
+    top: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
+    margintop: 30,
+    marginBottom: 30,
+    // bottom: 200,
   },
 
   dayButtonRow: {
@@ -431,6 +467,7 @@ const styles = StyleSheet.create({
 
   //addContainer
   addContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'absolute',
@@ -456,21 +493,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: '#fff',
-    borderBottomWidth: 0,
-    borderBottomColor: '#ddd',
-  },
 
   backButton: {
     fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
     color: 'black',
+    left: 10,
   },
 
   etcheader: {

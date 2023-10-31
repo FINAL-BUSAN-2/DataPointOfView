@@ -1141,15 +1141,56 @@ class PILL_PROD_SEARCH(BaseModel):
     pill_cd: str
     pill_nm: str
     pill_mnf: str
-    # pill_rv:Float
-    # pill_rvnum:Optional[Integer] = None
-    # pill_info:Optional[str] = None
 
 
 @app.get("/pillsearch")
-def pill_prod_search(db: Session = Depends(get_db)):
-    pillsearch = db.query(PILL_PROD).all()
-    return pillsearch
+def pill_prod_search(
+    q: Optional[str] = None, db: Session = Depends(get_db)
+):  # 'q'는 검색어입니다.
+    query = (
+        db.query(PILL_PROD.pill_cd, PILL_PROD.pill_nm, PILL_FUNC.func_emoji)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+    )
+
+    if q:
+        query = query.filter(PILL_PROD.pill_nm.like(f"%{q}%"))  # 검색어에 따른 필터링
+
+    results = query.all()
+
+    return [
+        {
+            "pill_cd": item[0],
+            "pill_nm": item[1],
+            "func_emoji": item[2],
+        }
+        for item in results
+    ]
+
+
+# @app.get("/pillsearch")
+# def pill_prod_search(db: Session = Depends(get_db)):
+#     pillsearch = db.query(PILL_PROD).all()
+#     return pillsearch
+
+
+# @app.get("/pillsearch")
+# def pill_prod_search(db: Session = Depends(get_db)):
+#     results = (
+#         db.query(PILL_PROD.pill_cd, PILL_PROD.pill_nm, PILL_FUNC.func_emoji)
+#         .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+#         .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+#         .all()
+#     )
+
+#     return [
+#         {
+#             "pill_cd": item[0],
+#             "pill_nm": item[1],
+#             "func_emoji": item[2],
+#         }
+#         for item in results
+#     ]
 
 
 class HEALTH_SEARCH(BaseModel):
