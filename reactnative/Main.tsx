@@ -218,7 +218,11 @@ const Main: React.FC<MainProps> = ({
 
             <View style={styles.routineItemSection}>
               <View style={styles.tagContainer}>
-                <Text style={[styles.routineInfo, {color: 'white'}]}>
+                <Text
+                  style={[
+                    styles.routineInfo,
+                    {color: 'white', textAlign: 'center'},
+                  ]}>
                   {item.ertn_tag ||
                     item.prtn_setting?.prtn_tag ||
                     item.hrtn_tag}
