@@ -124,29 +124,34 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 20, //위로부터 띄우기
     marginHorizontal: 20, //양옆띄우기
-    width: 380,
-    height: 60, // 높이 값을 조금 더 크게 설정
+    width: '75%',
+    height: 50, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     flexDirection: 'row', // 방향 설정
     alignItems: 'center', // 세로 정렬
+    alignSelf: 'center',
     justifyContent: 'space-between', // 가로 정렬
-
+    backgroundColor: '#fff',
+    borderRadius: 30,
     //borderWidth: 1,
     //borderColor: 'black',
+    zIndex: 2,
   },
   //검색창
   search: {
-    flex: 1, // 검색창이 가능한 한 많은 공간을 차지하도록
-    paddingLeft: 15,
+    // flex: 1, // 검색창이 가능한 한 많은 공간을 차지하도록
+    paddingLeft: 40,
     paddingRight: 15,
-    backgroundColor: 'rgb(231,230,230)', //검색창 색상
-    width: 330,
-    height: 60, // 전체 부모 컨테이너의 높이를 차지하게 설정
+    backgroundColor: '#fff', //검색창 색상
+    width: '100%',
+    height: 50, // 전체 부모 컨테이너의 높이를 차지하게 설정
     color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
     paddingVertical: 10, // paddingVertical 값을 조절
-    borderRadius: 10, // 라운드 모서리 추가
-    marginBottom: 10, // 간격 추가
+    borderRadius: 30, // 라운드 모서리 추가
+    borderWidth: 1,
+    borderColor: 'rgb(127,127,127)',
+    // marginBottom: 10, // 간격 추가
     marginRight: 10, // 취소 버튼과의 간격
   },
   searchIcon: {
@@ -157,18 +162,23 @@ const styles = StyleSheet.create({
   //연관검색창
   autoSearchContainer: {
     position: 'absolute',
-    top: 80,
-    maxHeight: 200, // 높이를 제한
-    width: 360,
-    backgroundColor: '#fff',
+    alignSelf: 'center',
+    top: 60,
+    maxHeight: '100%', // 높이를 제한
+    width: '70%',
+    backgroundColor: 'rgb(231,230,230)',
     padding: 15,
-    //borderWidth: 2,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
+    zIndex: 1,
   },
   item: {
     padding: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'flex-start',
+    left: 10,
     justifyContent: 'space-between',
   },
   arrowIcon: {

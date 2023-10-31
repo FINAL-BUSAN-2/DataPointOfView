@@ -377,7 +377,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         //     ref={camera}
         //   />
         // </View>
-        <View>
+        <View style={styles.headercontainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => handleBackPress()}>
               <Text style={styles.backButton}>{'<  운동루틴추가하기'}</Text>
@@ -394,7 +394,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     {/* borderColor: 'red ,borderWidth: 1*/}
                     <View style={{flex: 1}}>
                       {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
-                      <View style={{flex: 5, flexDirection: 'column'}}>
+                      <View
+                        style={{
+                          flex: 5,
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          borderRightWidth: 1,
+                          borderRightColor: 'rgb(175,171,171)',
+                        }}>
                         {/* 위쪽 공간 */}
 
                         <View
@@ -406,7 +413,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                             alignItems: 'center',
                           }}>
                           {/* 위쪽 컨텐츠 */}
-                          <Text>운동인식</Text>
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontWeight: 'bold',
+                              fontSize: 16,
+                            }}>
+                            운동인식
+                          </Text>
                         </View>
                         {/* 아래쪽 공간 */}
                         {/* borderColor: 'blue',borderWidth: 1 */}
@@ -416,10 +430,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                           {/* 카메라 아이콘 */}
                           <TouchableOpacity
                             onPress={() => handleCameraButtonClick()}>
-                            <Image
-                              source={require('./android/app/src/img/camera.png')}
-                              style={styles.cameraicon}
-                            />
+                            <Text style={{fontSize: 32, color: 'black'}}>
+                              📷
+                            </Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -427,7 +440,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     {/* 오른쪽 공간 */}
                     <View
                       // borderColor: 'orange',borderWidth: 1
-                      style={{flex: 3}}>
+                      style={{flex: 2}}>
                       {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
                       <View style={{flex: 1, flexDirection: 'column'}}>
                         {/* 위쪽 공간 (오른쪽 위) */}
@@ -681,8 +694,12 @@ const styles = StyleSheet.create({
     height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'rgb(231,230,230)',
+    backgroundColor: '#fff',
     width: '100%',
+  },
+  headercontainer: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
   header: {
     height: '10%',
@@ -690,7 +707,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     padding: 20,
-    // backgroundColor: 'rgb(43,58,85)', //rgb(43,58,85)
+    backgroundColor: '#fff',
     borderBottomWidth: 0,
     borderBottomColor: '#ddd',
   },
@@ -754,7 +771,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
-    marginBottom: 10,
+    alignSelf: 'center',
+    marginTop: 5,
+    marginBottom: 5,
   },
   setrepsinput: {
     padding: 8,
@@ -770,9 +789,10 @@ const styles = StyleSheet.create({
 
   /// 캘린더
   calendarContainer: {
-    marginTop: 10,
+    marginTop: 15,
     width: '80%',
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 10,
   },
   defaultText: {
@@ -794,11 +814,12 @@ const styles = StyleSheet.create({
   Timecontainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
   },
 
   /// 알람 설정
   notificationcontainer: {
-    marginTop: 0,
+    marginTop: 10,
     width: 360,
     height: 50,
     flexDirection: 'row',
@@ -864,6 +885,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    paddingRight: 10,
+    paddingLeft: 10,
     padding: 5,
     margin: 5,
     borderWidth: 1,
@@ -873,6 +896,8 @@ const styles = StyleSheet.create({
   },
 
   selectedButton: {
+    paddingRight: 10,
+    paddingLeft: 10,
     padding: 5,
     margin: 5,
     borderWidth: 1,
@@ -888,6 +913,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     alignItems: 'center',
+    backgroundColor: '#fff',
     elevation: 50, // for Android
   },
   //addTab
