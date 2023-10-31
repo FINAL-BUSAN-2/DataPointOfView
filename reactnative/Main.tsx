@@ -221,7 +221,7 @@ const Main: React.FC<MainProps> = ({
                 <Text
                   style={[
                     styles.routineInfo,
-                    {color: 'white', textAlign: 'center'},
+                    {color: 'white', alignSelf: 'center'},
                   ]}>
                   {item.ertn_tag ||
                     item.prtn_setting?.prtn_tag ||
@@ -242,7 +242,6 @@ const Main: React.FC<MainProps> = ({
           </View>
         )}
       />
-      <View style={styles.emptySpace}></View>
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -710,11 +709,6 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Make it a circle by setting border radius to half the width/height
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  emptySpace: {
-    height: '10%',
-    backgroundColor: 'blue.',
   },
 });
 export default Main;

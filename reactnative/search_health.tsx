@@ -112,17 +112,19 @@ function HealthSearch(props: Search_healthProps) {
         <View style={styles.autoSearchContainer}>
           <FlatList
             data={keyItems}
-            keyExtractor={item => item.health_nm}
+            keyExtractor={item => `${item.health_nm}-${item.health_tag}`}
             renderItem={({item}) => (
               <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
-                  onSelect(item.health_nm); // Call your onSelect function
+                  onSelect(`${item.health_nm}-${item.health_tag}`); // Call your onSelect function
                   setKeyword(item.health_nm);
                   setKeyItems([]);
-                  props.onSelect(item.health_nm);
                 }}>
-                <Text>{item.health_nm}</Text>
+                <Text>
+                  {item.health_emoji}
+                  {item.health_nm}({item.health_tag})
+                </Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
                   style={styles.arrowIcon}
@@ -139,9 +141,8 @@ function HealthSearch(props: Search_healthProps) {
 const styles = StyleSheet.create({
   //검색창박스
   container: {
-    marginTop: 20, //위로부터 띄우기
-    marginHorizontal: 20, //양옆띄우기
-    width: '75%',
+    marginTop: 10, //위로부터 띄우기
+    width: '85%',
     height: 50, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     flexDirection: 'row', // 방향 설정
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   //검색창
   search: {
     // flex: 1, // 검색창이 가능한 한 많은 공간을 차지하도록
-    paddingLeft: 40,
+    paddingLeft: 30,
     paddingRight: 15,
     backgroundColor: '#fff', //검색창 색상
     width: '100%',
@@ -165,11 +166,10 @@ const styles = StyleSheet.create({
     color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
     paddingVertical: 10, // paddingVertical 값을 조절
-    borderRadius: 30, // 라운드 모서리 추가
+    borderRadius: 40, // 라운드 모서리 추가
     borderWidth: 1,
     borderColor: 'rgb(127,127,127)',
     // marginBottom: 10, // 간격 추가
-    marginRight: 10, // 취소 버튼과의 간격
   },
   searchIcon: {
     position: 'absolute',
