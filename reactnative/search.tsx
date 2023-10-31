@@ -65,10 +65,10 @@ function Search(props: SearchProps) {
     };
   }, [keyword]);
 
-  const onSelect = (selectedValue: string) => {
+  const onSelect = (selectedValue: string, selectedCd: string) => {
     setKeyword(selectedValue);
     setKeyItems([]);
-    props.onSelect(selectedValue);
+    props.onSelect(selectedValue, selectedCd);
     setItemSelected(true);
   };
 
@@ -109,7 +109,7 @@ function Search(props: SearchProps) {
         }}
       /> */}
 
-      {!itemSelected && keyItems.length > 0 && keyword && (
+      {keyword && !itemSelected && keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
           <FlatList
             data={keyItems}
@@ -118,7 +118,7 @@ function Search(props: SearchProps) {
               <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
-                  onSelect(item.pill_nm);
+                  onSelect(item.pill_nm, item.pill_cd);
                   setKeyword(item.pill_nm);
                   setKeyItems([]);
                   props.onSelect(item.pill_nm, item.pill_cd);
