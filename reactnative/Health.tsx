@@ -260,29 +260,23 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   const imageSearch = async () => {
     const formData = new FormData();
     formData.append('image', {
-      uri: cameraImgPath,
+      uri: `file://${internalStoragePath}/${newFileName}`,
       type: 'image/jpeg',
-      name: newFileName,
+      name: 'image.jpg',
     });
 
-    // FastAPI 서버 URL
-    const serverUrl = 'https://www.dpv-project.com:5000/upload';
-
-    try {
-      const response = await axios.post(serverUrl, formData);
-
-      if (response.status === 200) {
-        const data = response.data;
-        console.log('Received Data:', data);
-        // "data" 변수에 전체 JSON 응답이 저장되어 있습니다.
-      } else {
-        console.error('HTTP 오류:', response.status);
-        // 오류 처리
-      }
-    } catch (error) {
-      console.error('오류:', error);
-      // 오류 처리
-    }
+    axios
+      .post('http://43.200.178.131:3344/imageSearch', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        console.log('이미지 업로드 성공:', response.data);
+      })
+      .catch(error => {
+        console.log('이미지 업로드 실패:', error);
+      });
   };
 
   return (
