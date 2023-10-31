@@ -91,7 +91,7 @@ const Main: React.FC<MainProps> = ({
     setShowImageItems(!showImageItems);
   };
   ``;
-  // 건강 페이지 이동 함수
+  /// 건강 페이지 이동 함수
   const movetest = () => {
     navigation.navigate('Health');
   };
