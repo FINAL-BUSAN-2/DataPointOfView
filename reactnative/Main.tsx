@@ -192,7 +192,7 @@ const Main: React.FC<MainProps> = ({
         <Text style={styles.memtex}>{userName}님 Daily routine</Text>
       </View>
 
-    {/* 루틴리스트 */}
+      {/* 루틴리스트 */}
       <FlatList
         data={data}
         renderItem={({item}) => (
