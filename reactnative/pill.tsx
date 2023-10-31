@@ -214,9 +214,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
             zIndex: 1,
             flex: 0.1,
             flexDirection: 'row',
-            // justifyContent: 'center',
-            // alignContent: 'center',
             alignItems: 'center',
+            left: 10,
           }}>
           <Text
             style={{
