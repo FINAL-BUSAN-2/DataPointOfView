@@ -477,47 +477,77 @@ def generate_unique_prtn_id(prtn_mem):
     return prtn_id
 
 
-# 루틴추가_기타
 @app.post("/routines")
-def create_routine(routine: ERoutineCreate, request: Request):
-    logger.error(f"111111111111111111111111111111")
-    # 라우터에 전달된 데이터 출력
-    logging.error(f"Received: {request}")
+def create_routine(routine: ERoutineCreate, db: Session = Depends(get_db)):
     try:
-        # Create a unique ertn_id
-        logging.error(f"Received routine: {routine}")
         ertn_id = generate_unique_ertn_id(routine.ertn_mem)
-        logger.error(f"33333333333333333333333333")
-        # logging.error(f"Received routine: {routine}")l
-        with SessionLocal() as db:
-            db_routine = ERTN_SETTING(
-                ertn_mem=routine.ertn_mem,  # 로그인아이디필요
-                ertn_id=ertn_id,
-                ertn_nm=routine.ertn_nm,
-                ertn_cat="기타",
-                ertn_tag="기타",
-                ertn_set=routine.ertn_set,
-                ertn_reps=routine.ertn_reps,
-                ertn_sdate=routine.ertn_sdate,
-                ertn_time=routine.ertn_time,
-                ertn_alram=routine.ertn_alram,
-                ertn_day=routine.ertn_day,
-                ertn_edate=None,
-            )
-            # logging.error(f"Received routine: {routine}")
-            logging.error(f"Routine to add: {db_routine}")
-            logger.error(f"44444444444444444444444444444444")
-            db.add(db_routine)
-            logger.error(f"5555555555555555555555555555")
-            db.commit()
-            logger(f"6666666666666666666666666")
-            # db.refresh(db_routine)
-            logger.error("7777777777777777777777777")
+
+        db_routine = ERTN_SETTING(
+            ertn_mem=routine.ertn_mem,
+            ertn_id=ertn_id,
+            ertn_nm=routine.ertn_nm,
+            ertn_cat="기타",
+            ertn_tag="기타",
+            ertn_set=routine.ertn_set,
+            ertn_reps=routine.ertn_reps,
+            ertn_sdate=routine.ertn_sdate,
+            ertn_time=routine.ertn_time,
+            ertn_alram=routine.ertn_alram,
+            ertn_day=routine.ertn_day,
+            ertn_edate=None,
+        )
+
+        db.add(db_routine)
+        db.commit()
 
         return db_routine
+
     except Exception as e:
-        logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+        logger.error("Error during routine insertion: %s", str(e))
         return {"error": "데이터 삽입 중 오류 발생"}
+
+
+# # 루틴추가_기타
+# @app.post("/routines")
+# def create_routine(routine: ERoutineCreate, request: Request):
+#     logger.error(f"111111111111111111111111111111")
+#     # 라우터에 전달된 데이터 출력
+#     logging.error(f"Received: {request}")
+#     try:
+#         # Create a unique ertn_id
+#         logging.error(f"Received routine: {routine}")
+#         ertn_id = generate_unique_ertn_id(routine.ertn_mem)
+#         logger.error(f"33333333333333333333333333")
+#         # logging.error(f"Received routine: {routine}")l
+#         with SessionLocal() as db:
+#             db_routine = ERTN_SETTING(
+#                 ertn_mem=routine.ertn_mem,  # 로그인아이디필요
+#                 ertn_id=ertn_id,
+#                 ertn_nm=routine.ertn_nm,
+#                 ertn_cat="기타",
+#                 ertn_tag="기타",
+#                 ertn_set=routine.ertn_set,
+#                 ertn_reps=routine.ertn_reps,
+#                 ertn_sdate=routine.ertn_sdate,
+#                 ertn_time=routine.ertn_time,
+#                 ertn_alram=routine.ertn_alram,
+#                 ertn_day=routine.ertn_day,
+#                 ertn_edate=None,
+#             )
+#             # logging.error(f"Received routine: {routine}")
+#             logging.error(f"Routine to add: {db_routine}")
+#             logger.error(f"44444444444444444444444444444444")
+#             db.add(db_routine)
+#             logger.error(f"5555555555555555555555555555")
+#             db.commit()
+#             logger(f"6666666666666666666666666")
+#             # db.refresh(db_routine)
+#             logger.error("7777777777777777777777777")
+
+#         return db_routine
+#     except Exception as e:
+#         logger.error("데이터 삽입 중 오류 발생: %s", str(e))
+#         return {"error": "데이터 삽입 중 오류 발생"}
 
 
 # 루틴추가_건강
