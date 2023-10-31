@@ -339,7 +339,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     style={{
                       width: 120,
                       height: 50,
-                      backgroundColor: 'blue',
+                      backgroundColor: 'rgb(43,58,85)',
                       margin: 15,
                       borderRadius: 20,
                       justifyContent: 'center',
@@ -355,7 +355,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     style={{
                       width: 120,
                       height: 50,
-                      backgroundColor: 'red',
+                      backgroundColor: 'rgb(206,119,119)',
                       margin: 15,
                       borderRadius: 20,
                       justifyContent: 'center',
@@ -915,6 +915,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     alignItems: 'center',
     backgroundColor: '#fff',
     elevation: 50, // for Android

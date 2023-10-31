@@ -121,27 +121,6 @@ const Main: React.FC<MainProps> = ({
       <View style={styles.header}>
         {/* 앱 로고 및 이름 */}
         <View style={styles.leftContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              console.log('제발');
-              navigation.reset({
-                index: 0,
-                routes: [{name: 'Main'}],
-              });
-            }}>
-            <Image
-              source={require('./android/app/src/img/red.png')}
-              style={{
-                width: 45,
-                height: 45,
-                marginRight: 16,
-              }}
-            />
-          </TouchableOpacity>
-          <Text style={styles.title}>웰라밸 / {userName}님</Text>
-        </View>
-        {/* 우측 상단 */}
-        <View style={styles.rightContainer}>
           {/* 알림 아이콘 */}
           <TouchableOpacity>
             <Image
@@ -153,6 +132,27 @@ const Main: React.FC<MainProps> = ({
             />
           </TouchableOpacity>
 
+          {/* <Text style={styles.title}>웰라밸 / {userName}님</Text> */}
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            console.log('제발');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Main'}],
+            });
+          }}>
+          <Image
+            source={require('./android/app/src/img/logo.png')}
+            style={{
+              width: 150,
+              height: 50,
+              // marginRight: 16,
+            }}
+          />
+        </TouchableOpacity>
+        {/* 우측 상단 */}
+        <View style={styles.rightContainer}>
           {/* 환경설정 아이콘 */}
           <TouchableOpacity onPress={goHplogSet}>
             <Image
@@ -175,7 +175,8 @@ const Main: React.FC<MainProps> = ({
         style={{
           borderTopWidth: 1,
           borderTopColor: 'rgb(175, 171, 171)',
-          width: '100%',
+          alignSelf: 'center',
+          width: '90%',
         }}
       />
 
@@ -190,27 +191,53 @@ const Main: React.FC<MainProps> = ({
         renderItem={({item}) => (
           <View style={styles.routineItem2}>
             <View style={styles.routineItemSection}>
-              <Text style={[styles.routineInfo, {color: 'black'}]}>
+              <Text
+                style={[styles.routineInfo, {color: 'black', width: '60%'}]}>
                 {item.ertn_time || item.prtn_time || item.hrtn_time}
               </Text>
             </View>
 
-            <View style={styles.routineItemSection}>
+            <View style={[styles.routineItemSection, {right: 25}]}>
               <View style={styles.tagContainer}>
-                <Text style={[styles.routineInfo, {color: 'white'}]}>
+                <Text
+                  style={[
+                    styles.routineInfo,
+                    {
+                      color: 'white',
+                      textAlign: 'center',
+                    },
+                  ]}>
                   {item.ertn_tag || item.prtn_tag || item.hrtn_tag}
                 </Text>
               </View>
             </View>
 
-            <View style={styles.routineItemSection}>
+            <View style={[styles.routineItemSection, {right: 35}]}>
               <Text style={[styles.routineInfo, {color: 'black'}]}>
                 {item.ertn_nm || item.prtn_nm || item.hrtn_nm}
               </Text>
             </View>
 
-            <View style={styles.routineItemSection}>
-              <Text style={styles.routineInfo}>😀</Text>
+            <View style={[styles.routineItemSection, {}]}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  height: 46,
+                  width: '56%',
+                  borderWidth: 1,
+                  borderRadius: 23,
+                  borderColor: 'rgb(231,230,230)',
+                  // backgroundColor: 'blue',
+                }}>
+                <Text
+                  style={[
+                    styles.routineInfo,
+                    {alignSelf: 'center', color: 'black', fontSize: 24},
+                  ]}>
+                  😀
+                </Text>
+              </View>
             </View>
           </View>
         )}
@@ -281,21 +308,21 @@ const Main: React.FC<MainProps> = ({
         <View style={[styles.flo_ex, {zIndex: 1}]}>
           <TouchableOpacity onPress={movetest}>
             <Image
-              source={require('./android/app/src/img/flo_ex.png')}
+              source={require('./android/app/src/img/floating_wh.png')}
               style={styles.floexIcon}
             />
             <Text style={styles.flotext}>건강</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={movetest1}>
             <Image
-              source={require('./android/app/src/img/flo_ex.png')}
+              source={require('./android/app/src/img/floating_wh.png')}
               style={styles.floexIcon}
             />
             <Text style={styles.flotext}>영양</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={movetest2}>
             <Image
-              source={require('./android/app/src/img/flo_ex.png')}
+              source={require('./android/app/src/img/floating_wh.png')}
               style={styles.floexIcon}
             />
             <Text style={styles.flotext}>기타</Text>
@@ -358,7 +385,6 @@ const styles = StyleSheet.create({
   rightContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 80,
   },
   // 앱 이름
   title: {
@@ -368,17 +394,17 @@ const styles = StyleSheet.create({
 
   //타임라인바
   timelineContainer: {
-    marginTop: 50, // Adjust this to change the vertical position of the timeline bar
-    left: '5%',
-    width: '90%',
-    height: 20,
+    marginTop: 30, // Adjust this to change the vertical position of the timeline bar
+    width: '80%',
+    alignSelf: 'center',
+    height: 30,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgb(171,170,170)',
     overflow: 'visible',
     position: 'relative',
-    zindex: 1,
+    zindex: 2,
   },
   // 타임라인바 텍스트
   timeText: {
@@ -444,9 +470,10 @@ const styles = StyleSheet.create({
   // 타임라인 바깥
   rectangle: {
     height: '100%',
-    borderRadius: 10,
-    backgroundColor: '#888',
-    zIndex: 2,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
+    backgroundColor: 'rgb(43,58,85)',
+    zIndex: 1,
   },
 
   //네비게이션바
@@ -559,7 +586,7 @@ const styles = StyleSheet.create({
     bottom: 90,
     width: 60,
     height: 260, // 변경된 부분 (원의 크기)
-    backgroundColor: 'rgb(239,175,175)',
+    backgroundColor: 'rgba(239,175,175,0.9)',
     borderBottomLeftRadius: 35, // 원의 하단 왼쪽 반지름
     borderBottomRightRadius: 35, // 원의 하단 오른쪽 반지름
     borderRadius: 35, // 원의 상단 반지름
@@ -571,7 +598,7 @@ const styles = StyleSheet.create({
     bottom: 25,
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(245,235,224,0.4)',
+    backgroundColor: 'rgb(231,230,230)',
     borderRadius: 20, // 변경된 부분 (원의 반지름)
     alignItems: 'center',
     justifyContent: 'center',
@@ -580,6 +607,7 @@ const styles = StyleSheet.create({
   flotext: {
     bottom: 25,
     textAlign: 'center',
+    color: 'black',
   },
   //루틴 리스트 스타일
   roundedBox: {
@@ -626,14 +654,13 @@ const styles = StyleSheet.create({
   },
   //회원명
   memTextContainer: {
-    // flex: 1,
-    height: 50,
+    flex: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },
   memtex: {
-    fontSize: 17, // Adjust the font size as needed
+    fontSize: 22, // Adjust the font size as needed
     fontWeight: 'bold',
     color: '#000000',
     textAlign: 'center',
@@ -642,24 +669,27 @@ const styles = StyleSheet.create({
   routineItem2: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignContent: 'center',
+    alignSelf: 'center',
+    width: '80%',
+    marginVertical: 10,
+    marginHorizontal: 16,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'red', // 'rgb(175, 171, 171)'
-    marginVertical: 5,
-    //paddingVertical: 30,
-    height: 60,
+    borderColor: 'rgb(175, 171, 171)', // Set the border color
   },
   routineItemSection: {
     flex: 1,
     justifyContent: 'center',
+    alignSelf: 'center',
+    height: 50,
   },
   routineInfo: {
-    height: 30,
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 16,
     // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    //borderColor: 'blue', // Set the border color
+    // borderBottomWidth: 1,
+    borderColor: 'rgb(175, 171, 171)', // Set the border color
     // Add any other styles you need
     justifyContent: 'center',
   },
@@ -667,11 +697,10 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderColor: 'rgb(175, 171, 171)',
     backgroundColor: 'rgb(43,58,85)',
-    padding: 0, // Adjust the padding as needed
+    padding: 3, // Adjust the padding as needed
     borderRadius: 8,
-    height: 40,
-    justifyContent: 'center',
-    width: 50,
+    alignSelf: 'flex-start',
+    width: '60%',
   },
 
   routineInfoWithEmoji: {
