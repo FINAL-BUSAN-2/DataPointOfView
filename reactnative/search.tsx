@@ -35,7 +35,7 @@ function Search(props: SearchProps) {
   };
 
   const fetchData = () => {
-    return fetch(`http://43.200.178.131:3344/pillsearch`)
+    return fetch(`http://43.200.178.131:3344/pillsearch?q=${keyword}`)
       .then(res => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
