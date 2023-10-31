@@ -38,6 +38,13 @@ interface RoutineData {
   ertn_nm: string;
   prtn_nm: string;
   hrtn_nm: string;
+  pill_nm: string;
+  prtn_cat: string;
+  prtn_setting?: {
+    prtn_time: string;
+    prtn_tag: string;
+    [key: string]: any;
+  };
 }
 
 const Main: React.FC<MainProps> = ({
@@ -75,8 +82,8 @@ const Main: React.FC<MainProps> = ({
         const data = response.data;
         // 정렬 없이 데이터를 설정함
         setData(data);
-        console.log(response);
-        console.log(data);
+        // console.log(response);
+        console.log(data.prtn_tag);
       } else {
         console.error('데이터가 없습니다.');
       }
@@ -185,59 +192,37 @@ const Main: React.FC<MainProps> = ({
         <Text style={styles.memtex}>{userName}님 Daily routine</Text>
       </View>
 
-      {/* 루틴리스트 */}
+    {/* 루틴리스트 */}
       <FlatList
         data={data}
         renderItem={({item}) => (
           <View style={styles.routineItem2}>
             <View style={styles.routineItemSection}>
-              <Text
-                style={[styles.routineInfo, {color: 'black', width: '60%'}]}>
-                {item.ertn_time || item.prtn_time || item.hrtn_time}
-              </Text>
-            </View>
-
-            <View style={[styles.routineItemSection, {right: 25}]}>
-              <View style={styles.tagContainer}>
-                <Text
-                  style={[
-                    styles.routineInfo,
-                    {
-                      color: 'white',
-                      textAlign: 'center',
-                    },
-                  ]}>
-                  {item.ertn_tag || item.prtn_tag || item.hrtn_tag}
-                </Text>
-              </View>
-            </View>
-
-            <View style={[styles.routineItemSection, {right: 35}]}>
               <Text style={[styles.routineInfo, {color: 'black'}]}>
-                {item.ertn_nm || item.prtn_nm || item.hrtn_nm}
+                {item.ertn_time ||
+                  item.prtn_setting?.prtn_time ||
+                  item.hrtn_time}
               </Text>
             </View>
 
-            <View style={[styles.routineItemSection, {}]}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  height: 46,
-                  width: '56%',
-                  borderWidth: 1,
-                  borderRadius: 23,
-                  borderColor: 'rgb(231,230,230)',
-                  // backgroundColor: 'blue',
-                }}>
-                <Text
-                  style={[
-                    styles.routineInfo,
-                    {alignSelf: 'center', color: 'black', fontSize: 24},
-                  ]}>
-                  😀
+            <View style={styles.routineItemSection}>
+              <View style={styles.tagContainer}>
+                <Text style={[styles.routineInfo, {color: 'white'}]}>
+                  {item.ertn_tag ||
+                    item.prtn_setting?.prtn_tag ||
+                    item.hrtn_tag}
                 </Text>
               </View>
+            </View>
+
+            <View style={styles.routineItemSection}>
+              <Text style={[styles.routineInfo, {color: 'black'}]}>
+                {item.ertn_nm || item.pill_nm || item.hrtn_nm}
+              </Text>
+            </View>
+
+            <View style={styles.routineItemSection}>
+              <Text style={styles.routineInfo}>😀</Text>
             </View>
           </View>
         )}
