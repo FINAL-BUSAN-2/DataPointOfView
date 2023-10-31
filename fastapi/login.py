@@ -1155,14 +1155,8 @@ class PILL_PROD_SEARCH(BaseModel):
 @app.get("/pillsearch")
 def pill_prod_search(db: Session = Depends(get_db)):
     results = (
-        db.query(
-            PILL_PROD.pill_cd,
-            PILL_PROD.pill_nm,
-            PILL_CMB.cmb_func,
-            PILL_FUNC.func_cd,
-            PILL_FUNC.func_emoji,
-        )
-        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_func)
+        db.query(PILL_PROD.pill_cd, PILL_PROD.pill_nm, PILL_FUNC.func_emoji)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
         .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .all()
     )
@@ -1171,9 +1165,7 @@ def pill_prod_search(db: Session = Depends(get_db)):
         {
             "pill_cd": item[0],
             "pill_nm": item[1],
-            "cmb_func": item[2],
-            "func_cd": item[3],
-            "func_emoji": item[4],
+            "func_emoji": item[2],
         }
         for item in results
     ]
