@@ -42,7 +42,10 @@ function Search(props: SearchProps) {
         }
         return res.json();
       })
-      .then(data => data); // 필요에 따라 데이터 처리 로직 추가
+      .then(data => {
+        console.log('Fetched data:', data); // 로그 출력
+        return data;
+      });
   };
 
   const updateData = async () => {
