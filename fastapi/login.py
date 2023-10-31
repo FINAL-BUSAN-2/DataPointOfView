@@ -1146,10 +1146,25 @@ class PILL_PROD_SEARCH(BaseModel):
     # pill_info:Optional[str] = None
 
 
-@app.get("/pillsearch")
-def pill_prod_search(db: Session = Depends(get_db)):
-    pillsearch = db.query(PILL_PROD).all()
-    return pillsearch
+# @app.get("/pillsearch")
+# def pill_prod_search(db: Session = Depends(get_db)):
+#     pillsearch = db.query(PILL_PROD).all()
+#     return pillsearch
+
+
+@app.get("/pillsearch/{pill_nm}")
+def pill_prod_search(pill_nm: str, db: Session = Depends(get_db)):
+    results = db.execute(
+        """
+        SELECT pill_prod.pill_nm, pill_func.func_emoji 
+        FROM pill_prod
+        INNER JOIN pill_cmb ON pill_prod.pill_cd = pill_cmb.cmb_func
+        INNER JOIN pill_func ON pill_cmb.cmb_func = pill_func.func_cd
+        WHERE pill_prod.pill_nm = :pill_nm  
+    """,
+        {"pill_nm": pill_nm},
+    ).fetchall()
+    return [{"pill_nm": row[0], "func_emoji": row[1]} for row in results]
 
 
 class HEALTH_SEARCH(BaseModel):
