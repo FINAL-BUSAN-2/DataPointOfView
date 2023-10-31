@@ -814,15 +814,18 @@ def rtnlist(userEmail: str, db: Session = Depends(get_db)):
     print(ertn_list)
 
     # prtn_setting 테이블에서 조건에 맞는 레코드 조회
-    prtn_list = (
-        db.query(PRTN_SETTING)
+    prtn_query = (
+        db.query(PRTN_SETTING, PILL_PROD.pill_nm)
+        .outerjoin(PILL_PROD, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
         .filter(PRTN_SETTING.prtn_mem == userEmail)
         .filter(
             (PRTN_SETTING.prtn_sdate == today)
             | (PRTN_SETTING.prtn_day.contains(day_of_week))
         )
-        .all()
     )
+    prtn_list = [
+        {"prtn_setting": record[0], "pill_nm": record[1]} for record in prtn_query.all()
+    ]
     print(prtn_list)
 
     # hrtn_setting 테이블에서 조건에 맞는 레코드 조회
@@ -1055,9 +1058,11 @@ def get_color_by_func(func):
     else:
         return "#FF817A"  # 연한 붉은색
 
+
 today = datetime.today().date()
 korean_days = ["월", "화", "수", "목", "금", "토", "일"]
 day_of_week = korean_days[today.weekday()]
+
 
 @app.get("/finfunc")
 # def finfunc(userEmail: str, db: Session = Depends(get_db)):
@@ -1147,21 +1152,22 @@ def finfunc(db: Session = Depends(get_db)):
             # .all()
             .count()
         )
-        result =  (efin + hfin + pfin) / (ertn + hrtn + prtn) * 100
+        result = (efin + hfin + pfin) / (ertn + hrtn + prtn) * 100
         if result < 20:
-            finemoji = '🌚'
+            finemoji = "🌚"
         elif result < 40:
-            finemoji = '⭐'
+            finemoji = "⭐"
         elif result < 60:
-            finemoji = '🌟'
+            finemoji = "🌟"
         elif result < 80:
-            finemoji = '🌠'
+            finemoji = "🌠"
         else:
-            finemoji = '✨'
-        
-        return result,finemoji
+            finemoji = "✨"
+
+        return result, finemoji
     except Exception as e:
         print(e)
+
 
 ############################################################## pill_prod((영양검색창활용)
 class PILL_PROD_SEARCH(BaseModel):
