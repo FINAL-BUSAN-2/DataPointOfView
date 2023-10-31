@@ -236,8 +236,9 @@ const Main: React.FC<MainProps> = ({
               </Text>
             </View>
 
-            <View style={styles.routineItemSection}>
-              <Text style={styles.routineInfo}>😀</Text>
+            <View style={styles.routineItemSection_done}>
+              {/* routineInfo */}
+              <Text style={styles.dottedCircle}></Text>
             </View>
           </View>
         )}
@@ -707,6 +708,25 @@ const styles = StyleSheet.create({
     width: 30, // Adjust the size as needed
     height: 30, // Adjust the size as needed
     borderRadius: 15, // Make it a circle by setting border radius to half the width/height
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  //루틴달성동그라미 컨테이너
+  routineItemSection_done: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    height: 50,
+  },
+  // 루틴달성동그라미
+  dottedCircle: {
+    width: 30, // 동그라미의 크기를 조절하세요.
+    height: 30, // 동그라미의 크기를 조절하세요.
+    borderRadius: 15, // 동그라미를 만들기 위해 width/height의 반으로 설정
+    borderWidth: 2, // 점선의 두께를 조절하세요.
+    borderColor: 'black', // 점선의 색상을 조절하세요.
+    borderStyle: 'dotted', // 점선 스타일
     justifyContent: 'center',
     alignItems: 'center',
   },
