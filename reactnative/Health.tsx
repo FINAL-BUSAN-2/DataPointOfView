@@ -75,7 +75,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     console.log('새로운 검색어:', newKeyword);
   };
   const handleSearchSelect = (selectedValue: string) => {
-    console.log('Selected value:', selectedValue);
+    console.log(selectedValue);
     setSelectedValue(selectedValue);
   };
 
@@ -136,6 +136,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     console.log('+버튼 클릭');
     // 여기에 "+" 버튼이 클릭됐을 때의 로직을 구현하세요.
   };
+
+  const goHplogSet = async () => {
+    navigation.navigate('hplogset');
+  };
+
   // 세트 입력 핸들러
   const handleSetChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -193,7 +198,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         const ertn_alram = notificationEnabled ? 1 : 0;
 
         const requestData = {
-          hrtn_nm: selectedValue,
+          hrtn_nm: selectedValue.split('-')[0],
           hrtn_set: parseInt(set),
           hrtn_reps: parseInt(reps),
           hrtn_day: daysString || '',
@@ -202,7 +207,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_alram: ertn_alram,
           hrtn_id: '',
           hrtn_cat: '',
-          hrtn_tag: tagsEnabled.toString(),
+          hrtn_tag: selectedValue.split('-')[1],
           hrtn_edate: '',
           hrtn_mem: userEmail,
         };
@@ -382,200 +387,87 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         // </View>
         <View style={styles.headercontainer}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => handleBackPress()}>
-              <Text style={styles.backButton}>{'<  운동루틴추가하기'}</Text>
+            {/* 앱 로고 및 이름 */}
+            <View style={styles.leftContainer}>
+              {/* 알림 아이콘 */}
+              <TouchableOpacity>
+                <Image
+                  source={require('./android/app/src/img/notification.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </TouchableOpacity>
+
+              {/* <Text style={styles.title}>웰라밸 / {userName}님</Text> */}
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                console.log('제발');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Main'}],
+                });
+              }}>
+              <Image
+                source={require('./android/app/src/img/logo.png')}
+                style={{
+                  width: 150,
+                  height: 50,
+                  // marginRight: 16,
+                }}
+              />
             </TouchableOpacity>
+            {/* 우측 상단 */}
+            <View style={styles.rightContainer}>
+              {/* 환경설정 아이콘 */}
+              <TouchableOpacity onPress={goHplogSet}>
+                <Image
+                  source={require('./android/app/src/img/settings.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.container}>
             <ScrollView>
-              <View style={{flex: 3}}>
-                {/* 큰틀1 */}
-                <View style={{flex: 3}}>
-                  {/* 틀2를 좌우로 나누기 위한 부모 뷰 */}
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    {/* 왼쪽 공간 */}
-                    {/* borderColor: 'red ,borderWidth: 1*/}
-                    <View style={{flex: 1}}>
-                      {/* 왼쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
-                      <View
-                        style={{
-                          flex: 5,
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          borderRightWidth: 1,
-                          borderRightColor: 'rgb(175,171,171)',
-                        }}>
-                        {/* 위쪽 공간 */}
+              <TouchableOpacity onPress={() => handleCameraButtonClick()}>
+                <View style={styles.cameraSection}>
+                  <View style={styles.camerabutton}>
+                    <Text style={styles.cameraText}>📷</Text>
+                  </View>
 
-                        <View
-                          style={{
-                            flex: 2.6,
-                            //borderWidth: 1,
-                            //borderColor: 'green',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          {/* 위쪽 컨텐츠 */}
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontWeight: 'bold',
-                              fontSize: 16,
-                            }}>
-                            운동인식
-                          </Text>
-                        </View>
-                        {/* 아래쪽 공간 */}
-                        {/* borderColor: 'blue',borderWidth: 1 */}
-                        <View style={{flex: 1}}>
-                          {/* 아래쪽 컨텐츠 */}
-                          {/* <Text>카메라</Text> */}
-                          {/* 카메라 아이콘 */}
-                          <TouchableOpacity
-                            onPress={() => handleCameraButtonClick()}>
-                            <Text style={{fontSize: 32, color: 'black'}}>
-                              📷
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                    {/* 오른쪽 공간 */}
-                    <View
-                      // borderColor: 'orange',borderWidth: 1
-                      style={{flex: 2}}>
-                      {/* 오른쪽을 다시 위아래로 나누기 위한 부모 뷰 */}
-                      <View style={{flex: 1, flexDirection: 'column'}}>
-                        {/* 위쪽 공간 (오른쪽 위) */}
-                        {/* borderColor: 'purple',borderWidth: 1 */}
-                        <View
-                          style={{
-                            flex: 1,
-                          }}>
-                          {/* 위쪽 컨텐츠 (오른쪽 위) */}
-                          {/* <Text>태그4</Text> */}
-
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('상체')}
-                              style={
-                                tagsEnabled.includes('상체')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>상체</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('하체')}
-                              style={
-                                tagsEnabled.includes('하체')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>하체</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('코어')}
-                              style={
-                                tagsEnabled.includes('코어')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>코어</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('기타')}
-                              style={
-                                tagsEnabled.includes('기타')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>기타</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                        {/* 아래쪽 공간 (오른쪽 아래) */}
-                        {/* borderColor: 'pink' */}
-                        <View style={{flex: 1}}>
-                          {/* 아래쪽 컨텐츠 (오른쪽 아래) */}
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            {/* <Text>태그3</Text> */}
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('스트레칭')}
-                              style={
-                                tagsEnabled.includes('스트레칭')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>스트레칭</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() => handletagsEnabled('유산소')}
-                              style={
-                                tagsEnabled.includes('유산소')
-                                  ? styles.selectedButton
-                                  : styles.button
-                              }>
-                              <Text style={{color: 'white'}}>유산소</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
+                  <View style={styles.cameraInfo}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontWeight: 'bold',
+                        fontSize: 17,
+                      }}>
+                      운동기구 카메라 인식
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 15,
+                      }}>
+                      - 이 기구 이름 뭐에요?
+                    </Text>
                   </View>
                 </View>
-              </View>
-
-              {/* <View style={styles.healthheader}> */}
-              {/* 루틴명 입력 */}
-              {/* <View style={styles.Routinename}> */}
-              {/* <TextInput
-                  style={styles.Routineinput}
-                  value={routineName}
-                  onChangeText={handleRoutineNameChange}
-                  placeholder="루틴 이름을 설정해주세요"
-                /> */}
-              <View style={{zIndex: 1}}>
-                <HealthSearch
-                  onKeywordChange={handleKeywordChange}
-                  onSelect={handleSearchSelect}
-                />
-              </View>
-              {/* 카메라 아이콘
-              <TouchableOpacity
-                onPress={() => console.log('Camera button pressed')}>
-                <Image
-                  source={require('./android/app/src/img/camera.png')}
-                  style={styles.cameraicon}
-                />
-              </TouchableOpacity> */}
-              {/* </View> */}
-              {/* 루틴 아이콘 */}
-              {/* <View style={styles.Routineicon}>
-                <TouchableOpacity onPress={handleAddButtonClick}>
-                  <Image
-                    source={require('./android/app/src/img/flo_ex.png')}
-                    style={styles.Routineicon_add}
+              </TouchableOpacity>
+              <View style={styles.searchSection}>
+                <View style={{zIndex: 1, width: '100%'}}>
+                  <HealthSearch
+                    onKeywordChange={handleKeywordChange}
+                    onSelect={handleSearchSelect}
                   />
-                </TouchableOpacity>
-              </View> */}
-              {/* </View> */}
+                </View>
+              </View>
 
               {/* 세트 & 횟수 입력 박스 */}
               <View style={styles.setreps}>
@@ -699,28 +591,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     width: '100%',
+    marginTop: '5%',
   },
+
   headercontainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
+
   header: {
-    height: '10%',
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    padding: 20,
     backgroundColor: '#fff',
-    borderBottomWidth: 0,
-    borderBottomColor: '#ddd',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rightContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  // 앱 이름
+  title: {
+    fontSize: 23,
+    fontWeight: 'bold',
   },
 
-  backButton: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginRight: 10,
-    color: 'black',
-  },
   scrollView: {},
   healthheader: {
     flexDirection: 'row',
@@ -948,6 +850,43 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+  },
+
+  camerabutton: {
+    backgroundColor: '#CE7676',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'center',
+  },
+
+  cameraText: {
+    fontSize: 32,
+    color: 'black',
+    textAlign: 'center',
+  },
+
+  cameraSection: {
+    width: '85%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+
+  cameraInfo: {
+    fontSize: 14,
+    paddingVertical: 10,
+    width: '70%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+  },
+
+  searchSection: {
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '4%',
   },
 });
 
