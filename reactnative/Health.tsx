@@ -266,27 +266,72 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     setNewFileName(newFileName);
   };
 
+  // const https = require('https');
+
   const imageSearch = async () => {
     const formData = new FormData();
     formData.append('image', {
       uri: `file://${internalStoragePath}/${newFileName}`,
       type: 'image/jpeg',
-      name: 'image.jpg',
+      name: newFileName,
     });
 
+    const searchUrl = 'http://43.200.178.131:3344/imageSearch';
+    // const searchUrl = 'https://dpv-project.com:5000/upload';
+
+    //   const HttpAgent = new https.Agent({rejectUnauthorized: false});
+
     axios
-      .post('http://43.200.178.131:3344/imageSearch', formData, {
+      .post(searchUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        //       httpsAgent: HttpAgent,
       })
       .then(response => {
         console.log('이미지 업로드 성공:', response.data);
       })
       .catch(error => {
-        console.log('이미지 업로드 실패:', error);
+        if (error.response) {
+          console.error('서버 응답 오류:', error.response.data);
+        } else if (error.request) {
+          console.error('네트워크 오류', error.message);
+        } else {
+          console.error('오류', error.message);
+        }
       });
   };
+  // const imageSearch = async () => {
+  //   const formData = new FormData();
+  //   formData.append('image', {
+  //     uri: `file://${internalStoragePath}/${newFileName}`,
+  //     type: 'image/jpeg',
+  //     name: newFileName,
+  //   });
+
+  //   const searchUrl = 'https://dpv-project.com:5000/upload';
+
+  //   fetch(searchUrl, {
+  //     method: 'POST',
+  //     body: formData,
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //     },
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log('이미지 업로드 성공:', data);
+  //     })
+  //     .catch(error => {
+  //       if (error.response) {
+  //         console.error('서버응답오류:', error.response.data);
+  //       } else if (error.request) {
+  //         console.error('네트워크 오류', error.message);
+  //       } else {
+  //         console.error('오류', error.message);
+  //       }
+  //     });
+  // };
 
   return (
     <>
