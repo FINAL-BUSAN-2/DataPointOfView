@@ -91,7 +91,7 @@ const Main: React.FC<MainProps> = ({
     setShowImageItems(!showImageItems);
   };
   ``;
-  // 건강 페이지 이동 함수
+  /// 건강 페이지 이동 함수
   const movetest = () => {
     navigation.navigate('Health');
   };
@@ -242,6 +242,7 @@ const Main: React.FC<MainProps> = ({
           </View>
         )}
       />
+      <View style={styles.emptySpace}></View>
 
       {/* 네비게이션바 */}
       <View style={styles.navBarContainer}>
@@ -690,6 +691,7 @@ const styles = StyleSheet.create({
     // borderBottomWidth: 1,
     borderColor: 'rgb(175, 171, 171)', // Set the border color
     // Add any other styles you need
+    justifyContent: 'center',
   },
   tagContainer: {
     // borderWidth: 1,
@@ -708,6 +710,11 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Make it a circle by setting border radius to half the width/height
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  emptySpace: {
+    height: '10%',
+    backgroundColor: 'blue.',
   },
 });
 export default Main;

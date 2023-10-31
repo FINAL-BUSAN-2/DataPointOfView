@@ -25,6 +25,7 @@ function Search(props: SearchProps) {
   const navigation = useNavigation();
   const [keyword, setKeyword] = useState<string>('');
   const [keyItems, setKeyItems] = useState<autoDatas[]>([]);
+  const [itemSelected, setItemSelected] = useState(false);
 
   const onChangeData = (e: any) => {
     const newKeyword = e.nativeEvent.text;
@@ -44,12 +45,14 @@ function Search(props: SearchProps) {
   };
 
   const updateData = async () => {
-    const res = await fetchData();
-    let filteredItems = res.filter((list: autoDatas) =>
-      list.pill_nm.includes(keyword),
-    );
-    // .slice(0, 10); 최대 10개항목만
-    setKeyItems(filteredItems);
+    if (!itemSelected) {
+      const res = await fetchData();
+      let filteredItems = res.filter((list: autoDatas) =>
+        list.pill_nm.includes(keyword),
+      );
+      // .slice(0, 10); 최대 10개항목만
+      setKeyItems(filteredItems);
+    }
   };
 
   useEffect(() => {
@@ -58,8 +61,21 @@ function Search(props: SearchProps) {
     }, 200);
     return () => {
       clearTimeout(debounce);
+      setItemSelected(false);
     };
   }, [keyword]);
+
+  const onSelect = (selectedValue: string) => {
+    setKeyword(selectedValue);
+    setKeyItems([]);
+    props.onSelect(selectedValue);
+    setItemSelected(true);
+  };
+
+  const clearSearchInput = () => {
+    setKeyword(''); // Clear the search input
+    setItemSelected(false); // Reset itemSelected to false
+  };
 
   return (
     // 검색창
@@ -93,7 +109,7 @@ function Search(props: SearchProps) {
         }}
       /> */}
 
-      {keyItems.length > 0 && keyword && (
+      {!itemSelected && keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
           <FlatList
             data={keyItems}
@@ -102,6 +118,7 @@ function Search(props: SearchProps) {
               <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
+                  onSelect(item.pill_nm);
                   setKeyword(item.pill_nm);
                   setKeyItems([]);
                   props.onSelect(item.pill_nm, item.pill_cd);
