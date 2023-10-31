@@ -6,7 +6,7 @@ const LogoComponent: React.FC = () => {
     <View style={styles.container}>
       {/* 2.png 이미지 추가 */}
       <Image
-        source={require('./android/app/src/img/red.png')} // 이미지 파일의 경로를 지정
+        source={require('./android/app/src/img/WLB.png')} // 이미지 파일의 경로를 지정
         style={styles.logo}
       />
     </View>
