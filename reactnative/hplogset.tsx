@@ -38,6 +38,9 @@ const HplogSet: React.FC<HplogSetProps> = ({
     Alert.alert('아직', '미구현');
   };
 
+  const goHplogSet = async () => {
+    navigation.navigate('hplogset');
+  };
   const logOut = async () => {
     try {
       const response = await fetch('http://43.200.178.131:3344/kakao/logout');
@@ -66,47 +69,48 @@ const HplogSet: React.FC<HplogSetProps> = ({
         <View style={styles.header}>
           {/* 앱 로고 및 이름 */}
           <View style={styles.leftContainer}>
-            {/* 로고 클릭 이벤트 */}
-            <TouchableOpacity
-              onPress={() => {
-                console.log('제발');
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'Main'}],
-                });
-              }}>
+            {/* 알림 아이콘 */}
+            <TouchableOpacity>
               <Image
-                source={require('./android/app/src/img/red.png')}
+                source={require('./android/app/src/img/notification.png')}
                 style={{
-                  width: 45,
-                  height: 45,
-                  marginRight: 16,
+                  width: 30,
+                  height: 30,
                 }}
               />
             </TouchableOpacity>
 
-            <Text style={styles.title}>웰라밸 / {userName}님</Text>
+            {/* <Text style={styles.title}>웰라밸 / {userName}님</Text> */}
           </View>
-
+          <TouchableOpacity
+            onPress={() => {
+              console.log('제발');
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Main'}],
+              });
+            }}>
+            <Image
+              source={require('./android/app/src/img/logo.png')}
+              style={{
+                width: 150,
+                height: 50,
+                // marginRight: 16,
+              }}
+            />
+          </TouchableOpacity>
           {/* 우측 상단 */}
           <View style={styles.rightContainer}>
-            {/* 알림 아이콘 */}
-            <Image
-              source={require('./android/app/src/img/notification.png')}
-              style={{
-                width: 30,
-                height: 30,
-              }}
-            />
             {/* 환경설정 아이콘 */}
-
-            <Image
-              source={require('./android/app/src/img/settings.png')}
-              style={{
-                width: 30,
-                height: 30,
-              }}
-            />
+            <TouchableOpacity onPress={goHplogSet}>
+              <Image
+                source={require('./android/app/src/img/settings.png')}
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.settingTop}>
@@ -216,21 +220,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
   leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-
-  title: {
-    fontSize: 23,
-    fontWeight: 'bold',
-  },
-
   rightContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 80,
+  },
+  // 앱 이름
+  title: {
+    fontSize: 23,
+    fontWeight: 'bold',
   },
 
   settButton: {
@@ -276,14 +277,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 58,
-    borderRadius: 35,
-    margin: 5,
-    backgroundColor: 'rgb(245,235,224)',
   },
   // 아티클 이모지
   articleemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 홈
   homeTab: {
@@ -301,6 +299,7 @@ const styles = StyleSheet.create({
   // 홈 이모지
   homeemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 개인
   accTab: {
@@ -318,6 +317,7 @@ const styles = StyleSheet.create({
   // 개인 이모지
   accemoji: {
     fontSize: 25,
+    color: 'black',
   },
   // 네비게이션 텍스트
   navText: {

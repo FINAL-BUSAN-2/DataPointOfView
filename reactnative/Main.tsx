@@ -74,16 +74,27 @@ const Main: React.FC<MainProps> = ({
     requestCameraPermission();
   }, []);
 
+  const getTimeFromItem = (item: RoutineData): string => {
+    return item.ertn_time || item.prtn_setting?.prtn_time || item.hrtn_time;
+  };
+
   const fetchData = async () => {
     try {
       const fetchDataUrl = `http://43.200.178.131:3344/rtnlist/?userEmail=${userEmail}`;
       const response = await axios.get(fetchDataUrl);
       if (response.data) {
-        const data = response.data;
-        // 정렬 없이 데이터를 설정함
+        const data: RoutineData[] = response.data;
+        data.sort((a, b) => {
+          const timeA = getTimeFromItem(a);
+          const timeB = getTimeFromItem(b);
+
+          // 문자열로 된 시간을 비교
+          if (timeA < timeB) return -1;
+          if (timeA > timeB) return 1;
+          return 0;
+        });
+
         setData(data);
-        // console.log(response);
-        console.log(data.prtn_tag);
       } else {
         console.error('데이터가 없습니다.');
       }
