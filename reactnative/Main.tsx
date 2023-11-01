@@ -47,6 +47,25 @@ interface RoutineData {
   };
 }
 
+//루틴달성
+interface RoutineItem {
+  hrtn_nm?: string;
+  ertn_nm?: string;
+  prtn_nm?: string;
+  hrtn_id?: string;
+  ertn_id?: string;
+  prtn_id?: string;
+}
+
+type DatabaseData = {
+  hrtn_id?: string;
+  fin_hrtn_time?: string;
+  ertn_id?: string;
+  fin_ertn_time?: string;
+  prtn_id?: string;
+  fin_prtn_time?: string;
+};
+
 const Main: React.FC<MainProps> = ({
   navigation,
   userName,
@@ -132,6 +151,64 @@ const Main: React.FC<MainProps> = ({
 
   const goHplogSet = async () => {
     navigation.navigate('hplogset');
+  };
+
+  //루틴달성핸들러
+  const handleRoutineCompletion = (item: RoutineItem) => {
+    const currentDateTime = new Date();
+    const hours = String(currentDateTime.getHours()).padStart(2, '0');
+    const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`; // hh:mm 형식으로 변환
+    console.log('11111111111111111111111111', item); //log
+    // Alert.alert('22222222222222222222222222', JSON.stringify(item)); // Alert로 값 확인
+    if (item.hrtn_nm) {
+      saveToDatabase('hrtn_fin', {
+        hrtn_id: item.hrtn_id,
+        fin_hrtn_time: formattedTime,
+      });
+    } else if (item.ertn_nm) {
+      saveToDatabase('ertn_fin', {
+        ertn_id: item.ertn_id,
+        fin_ertn_time: formattedTime,
+      });
+    } else if (item.prtn_nm) {
+      saveToDatabase('prtn_fin', {
+        prtn_id: item.prtn_id,
+        fin_prtn_time: formattedTime,
+      });
+    }
+  };
+
+  const saveToDatabase = async (tableName: string, data: DatabaseData) => {
+    try {
+      console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
+      // Alert.alert(
+      //   'Saving to Table:',
+      //   `${tableName} With Data: ${JSON.stringify(data)}`,
+      // ); // Alert로 값 확인
+
+      const response = await fetch(
+        `http://43.200.178.131:3344/rtn_done/${tableName}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to save data to server');
+      }
+
+      const result = await response.json();
+      console.log('4444444444444444444444:', result); // 서버의 응답 log 추가
+      return result;
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('데이터 저장에 실패했습니다.');
+    }
   };
 
   return (
@@ -237,8 +314,10 @@ const Main: React.FC<MainProps> = ({
             </View>
 
             <View style={styles.routineItemSection_done}>
-              {/* routineInfo */}
-              <Text style={styles.dottedCircle}></Text>
+              {/* routineInfo  루틴 달성 테스트중*/}
+              <Text
+                style={styles.dottedCircle}
+                onPress={() => handleRoutineCompletion(item)}></Text>
             </View>
           </View>
         )}
