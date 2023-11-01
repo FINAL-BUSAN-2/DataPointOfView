@@ -1165,17 +1165,22 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
         print(e)
 
 
+def email_test(userEmail: str):
+    at_index = userEmail.find("@")
+    if at_index != -1:
+        first_part = userEmail[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = userEmail[at_index + 1]  # "@" 다음 첫 문자 추출
+        email_data = f"{first_part}@{first_char_after_at}"
+    else:
+        raise ValueError("Invalid mem format")
+
+    return email_data
+
+
 @app.get("/emailtest")
-def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    pos_email = func.instr(Mem_Detail.mem_email, "@")
-    email_data = (
-        # db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-        db.query(func.substr(userEmail, 1, pos_email + 1))
-        .filter(Mem_Detail.mem_email == userEmail)
-        .first()
-        # db.query(func.substr(userEmail, 1, pos_email + 1)).all()
-    )
-    return {"email_data": email_data, "userEmail": userEmail, "pos_email": pos_email}
+def emailfind(userEmail: str):
+    email_data = email_test(userEmail)
+    return {"email_data": email_data, "userEmail": userEmail}
 
 
 ############################################################## pill_prod((영양검색창활용)
