@@ -900,6 +900,18 @@ def get_search_pill(db: Session = Depends(get_db)):
     return pill_func
 
 
+def email_test(userEmail: str):
+    at_index = userEmail.find("@")
+    if at_index != -1:
+        first_part = userEmail[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = userEmail[at_index + 1]  # "@" 다음 첫 문자 추출
+        email_data = f"{first_part}@{first_char_after_at}"
+    else:
+        raise ValueError("Invalid mem format")
+
+    return email_data
+
+
 @app.get("/health_piechartdata")
 def get_health_chart_data(userEmail: str, db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
@@ -1062,6 +1074,7 @@ day_of_week = korean_days[today.weekday()]
 @app.get("/finfunc")
 # def finfunc(userEmail: str, db: Session = Depends(get_db)):
 def finfunc(userEmail: str, db: Session = Depends(get_db)):
+    email_data = email_test(userEmail)
     try:
         ertn = (
             db.query(ERTN_SETTING).filter(
@@ -1121,7 +1134,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
             db.query(ERTN_FIN).filter(
                 and_(
                     cast(ERTN_FIN.fin_ertn_time, Date) == today,
-                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == "qwert0175@n",
+                    func.substr(ERTN_FIN.ertn_id, 1, pos_e + 1) == email_data,
                 ),
             )
             # .all()
@@ -1131,7 +1144,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
             db.query(HRTN_FIN).filter(
                 and_(
                     cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == "qwert0175@n",
+                    func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == email_data,
                 ),
             )
             # .all()
@@ -1141,7 +1154,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
             db.query(PRTN_FIN).filter(
                 and_(
                     cast(PRTN_FIN.fin_prtn_time, Date) == today,
-                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == "qwert0175@n",
+                    func.substr(PRTN_FIN.prtn_id, 1, pos_p + 1) == email_data,
                 )
             )
             # .all()
@@ -1162,18 +1175,6 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
         return result, finemoji
     except Exception as e:
         print(e)
-
-
-def email_test(userEmail: str):
-    at_index = userEmail.find("@")
-    if at_index != -1:
-        first_part = userEmail[:at_index]  # "@" 앞부분 추출
-        first_char_after_at = userEmail[at_index + 1]  # "@" 다음 첫 문자 추출
-        email_data = f"{first_part}@{first_char_after_at}"
-    else:
-        raise ValueError("Invalid mem format")
-
-    return email_data
 
 
 @app.get("/emailtest")
