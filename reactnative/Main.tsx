@@ -166,16 +166,14 @@ const Main: React.FC<MainProps> = ({
     const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`; // yyyy-mm-dd hh:mm 형식으로 변환
 
-    console.log('11111111111111111111111111', item); //log
+    // console.log('11111111111111111111111111', item); //log
 
     if (item.hrtn_nm) {
-      console.log('Condition for hrtn_nm is true');
       saveToDatabase('hrtn_fin', {
         hrtn_id: item.hrtn_id,
         fin_hrtn_time: formattedDateTime,
       });
     } else if (item.ertn_nm) {
-      console.log('Condition for ertn_nm is true');
       saveToDatabase('ertn_fin', {
         ertn_id: item.ertn_id,
         fin_ertn_time: formattedDateTime,
@@ -189,7 +187,7 @@ const Main: React.FC<MainProps> = ({
   };
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
-      console.log('2222222222222222', tableName, 'With Data:', data); // 여기에 log 추가
+      // console.log('2222222222222222', tableName, 'With Data:', data);
       Alert.alert;
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
@@ -201,14 +199,14 @@ const Main: React.FC<MainProps> = ({
           body: JSON.stringify(data),
         },
       );
-      console.log('333333333333333333333:', response);
+      // console.log('333333333333333333333:', response);
 
       if (!response.ok) {
         throw new Error('Failed to save data to server');
       }
 
       const result = await response.json();
-      console.log('4444444444444444444444:', result);
+      // console.log('4444444444444444444444:', result);
       return result;
     } catch (error) {
       console.error('Error:', error);
