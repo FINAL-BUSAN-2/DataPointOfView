@@ -77,9 +77,8 @@ const HplogSet: React.FC<HplogSetProps> = ({
           text: '탈퇴',
           onPress: async () => {
             try {
-              const response = await axios.post(
-                'http://43.200.178.131:3344/withdrawal',
-                {userEmail: userEmail},
+              const response = await axios.get(
+                `http://43.200.178.131:3344/withdrawal?userEmail=${userEmail}`,
               );
               if (response.status === 200) {
                 Alert.alert('탈퇴 완료', '탈퇴되었습니다.');
@@ -183,7 +182,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
               <Text style={styles.buttonText}>회원정보 수정</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleWithdrawal}
+              onPress={() => handleWithdrawal(userEmail)}
               style={styles.settButton}>
               <Text style={styles.buttonText}>탈퇴</Text>
             </TouchableOpacity>

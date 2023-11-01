@@ -195,14 +195,14 @@ async def kakao_logout_callback(request: Request):
     return {"message": "로그아웃 되었습니다."}
 
 
-@app.post('/withdrawal')
+@app.get('/withdrawal')
 async def goWithdrawal(userEmail:str, db: Session = Depends(get_db)):
-    # user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email==userEmail).first()
+    user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email==userEmail).first()
     
-    # user_data.mem_delete = 1
-    # user_data.mem_dday = str(datetime.now())
+    user_data.mem_delete = 1
+    user_data.mem_dday = str(datetime.now())
     
-    # db.commit()
+    db.commit()
     return {"message": "탈퇴 되었습니다."}
 
 
