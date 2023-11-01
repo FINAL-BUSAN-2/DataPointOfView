@@ -212,7 +212,7 @@ const Main: React.FC<MainProps> = ({
       return result;
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('데이터 저장에 실패했습니다.');
+      Alert.alert('이미 루틴을 수행하셨습니다');
     }
   };
 
