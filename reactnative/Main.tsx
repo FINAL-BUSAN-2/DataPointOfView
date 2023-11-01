@@ -230,7 +230,7 @@ const Main: React.FC<MainProps> = ({
               </View>
             </View>
 
-            <View style={styles.routineItemSection}>
+            <View style={styles.routineItemSectionNM}>
               <Text style={[styles.routineInfo, {color: 'black'}]}>
                 {item.ertn_nm || item.pill_nm || item.hrtn_nm}
               </Text>
@@ -684,6 +684,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 50,
   },
+  routineItemSectionNM: {
+    width: 150,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    height: 50,
+  },
+
   routineInfo: {
     textAlign: 'left',
     fontSize: 16,
