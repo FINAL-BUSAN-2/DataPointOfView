@@ -10,6 +10,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {ScrollView} from 'react-native-gesture-handler';
+import axios from 'axios';
 
 type HplogSetProps = {
   navigation: StackNavigationProp<RootStackPageList, 'hplogset'>;
@@ -61,6 +62,41 @@ const HplogSet: React.FC<HplogSetProps> = ({
       console.error('네트워크 오류:', error);
       Alert.alert('네트워크 오류', '네트워크 오류가 발생했습니다.');
     }
+  };
+
+  const handleWithdrawal = () => {
+    Alert.alert(
+      '탈퇴 확인',
+      '정말로 회원 탈퇴하시겠습니까?\n\n탈퇴 시 개인정보는 6개월간 보관됩니다.',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '탈퇴',
+          onPress: async userEmail => {
+            try {
+              const response = await axios.post(
+                'http://43.200.178.131:3344/withdrawal',
+              );
+              if (response.status === 200) {
+                Alert.alert('탈퇴 완료', '탈퇴되었습니다.');
+                setLogin(false);
+                setUserName(null);
+                setUserEmail(null);
+              } else {
+                Alert.alert('탈퇴 실패', '탈퇴 중에 오류가 발생했습니다.');
+              }
+            } catch (error) {
+              console.error('탈퇴 요청 중 오류 발생: ', error);
+              Alert.alert('오류', '탈퇴 중에 오류가 발생했습니다.');
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -145,7 +181,9 @@ const HplogSet: React.FC<HplogSetProps> = ({
             <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
+            <TouchableOpacity
+              onPress={handleWithdrawal}
+              style={styles.settButton}>
               <Text style={styles.buttonText}>탈퇴</Text>
             </TouchableOpacity>
           </View>

@@ -190,22 +190,9 @@ async def kakao_logout_callback(request: Request):
     return {"message": "로그아웃 되었습니다."}
 
 
-# @app.get("/naver/news/")
-# def naver_news_crawling(search: str):
-#     url = f'https://search.naver.com/search.naver?where=news&query={search}&sm=tab_opt&sort=0'
-#     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
-#     news = requests.get(url,headers=headers)
-#     news_html = BeautifulSoup(news.text,"html.parser")
-#     news_list = []
-#     for i in range(5) :
-#         title = news_html.select_one(f"#sp_nws{i+1} > div > div > a").get_text()
-#         href = news_html.select_one(f"#sp_nws{i+1} > div > div > a")["href"]
-#         img_element = news_html.select_one(f'#sp_nws{i+1} > div > a > img')
-#         img = img_element['src'] if img_element else None
-#         news_list.append({'title':title,'href':href,'img':img})
-#     df = pd.DataFrame(news_list)
-
-#     return df.to_dict(orient='records')
+@app.post('/withdrawal')
+async def withdrawal():
+    return {"message": "탈퇴 되었습니다."}
 
 
 # 루틴추가_기타
