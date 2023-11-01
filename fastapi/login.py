@@ -1168,7 +1168,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 def emailfind(userEmail: str):
     at_position = userEmail.index("@")
     pos = userEmail[1 : at_position + 1]
-    return pos
+    return pos, at_position, userEmail
 
 
 ############################################################## pill_prod((영양검색창활용)
