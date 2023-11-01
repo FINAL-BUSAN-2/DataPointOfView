@@ -1167,7 +1167,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 @app.get("/emailtest")
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
     email_data = (
-        db.query(Mem_Detail.mem_email).filter(Mem_Detail.mem_email == userEmail).first()
+        db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     )
     return {
         "email_data": email_data,
