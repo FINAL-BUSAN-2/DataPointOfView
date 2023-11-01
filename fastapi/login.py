@@ -1166,9 +1166,11 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 @app.get("/emailtest")
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    email_data = db.query(Mem_Detail.mem_email)
+    email_data = (
+        db.query(Mem_Detail.mem_email).filter(Mem_Detail.mem_email == userEmail).first()
+    )
     at_position = userEmail.index("@")
-    pos = userEmail[1 : at_position + 1]
+    # pos = userEmail[1 : at_position + 1]
     return {
         "email_data": email_data,
         "at_position": at_position,
