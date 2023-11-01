@@ -901,7 +901,7 @@ def get_search_pill(db: Session = Depends(get_db)):
 
 
 @app.get("/health_piechartdata")
-def get_health_chart_data(db: Session = Depends(get_db)):
+def get_health_chart_data(userEmail: str, db: Session = Depends(get_db)):
     # # HRTN_FIN 테이블에서 존재하는 hrtn_id 조회
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     # HEALTH 테이블에서 해당 태그의 빈도수 조회 (태그: 상체/하체/코어/유산소/스트레칭/기타)
@@ -911,7 +911,7 @@ def get_health_chart_data(db: Session = Depends(get_db)):
         .filter(
             and_(
                 HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                HRTN_SETTING.hrtn_mem == userEmail,
             )
         )
         .group_by(HEALTH.health_tag)
@@ -957,14 +957,14 @@ def get_color_by_tag(tag):
 
 
 @app.get("/pill_piechartdata")
-def get_pill_chart_data(db: Session = Depends(get_db)):
+def get_pill_chart_data(userEmail: str, db: Session = Depends(get_db)):
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
     func_counts_query = (
         db.query(PILL_FUNC.func_nm, func.count(PILL_FUNC.func_nm), PILL_FUNC.func_emoji)
         .filter(
             and_(
                 PRTN_SETTING.prtn_id.in_(prtn_ids_query),
-                PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                PRTN_SETTING.prtn_mem == userEmail,
                 PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm,
                 PILL_CMB.cmb_pill == PILL_PROD.pill_cd,
                 PILL_FUNC.func_cd == PILL_CMB.cmb_func,
@@ -1061,12 +1061,12 @@ day_of_week = korean_days[today.weekday()]
 
 @app.get("/finfunc")
 # def finfunc(userEmail: str, db: Session = Depends(get_db)):
-def finfunc(db: Session = Depends(get_db)):
+def finfunc(userEmail: str, db: Session = Depends(get_db)):
     try:
         ertn = (
             db.query(ERTN_SETTING).filter(
                 and_(
-                    ERTN_SETTING.ertn_mem == "qwert0175@naver.com",
+                    ERTN_SETTING.ertn_mem == userEmail,
                     or_(
                         ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
                         ERTN_SETTING.ertn_day.is_(None),
@@ -1083,7 +1083,7 @@ def finfunc(db: Session = Depends(get_db)):
         hrtn = (
             db.query(HRTN_SETTING).filter(
                 and_(
-                    HRTN_SETTING.hrtn_mem == "qwert0175@naver.com",
+                    HRTN_SETTING.hrtn_mem == userEmail,
                     or_(
                         HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
@@ -1100,7 +1100,7 @@ def finfunc(db: Session = Depends(get_db)):
         prtn = (
             db.query(PRTN_SETTING).filter(
                 and_(
-                    PRTN_SETTING.prtn_mem == "qwert0175@naver.com",
+                    PRTN_SETTING.prtn_mem == userEmail,
                     or_(
                         PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
                         PRTN_SETTING.prtn_day.is_(None),
@@ -1162,6 +1162,14 @@ def finfunc(db: Session = Depends(get_db)):
         return result, finemoji
     except Exception as e:
         print(e)
+
+
+@app.get("/emailtest")
+def emailfind(userEmail: str, db: Session = Depends(get_db)):
+    at_index = userEmail.find("@")
+    if at_index != -1:
+        first_part = userEmail[:at_index]
+    return first_part
 
 
 ############################################################## pill_prod((영양검색창활용)
