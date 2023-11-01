@@ -1309,7 +1309,7 @@ class PrtnFinCreate(BaseModel):
     fin_prtn_time: str
 
 
-@app.post("/rtn_done/hrtn_fin/")
+@app.post("/rtn_done/hrtn_fin")
 def create_hrtn(data: HrtnFinCreate, db: Session = Depends(get_db)):
     hrtn = HRTN_FIN(**data.dict())
     db.add(hrtn)
@@ -1318,7 +1318,7 @@ def create_hrtn(data: HrtnFinCreate, db: Session = Depends(get_db)):
     return hrtn
 
 
-@app.post("/rtn_done/ertn_fin/")
+@app.post("/rtn_done/ertn_fin")
 def create_ertn(data: ErtnFinCreate, db: Session = Depends(get_db)):
     ertn = ERTN_FIN(**data.dict())
     db.add(ertn)
@@ -1327,7 +1327,7 @@ def create_ertn(data: ErtnFinCreate, db: Session = Depends(get_db)):
     return ertn
 
 
-@app.post("/rtn_done/prtn_fin/")
+@app.post("/rtn_done/prtn_fin")
 def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
     prtn = PRTN_FIN(**data.dict())
     db.add(prtn)
