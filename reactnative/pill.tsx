@@ -206,133 +206,150 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           </Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.container}>
-        {/* <ScrollView style={styles.scrollView}> */}
-        {/* 루틴입력 */}
-        <View
-          style={{
-            zIndex: 1,
-            flex: 0.1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            left: 10,
-          }}>
-          <Text
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{flexGrow: 5}}>
+          {/* <ScrollView style={styles.scrollView}> */}
+          {/* 루틴입력 */}
+          <View
             style={{
+              flex: 0.1,
+              flexDirection: 'row',
+              alignItems: 'center',
               alignSelf: 'center',
-              fontSize: 30,
-              left: 5,
-              bottom: 5,
+              left: 10,
+              // backgroundColor: 'orange',
             }}>
-            🔍
-          </Text>
-          <Search
-            onKeywordChange={handleKeywordChange}
-            onSelect={(pillName, pillCd) => {
-              setSelectedPillCd(pillCd);
-              setSelectedValue(pillName);
-            }}
-          />
-        </View>
-        {/* <KeyboardAvoidingView style={{flex: 0.15, top: 10}} behavior="padding"> */}
-        {/*몇회&몇정 입력 박스 */}
-        <View style={styles.setreps}>
-          {/* 몇회 입력 */}
-          <TextInput
-            style={styles.setrepsinput}
-            value={set}
-            onChangeText={handleSetChange}
-            placeholder="       "
-            keyboardType="numeric"
-          />
-          <Text style={styles.setrepstext}>회 X</Text>
-          {/* 몇정 입력 */}
-          <TextInput
-            style={styles.setrepsinput}
-            value={reps}
-            onChangeText={handleRepsChange}
-            placeholder="       "
-            keyboardType="numeric"
-          />
-          <Text style={styles.setrepstext}>정</Text>
-        </View>
-        {/* 날짜 선택 (달력 호출) */}
-        <View style={styles.caltotal}>
-          <TouchableOpacity
-            onPress={() => setShowCalendar(true)}
-            style={styles.calendarContainer}>
-            {!showCalendar ? (
-              <View>
-                <Text style={styles.defaultText}>
-                  {selectedDate}
-                  <Text style={styles.calendarText}>에 시작할 거예요</Text>
-                </Text>
-                <TouchableOpacity
-                  onPress={() => setShowCalendar(true)}></TouchableOpacity>
-              </View>
-            ) : (
-              <View>
-                <Calendar
-                  style={{flex: 0.1}}
-                  onDayPress={handleDateSelect}
-                  markedDates={{[selectedDate]: {selected: true}}}
-                />
-                <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                  <View style={{flex: 0.3}}>
-                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>취소</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
-        {/* 시간 선택 */}
-        <View style={styles.Timecontainer}>
-          <TimeComponent onTimeChange={handleTimeChange} />
-        </View>
-        <View style={{flex: 0.1, top: 30}}>
-          <Toggle
-            label={'알림'}
-            value={notificationEnabled}
-            onChange={setNotificationEnabled}
-          />
-        </View>
-        <View style={{flex: 0.1, top: 30}}>
-          {/* 반복 설정 */}
-          <Toggle
-            label={'반복'}
-            value={repeatEnabled}
-            onChange={setRepeatEnabled}>
-            {repeatEnabled && (
-              <View>
-                <View style={styles.dayPickerContainer}>
-                  <View style={styles.dayButtonRow}>
-                    {['월', '화', '수', '목', '금', '토', '일'].map(day => (
-                      <TouchableOpacity
-                        key={`day-${day}`}
-                        onPress={() => handleDayOfWeekToggle(day)}
-                        style={[
-                          styles.dayButton,
-                          selectedDaysOfWeek.includes(day) &&
-                            styles.selectedDayButton,
-                        ]}>
-                        <Text
-                          key={`text-${day}`}
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontSize: 30,
+                right: 10,
+                top: 7,
+                // bottom: 5,
+              }}>
+              🔍
+            </Text>
+            <View
+              style={{
+                alignSelf: 'center',
+                width: '80%',
+                // backgroundColor: 'green',
+              }}>
+              {/* <View> */}
+              <Search
+                onKeywordChange={handleKeywordChange}
+                onSelect={(pillName, pillCd) => {
+                  setSelectedPillCd(pillCd);
+                  setSelectedValue(pillName);
+                }}
+              />
+            </View>
+          </View>
+          {/* <KeyboardAvoidingView style={{flex: 0.15, top: 10}} behavior="padding"> */}
+          {/*몇회&몇정 입력 박스 */}
+          <View style={styles.setreps}>
+            {/* 몇회 입력 */}
+            <TextInput
+              style={styles.setrepsinput}
+              value={set}
+              onChangeText={handleSetChange}
+              placeholder="       "
+              keyboardType="numeric"
+            />
+            <Text style={styles.setrepstext}>회 X</Text>
+            {/* 몇정 입력 */}
+            <TextInput
+              style={styles.setrepsinput}
+              value={reps}
+              onChangeText={handleRepsChange}
+              placeholder="       "
+              keyboardType="numeric"
+            />
+            <Text style={styles.setrepstext}>정</Text>
+          </View>
+          {/* 날짜 선택 (달력 호출) */}
+          <View style={styles.caltotal}>
+            <TouchableOpacity
+              onPress={() => setShowCalendar(true)}
+              style={styles.calendarContainer}>
+              {!showCalendar ? (
+                <View>
+                  <Text style={styles.defaultText}>
+                    {selectedDate}
+                    <Text style={styles.calendarText}>에 시작할 거예요</Text>
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setShowCalendar(true)}></TouchableOpacity>
+                </View>
+              ) : (
+                <View>
+                  <Calendar
+                    style={{flex: 0.1}}
+                    onDayPress={handleDateSelect}
+                    markedDates={{[selectedDate]: {selected: true}}}
+                  />
+                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                    <View style={{flex: 0.3}}>
+                      <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                        취소
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+          {/* 시간 선택 */}
+          <View style={styles.Timecontainer}>
+            <TimeComponent onTimeChange={handleTimeChange} />
+          </View>
+          <View style={{zIndex: 2}}>
+            <Toggle
+              label={'알림'}
+              value={notificationEnabled}
+              onChange={setNotificationEnabled}
+            />
+          </View>
+          <View style={{zIndex: 2}}>
+            {/* 반복 설정 */}
+            <Toggle
+              label={'반복'}
+              value={repeatEnabled}
+              onChange={setRepeatEnabled}>
+              {repeatEnabled && (
+                <View>
+                  <View style={styles.dayPickerContainer}>
+                    <View style={styles.dayButtonRow}>
+                      {['월', '화', '수', '목', '금', '토', '일'].map(day => (
+                        <TouchableOpacity
+                          key={`day-${day}`}
+                          onPress={() => handleDayOfWeekToggle(day)}
                           style={[
-                            styles.dayButtonText,
+                            styles.dayButton,
                             selectedDaysOfWeek.includes(day) &&
-                              styles.selectedDayButtonText,
+                              styles.selectedDayButton,
                           ]}>
-                          {day}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                          <Text
+                            key={`text-${day}`}
+                            style={[
+                              styles.dayButtonText,
+                              selectedDaysOfWeek.includes(day) &&
+                                styles.selectedDayButtonText,
+                            ]}>
+                            {day}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
-          </Toggle>
-        </View>
+              )}
+            </Toggle>
+          </View>
+        </ScrollView>
         {/* </ScrollView> */}
         {/* </KeyboardAvoidingView> */}
         {/* 추가하기 */}
@@ -347,14 +364,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 };
 
 const styles = StyleSheet.create({
-  scrollView: {},
   container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     // justifyContent: 'center',
     alignContent: 'flex-start',
-    zIndex: 1,
     backgroundColor: '#fff',
   },
   header: {
@@ -369,18 +384,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomColor: '#ddd',
   },
+  scrollView: {
+    // flex: 1,
+    // height: 500,
+    width: '100%',
+    // backgroundColor: 'purple',
+    marginBottom: '18%',
+    zIndex: 1,
+  },
 
   /// 몇회 & 몇정 설정
   setreps: {
-    flex: 0.08,
+    // flex: 1,
     width: 300,
+    height: '10%',
     flexDirection: 'row',
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
     alignSelf: 'center',
-    bottom: 5,
+    // top: 20,
     // backgroundColor: 'red',
-    // marginBottom: 10,
+    // marginTop: 20,
     // bottom: 200,
   },
   setrepsinput: {
@@ -398,16 +422,17 @@ const styles = StyleSheet.create({
   /// 캘린더
   caltotal: {
     flex: 0.1,
+    // top: 30,
+    marginTop: 30,
   },
   calendarContainer: {
     flex: 1,
     marginTop: 5,
     width: '80%',
-    position: 'absolute',
+    // position: 'absolute',
     alignItems: 'center',
     alignSelf: 'center',
     // marginBottom: 50,
-    zIndex: 2,
     // top: 140,
     // bottom: 200,
   },
@@ -428,13 +453,14 @@ const styles = StyleSheet.create({
 
   // 시간 설정
   Timecontainer: {
-    flex: 0.2,
-    top: 20,
+    // flex: 0.2,
+    // top: 50,
+    height: '40%',
+    // backgroundColor: 'orange',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1,
-    margintop: 30,
-    marginBottom: 30,
+    // margintop: 50,
+    // marginBottom: 30,
     // bottom: 200,
   },
 
@@ -469,20 +495,21 @@ const styles = StyleSheet.create({
   addContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
     height: 70,
+    width: '100%',
     alignItems: 'center',
+    backgroundColor: '#fff',
     elevation: 50, // for Android
   },
   //addTab
   addTab: {
     flexDirection: 'row',
-    height: 80,
-    width: '100%',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    height: 60,
+    width: '80%',
+    borderRadius: 50,
     backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
