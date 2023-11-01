@@ -11,7 +11,7 @@ export interface ToggleProps {
 export const styles = StyleSheet.create({
   /// 알람 설정
   notificationcontainer: {
-    marginTop: 0,
+    // marginTop: 0,
     width: 360,
     height: 50,
     flexDirection: 'row',

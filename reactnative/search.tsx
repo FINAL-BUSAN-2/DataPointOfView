@@ -83,7 +83,7 @@ function Search(props: SearchProps) {
 
   return (
     // 검색창
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, zIndex: 3}}>
       <View style={styles.container}>
         <TextInput
           value={keyword}
@@ -118,6 +118,7 @@ function Search(props: SearchProps) {
           <FlatList
             data={keyItems}
             style={{flex: 1}}
+            nestedScrollEnabled={true}
             keyExtractor={item => item.pill_nm}
             renderItem={({item}) => (
               <TouchableOpacity
@@ -147,20 +148,22 @@ function Search(props: SearchProps) {
 const styles = StyleSheet.create({
   //검색창박스
   container: {
-    flex: 0.5,
-    // marginTop: 20, //위로부터 띄우기
-    marginHorizontal: 20, //양옆띄우기
-    width: '85%',
+    flex: 1,
+    marginTop: 20, //위로부터 띄우기
+    // marginHorizontal: 20, //양옆띄우기
+    width: '100%',
     height: 50, // 높이 값을 조금 더 크게 설정
     position: 'relative',
     flexDirection: 'row', // 방향 설정
     alignItems: 'center', // 세로 정렬
-    alignSelf: 'flex-start',
+    top: 0,
+    // alignSelf: 'flex-end',
     justifyContent: 'space-between', // 가로 정렬
     borderRadius: 30,
-    //borderWidth: 1,
+    // backgroundColor: 'blue',
+    // borderWidth: 1,
     //borderColor: 'black',
-    zIndex: 2,
+    zIndex: 3,
   },
   //검색창
   search: {
@@ -169,15 +172,16 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     backgroundColor: '#fff', //검색창 색상
     width: '100%',
+    // left: 50,
     height: 50, // 전체 부모 컨테이너의 높이를 차지하게 설정
     color: '#333', //입력되는글자색상
     fontSize: 14, // fontSize 값을 조금 줄임
-    paddingVertical: 10, // paddingVertical 값을 조절
+    // paddingVertical: 10, // paddingVertical 값을 조절
     borderRadius: 30, // 라운드 모서리 추가
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'rgb(127,127,127)',
     // marginBottom: 10, // 간격 추가
-    marginRight: 10, // 취소 버튼과의 간격
+    // marginRight: 10, // 취소 버튼과의 간격
   },
   searchIcon: {
     position: 'absolute',
@@ -186,28 +190,31 @@ const styles = StyleSheet.create({
   },
   //연관검색창
   autoSearchContainer: {
-    flex: 1,
-    height: 300,
+    // flex: 1,
+    height: 180,
     // position: 'absolute',
     alignSelf: 'center',
-    // top: 60,
+    // top: 36,
+    bottom: 30,
     maxHeight: 300, // 높이를 제한
-    width: '80%',
+    width: '99%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
-    right: 16,
+    // right: 5,
+    // left: 30,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     borderWidth: 1,
     borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
-    zIndex: 1,
+    zIndex: 2,
   },
   item: {
     padding: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
     justifyContent: 'space-between',
+    zIndex: 2,
   },
   arrowIcon: {
     width: 18,
