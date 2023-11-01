@@ -75,9 +75,8 @@ const HplogSet: React.FC<HplogSetProps> = ({
         },
         {
           text: '탈퇴',
-          onPress: async userEmail => {
+          onPress: async () => {
             try {
-              Alert.alert(userEmail);
               const response = await axios.post(
                 'http://43.200.178.131:3344/withdrawal',
                 {userEmail: userEmail},

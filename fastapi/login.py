@@ -200,8 +200,8 @@ async def withdrawal(userEmail:str, db: Session = Depends(get_db)):
     user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email==userEmail).first()
     
     user_data.mem_delete = 1
-    user_data.mem_dday = datetime.now()
-
+    user_data.mem_dday = str(datetime.now())
+    
     db.commit()
     return {"message": "탈퇴 되었습니다."}
 
