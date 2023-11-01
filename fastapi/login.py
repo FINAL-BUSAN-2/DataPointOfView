@@ -197,7 +197,7 @@ async def kakao_logout_callback(request: Request):
 
 @app.post('/withdrawal')
 async def withdrawal(userEmail:str, db: Session = Depends(get_db)):
-    user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email==userEmail).first()
+    user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email=='qwert0175@naver.com').first()
     
     user_data.mem_delete = 1
     user_data.mem_dday = datetime.now()
