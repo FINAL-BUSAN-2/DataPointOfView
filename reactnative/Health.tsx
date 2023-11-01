@@ -467,31 +467,31 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           </View>
           <View style={styles.container}>
             <ScrollView>
-              <TouchableOpacity onPress={() => handleCameraButtonClick()}>
-                <View style={styles.cameraSection}>
+              <View style={styles.cameraSection}>
+                <TouchableOpacity onPress={() => handleCameraButtonClick()}>
                   <View style={styles.camerabutton}>
                     <Text style={styles.cameraText}>📷</Text>
                   </View>
+                </TouchableOpacity>
 
-                  <View style={styles.cameraInfo}>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontWeight: 'bold',
-                        fontSize: 17,
-                      }}>
-                      운동기구 카메라 인식
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: 15,
-                      }}>
-                      - 이 기구 이름 뭐에요?
-                    </Text>
-                  </View>
+                <View style={styles.cameraInfo}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontWeight: 'bold',
+                      fontSize: 17,
+                    }}>
+                    운동기구 카메라 인식
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 15,
+                    }}>
+                    - 이 기구 이름 뭐에요?
+                  </Text>
                 </View>
-              </TouchableOpacity>
+              </View>
               <View style={styles.searchSection}>
                 <View style={{zIndex: 1, width: '100%'}}>
                   <HealthSearch

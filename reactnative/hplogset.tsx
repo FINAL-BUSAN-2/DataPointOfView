@@ -79,6 +79,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
             try {
               const response = await axios.post(
                 'http://43.200.178.131:3344/withdrawal',
+                {userEmail: userEmail},
               );
               if (response.status === 200) {
                 Alert.alert('탈퇴 완료', '탈퇴되었습니다.');

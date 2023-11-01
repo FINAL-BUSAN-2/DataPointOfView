@@ -149,6 +149,11 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
     )
     if existing_user:
+        if existing_user.mem_delete == 1:
+            existing_user.mem_delete = 0
+            existing_user.mem_dday = None
+            db.commit()
+            db.refresh(existing_user)
         return RedirectResponse(login_url_scheme)
 
     else:
@@ -191,7 +196,13 @@ async def kakao_logout_callback(request: Request):
 
 
 @app.post('/withdrawal')
-async def withdrawal():
+async def withdrawal(userEmail:str, db: Session = Depends(get_db)):
+    user_data = db.query(Mem_Detail).filter(Mem_Detail.mem_email==userEmail).first()
+    
+    user_data.mem_delete = 1
+    user_data.mem_dday = datetime.now()
+
+    db.commit()
     return {"message": "탈퇴 되었습니다."}
 
 
