@@ -44,6 +44,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
+  const [chartData4, setChartData4] = useState([]);
   useEffect(() => {
     fetch(
       `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
@@ -62,6 +63,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(chartData3 =>
         setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
       )
+      .catch(error => console.error('Error:', error));
+    fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData4 => setChartData4(chartData4))
       .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
