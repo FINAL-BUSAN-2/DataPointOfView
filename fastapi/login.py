@@ -1184,30 +1184,28 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 # return {"email_data": email_data, "userEmail": userEmail}
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-    tag_counts_query = (
-        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
-        .join(HRTN_SETTING, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+    emoji_query = (
+        db.query(HRTN_FIN)
         .filter(
             and_(
-                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
                 HRTN_SETTING.hrtn_mem == userEmail,
+                HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
+                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
             )
         )
         .all()
     )
 
     # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    pie_chart_data = [
-        {
-            "tag": tag_count[0],
-            "count": tag_count[1],
-            "emoji": tag_count[2],
-            "color": get_color_by_tag(tag_count[0]),
-        }
-        for tag_count in tag_counts_query
-    ]
+    # emoji_data = [
+    #     {
+    #         "fin_time": emoji[0],
+    #         "emoji": emoji[2],
+    #     }
+    #     for emoji in emoji_query
+    # ]
 
-    return pie_chart_data
+    return emoji_query
 
 
 ############################################################## pill_prod((영양검색창활용)
