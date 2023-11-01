@@ -275,14 +275,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   const imageSearch = async () => {
     const formData = new FormData();
-    formData.append('image', {
+    formData.append('file', {
       uri: `file://${internalStoragePath}/${newFileName}`,
       type: 'image/jpeg',
       name: newFileName,
     });
 
-    const searchUrl = 'http://43.200.178.131:3344/imageSearch';
-    // const searchUrl = 'https://dpv-project.com:5000/upload';
+    // const searchUrl = 'http://43.200.178.131:3344/imageSearch';
+    const searchUrl = 'http://13.209.7.124:5000/upload';
 
     //   const HttpAgent = new https.Agent({rejectUnauthorized: false});
 
@@ -294,7 +294,25 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         //       httpsAgent: HttpAgent,
       })
       .then(response => {
-        console.log('이미지 업로드 성공:', response.data);
+        Alert.alert('이 기구가 맞나요?', response.data['predicted_class'], [
+          {
+            text: '네',
+            onPress: () => {
+              setIsCameraOpen(false);
+              RNFS.unlink(`${internalStoragePath}/${newFileName}`);
+              setModalVisible(!isModalVisible);
+              setCameraImgPath('');
+            },
+          },
+          {
+            text: '아니요',
+            onPress: () => {
+              RNFS.unlink(`${internalStoragePath}/${newFileName}`);
+              setModalVisible(!isModalVisible);
+              setCameraImgPath('');
+            },
+          },
+        ]);
       })
       .catch(error => {
         if (error.response) {
@@ -306,37 +324,6 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         }
       });
   };
-  // const imageSearch = async () => {
-  //   const formData = new FormData();
-  //   formData.append('image', {
-  //     uri: `file://${internalStoragePath}/${newFileName}`,
-  //     type: 'image/jpeg',
-  //     name: newFileName,
-  //   });
-
-  //   const searchUrl = 'https://dpv-project.com:5000/upload';
-
-  //   fetch(searchUrl, {
-  //     method: 'POST',
-  //     body: formData,
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //     },
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log('이미지 업로드 성공:', data);
-  //     })
-  //     .catch(error => {
-  //       if (error.response) {
-  //         console.error('서버응답오류:', error.response.data);
-  //       } else if (error.request) {
-  //         console.error('네트워크 오류', error.message);
-  //       } else {
-  //         console.error('오류', error.message);
-  //       }
-  //     });
-  // };
 
   return (
     <>
