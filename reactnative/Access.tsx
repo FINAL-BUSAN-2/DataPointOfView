@@ -169,12 +169,22 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 운동랭킹 이모지 영역 */}
           <View style={styles.tophealthemoji}>
             {/* 운동랭킹 이모지 스타일 */}
-            <Text style={styles.tophealthemojitext}>{htopEmoji}</Text>
+            <Text style={styles.tophealthemojitext}>
+              {htopEmoji ? htopEmoji : '❓'}
+            </Text>
           </View>
           {/* 운동랭킹 태그 영역 */}
           <View style={styles.tophealthtag}>
             {/* 운동랭킹 태그 스타일 */}
-            <Text style={styles.tophealthtagtext}>{htopTag}</Text>
+            <Text style={styles.tophealthtagtext}>
+              {htopTag ? (
+                <Text style={styles.toppillfunctext}>{htopTag}</Text>
+              ) : (
+                <Text style={{fontSize: 12, color: 'white'}}>
+                  달성한 루틴이 {'\n'}없어요.
+                </Text>
+              )}
+            </Text>
           </View>
         </View>
 
@@ -188,12 +198,22 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {/* 영양랭킹 이모지 영역 */}
           <View style={styles.toppillemoji}>
             {/* 영양랭킹 이모지 스타일 */}
-            <Text style={styles.toppillemojitext}>{ptopEmoji}</Text>
+            <Text style={styles.toppillemojitext}>
+              {ptopEmoji ? ptopEmoji : '❓'}
+            </Text>
           </View>
           {/* 영양랭킹 기능명 영역 */}
           <View style={styles.toppillfunc}>
             {/* 영양랭킹 기능명 스타일 */}
-            <Text style={styles.toppillfunctext}>{ptopFunc}</Text>
+            <Text style={styles.toppillfunctext}>
+              {ptopFunc ? (
+                <Text style={styles.toppillfunctext}>{ptopFunc}</Text>
+              ) : (
+                <Text style={{fontSize: 12, color: 'white'}}>
+                  달성한 루틴이 없어요.
+                </Text>
+              )}
+            </Text>
           </View>
         </View>
 
@@ -246,7 +266,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
                 sliceColor={hcolor}
               />
             ) : (
-              <Text>Loading...</Text>
+              <Text>달성한 루틴이 없어요.</Text>
             )}
           </View>
 
@@ -259,7 +279,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
                 sliceColor={pcolor}
               />
             ) : (
-              <Text>Loading...</Text>
+              <Text>달성한 루틴이 없어요.</Text>
             )}
           </View>
         </View>
