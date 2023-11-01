@@ -237,8 +237,10 @@ const Main: React.FC<MainProps> = ({
             </View>
 
             <View style={styles.routineItemSection_done}>
-              {/* routineInfo */}
-              <Text style={styles.dottedCircle}></Text>
+              {/* routineInfo  루틴 달성 테스트중*/}
+              <Text
+                style={styles.dottedCircle}
+                onPress={() => alert('완료되었습니다.')}></Text>
             </View>
           </View>
         )}
