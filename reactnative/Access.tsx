@@ -45,6 +45,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
   const [chartData4, setChartData4] = useState([]);
+  const [showRecommend, setShowRecommend] = useState(false);
   useEffect(() => {
     fetch(
       `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
@@ -93,6 +94,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
+
+  const showRecommendButton = () => {
+    setShowRecommend(!showRecommend);
+  };
 
   console.log('finper:', chartData3?.result, chartData3?.finemoji);
   // console.log('finemoji:', finfunc);
@@ -288,17 +293,23 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
         {/* 통계 텍스트 영역 */}
         <View style={styles.statisticstextbox}>
-          <View style={styles.statictitle}>
+          <TouchableOpacity
+            onPress={showRecommendButton}
+            style={styles.statictitle}>
             <Text style={styles.statictitletext}>추천 영양제</Text>
-          </View>
-          {/* 추천 타이틀 */}
-          <Text style={styles.recotext}>다른 사람은 이런 것도 먹어요!</Text>
-          {/* 추천 제품1 */}
-          <Text style={styles.recoproducttext}>🎃 비타민군 - 쏠라c</Text>
-          {/* 추천 제품2 */}
-          <Text style={styles.cautiontext}>🎃 비타민군 - 쏠라c</Text>
-          {/* 추천 제품3 */}
-          <Text style={styles.cautiontext2}>🎃 비타민군 - 쏠라c</Text>
+          </TouchableOpacity>
+          {showRecommend && (
+            <>
+              {/* 추천 타이틀 */}
+              <Text style={styles.recotext}>다른 사람은 이런 것도 먹어요!</Text>
+              {/* 추천 제품1 */}
+              <Text style={styles.recoproducttext}>🎃 비타민군 - 쏠라c</Text>
+              {/* 추천 제품2 */}
+              <Text style={styles.cautiontext}>🎃 비타민군 - 쏠라c</Text>
+              {/* 추천 제품3 */}
+              <Text style={styles.cautiontext2}>🎃 비타민군 - 쏠라c</Text>
+            </>
+          )}
         </View>
       </View>
 
