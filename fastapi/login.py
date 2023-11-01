@@ -1184,6 +1184,8 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 # return {"email_data": email_data, "userEmail": userEmail}
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+    email_data = email_test(userEmail)
+    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
     emoji_query = (
         db.query(HRTN_FIN)
         .filter(
@@ -1191,6 +1193,7 @@ def emailfind(userEmail: str, db: Session = Depends(get_db)):
                 HRTN_SETTING.hrtn_mem == userEmail,
                 HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
                 HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                func.substr(ERTN_FIN.ertn_id, 1, pos_h + 1) == email_data,
             )
         )
         .all()
