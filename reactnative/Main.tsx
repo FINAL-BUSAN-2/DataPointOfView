@@ -156,36 +156,34 @@ const Main: React.FC<MainProps> = ({
   //루틴달성핸들러
   const handleRoutineCompletion = (item: RoutineItem) => {
     const currentDateTime = new Date();
+    const year = currentDateTime.getFullYear();
+    const month = String(currentDateTime.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+    const day = String(currentDateTime.getDate()).padStart(2, '0');
     const hours = String(currentDateTime.getHours()).padStart(2, '0');
     const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
-    const formattedTime = `${hours}:${minutes}`; // hh:mm 형식으로 변환
-    console.log('11111111111111111111111111', item); //log
-    // Alert.alert('22222222222222222222222222', JSON.stringify(item)); // Alert로 값 확인
+    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`; // yyyy-mm-dd hh:mm 형식으로 변환
+    //console.log('11111111111111111111111111', item); //log
     if (item.hrtn_nm) {
       saveToDatabase('hrtn_fin', {
         hrtn_id: item.hrtn_id,
-        fin_hrtn_time: formattedTime,
+        fin_hrtn_time: formattedDateTime,
       });
     } else if (item.ertn_nm) {
       saveToDatabase('ertn_fin', {
         ertn_id: item.ertn_id,
-        fin_ertn_time: formattedTime,
+        fin_ertn_time: formattedDateTime,
       });
     } else if (item.prtn_nm) {
       saveToDatabase('prtn_fin', {
         prtn_id: item.prtn_id,
-        fin_prtn_time: formattedTime,
+        fin_prtn_time: formattedDateTime,
       });
     }
   };
 
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
-      console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
-      // Alert.alert(
-      //   'Saving to Table:',
-      //   `${tableName} With Data: ${JSON.stringify(data)}`,
-      // ); // Alert로 값 확인
+      //console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
 
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
@@ -203,7 +201,7 @@ const Main: React.FC<MainProps> = ({
       }
 
       const result = await response.json();
-      console.log('4444444444444444444444:', result); // 서버의 응답 log 추가
+      //console.log('4444444444444444444444:', result);
       return result;
     } catch (error) {
       console.error('Error:', error);
