@@ -1167,10 +1167,13 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 @app.get("/emailtest")
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    pos_email = func.instr(userEmail, "@")
+    pos_email = func.instr(Mem_Detail.mem_email, "@")
     email_data = (
         # db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-        db.query(func.substr(userEmail, 1, pos_email + 1)).all()
+        db.query(func.substr(userEmail, 1, pos_email + 1))
+        .filter(Mem_Detail.mem_email == userEmail)
+        .first()
+        # db.query(func.substr(userEmail, 1, pos_email + 1)).all()
     )
     return {"email_data": email_data, "userEmail": userEmail, "pos_email": pos_email}
 
