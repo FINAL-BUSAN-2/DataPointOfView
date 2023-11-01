@@ -149,6 +149,7 @@ async def kakao_callback(code: str, request: Request, db: Session = Depends(get_
         f"hplog://callback?name={encodedUserName}&user_email={encodedUserEmail}"
     )
     if existing_user:
+        # 탈퇴한 사용자의 경우, 탈퇴 1 -> 0
         if existing_user.mem_delete == 1:
             existing_user.mem_delete = 0
             existing_user.mem_dday = None
