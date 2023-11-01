@@ -1165,11 +1165,10 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 
 @app.get("/emailtest")
-def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    at_index = userEmail.find("@")
-    if at_index != -1:
-        first_part = userEmail[:at_index]
-    return first_part
+def emailfind(userEmail: str):
+    pos_emaile = func.instr(userEmail, "@")
+    pos = userEmail[1 : pos_emaile + 1]
+    return pos
 
 
 ############################################################## pill_prod((영양검색창활용)
