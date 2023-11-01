@@ -466,136 +466,134 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
             </View>
           </View>
           <View style={styles.container}>
-            <ScrollView>
-              <View style={styles.cameraSection}>
-                <TouchableOpacity onPress={() => handleCameraButtonClick()}>
-                  <View style={styles.camerabutton}>
-                    <Text style={styles.cameraText}>📷</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <View style={styles.cameraInfo}>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontWeight: 'bold',
-                      fontSize: 17,
-                    }}>
-                    운동기구 카메라 인식
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 15,
-                    }}>
-                    - 이 기구 이름 뭐에요?
-                  </Text>
+            <View style={styles.cameraSection}>
+              <TouchableOpacity onPress={() => handleCameraButtonClick()}>
+                <View style={styles.camerabutton}>
+                  <Text style={styles.cameraText}>📷</Text>
                 </View>
-              </View>
-              <View style={styles.searchSection}>
-                <View style={{zIndex: 1, width: '100%'}}>
-                  <HealthSearch
-                    onKeywordChange={handleKeywordChange}
-                    onSelect={handleSearchSelect}
-                  />
-                </View>
-              </View>
-
-              {/* 세트 & 횟수 입력 박스 */}
-              <View style={styles.setreps}>
-                {/* 세트 입력 */}
-                <TextInput
-                  style={styles.setrepsinput}
-                  value={set}
-                  onChangeText={handleSetChange}
-                  placeholder="       "
-                  keyboardType="numeric"
-                />
-                <Text style={styles.setrepstext}>세트 X</Text>
-                {/* 횟수 입력 */}
-                <TextInput
-                  style={styles.setrepsinput}
-                  value={reps}
-                  onChangeText={handleRepsChange}
-                  placeholder="       "
-                  keyboardType="numeric"
-                />
-                <Text style={styles.setrepstext}>회</Text>
-              </View>
-
-              {/* 날짜 선택 (달력 호출) */}
-              <TouchableOpacity
-                onPress={() => setShowCalendar(true)}
-                style={styles.calendarContainer}>
-                {!showCalendar ? (
-                  <>
-                    <Text style={styles.defaultText}>
-                      {selectedDate}
-                      <Text style={styles.calendarText}>에 시작할 거예요</Text>
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => setShowCalendar(true)}></TouchableOpacity>
-                  </>
-                ) : (
-                  <>
-                    <Calendar
-                      onDayPress={handleDateSelect}
-                      markedDates={{[selectedDate]: {selected: true}}}
-                    />
-                    <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                      <Text>취소</Text>
-                    </TouchableOpacity>
-                  </>
-                )}
               </TouchableOpacity>
 
-              {/* 시간 선택 */}
-              <View style={styles.Timecontainer}>
-                <TimeComponent onTimeChange={handleTimeChange} />
+              <View style={styles.cameraInfo}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: 17,
+                  }}>
+                  운동기구 카메라 인식
+                </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontSize: 15,
+                  }}>
+                  - 이 기구 이름 뭐에요?
+                </Text>
               </View>
+            </View>
+            <View style={styles.searchSection}>
+              <View style={{zIndex: 1, width: '100%'}}>
+                <HealthSearch
+                  onKeywordChange={handleKeywordChange}
+                  onSelect={handleSearchSelect}
+                />
+              </View>
+            </View>
 
-              {/* 알림 설정 */}
-              <Toggle
-                label={'알림'}
-                value={notificationEnabled}
-                onChange={handleNotificationChange}
+            {/* 세트 & 횟수 입력 박스 */}
+            <View style={styles.setreps}>
+              {/* 세트 입력 */}
+              <TextInput
+                style={styles.setrepsinput}
+                value={set}
+                onChangeText={handleSetChange}
+                placeholder="       "
+                keyboardType="numeric"
               />
+              <Text style={styles.setrepstext}>세트 X</Text>
+              {/* 횟수 입력 */}
+              <TextInput
+                style={styles.setrepsinput}
+                value={reps}
+                onChangeText={handleRepsChange}
+                placeholder="       "
+                keyboardType="numeric"
+              />
+              <Text style={styles.setrepstext}>회</Text>
+            </View>
 
-              {/* 반복 설정 */}
-              <Toggle
-                label={'반복'}
-                value={repeatEnabled}
-                onChange={setRepeatEnabled}>
-                {repeatEnabled && (
-                  <>
-                    <View style={styles.dayPickerContainer}>
-                      <View style={styles.dayButtonRow}>
-                        {['월', '화', '수', '목', '금', '토', '일'].map(day => (
-                          <TouchableOpacity
-                            key={`day-${day}`}
-                            onPress={() => handleDayOfWeekToggle(day)}
+            {/* 날짜 선택 (달력 호출) */}
+            <TouchableOpacity
+              onPress={() => setShowCalendar(true)}
+              style={styles.calendarContainer}>
+              {!showCalendar ? (
+                <>
+                  <Text style={styles.defaultText}>
+                    {selectedDate}
+                    <Text style={styles.calendarText}>에 시작할 거예요</Text>
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setShowCalendar(true)}></TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Calendar
+                    onDayPress={handleDateSelect}
+                    markedDates={{[selectedDate]: {selected: true}}}
+                  />
+                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                    <Text>취소</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </TouchableOpacity>
+
+            {/* 시간 선택 */}
+            <View style={styles.Timecontainer}>
+              <TimeComponent onTimeChange={handleTimeChange} />
+            </View>
+
+            {/* 알림 설정 */}
+            <Toggle
+              label={'알림'}
+              value={notificationEnabled}
+              onChange={handleNotificationChange}
+            />
+
+            {/* 반복 설정 */}
+            <Toggle
+              label={'반복'}
+              value={repeatEnabled}
+              onChange={setRepeatEnabled}>
+              {repeatEnabled && (
+                <>
+                  <View style={styles.dayPickerContainer}>
+                    <View style={styles.dayButtonRow}>
+                      {['월', '화', '수', '목', '금', '토', '일'].map(day => (
+                        <TouchableOpacity
+                          key={`day-${day}`}
+                          onPress={() => handleDayOfWeekToggle(day)}
+                          style={[
+                            styles.dayButton,
+                            selectedDaysOfWeek.includes(day) &&
+                              styles.selectedDayButton,
+                          ]}>
+                          <Text
+                            key={`text-${day}`}
                             style={[
-                              styles.dayButton,
+                              styles.dayButtonText,
                               selectedDaysOfWeek.includes(day) &&
-                                styles.selectedDayButton,
+                                styles.selectedDayButtonText,
                             ]}>
-                            <Text
-                              key={`text-${day}`}
-                              style={[
-                                styles.dayButtonText,
-                                selectedDaysOfWeek.includes(day) &&
-                                  styles.selectedDayButtonText,
-                              ]}>
-                              {day}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
+                            {day}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
                     </View>
-                  </>
-                )}
-              </Toggle>
-            </ScrollView>
+                  </View>
+                </>
+              )}
+            </Toggle>
           </View>
         </View>
       )}
@@ -621,9 +619,7 @@ const styles = StyleSheet.create({
     height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
     width: '100%',
-    marginTop: '5%',
   },
 
   headercontainer: {
@@ -704,12 +700,12 @@ const styles = StyleSheet.create({
 
   /// 세트 & 횟수 설정
   setreps: {
+    marginTop: 50,
     width: 300,
     flexDirection: 'row',
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 5,
     marginBottom: 5,
   },
   setrepsinput: {
