@@ -155,23 +155,26 @@ const Main: React.FC<MainProps> = ({
 
   //루틴달성핸들러
   const handleRoutineCompletion = (item: RoutineItem) => {
-    const currentTime = new Date().toISOString(); // 현재 시간 가져오기
+    const currentDateTime = new Date();
+    const hours = String(currentDateTime.getHours()).padStart(2, '0');
+    const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`; // hh:mm 형식으로 변환
     console.log('11111111111111111111111111', item); //log
-    Alert.alert('22222222222222222222222222', JSON.stringify(item)); // Alert로 값 확인
+    // Alert.alert('22222222222222222222222222', JSON.stringify(item)); // Alert로 값 확인
     if (item.hrtn_nm) {
       saveToDatabase('hrtn_fin', {
         hrtn_id: item.hrtn_id,
-        fin_hrtn_time: currentTime,
+        fin_hrtn_time: formattedTime,
       });
     } else if (item.ertn_nm) {
       saveToDatabase('ertn_fin', {
         ertn_id: item.ertn_id,
-        fin_ertn_time: currentTime,
+        fin_ertn_time: formattedTime,
       });
     } else if (item.prtn_nm) {
       saveToDatabase('prtn_fin', {
         prtn_id: item.prtn_id,
-        fin_prtn_time: currentTime,
+        fin_prtn_time: formattedTime,
       });
     }
   };
@@ -179,10 +182,10 @@ const Main: React.FC<MainProps> = ({
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
       console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
-      Alert.alert(
-        'Saving to Table:',
-        `${tableName} With Data: ${JSON.stringify(data)}`,
-      ); // Alert로 값 확인
+      // Alert.alert(
+      //   'Saving to Table:',
+      //   `${tableName} With Data: ${JSON.stringify(data)}`,
+      // ); // Alert로 값 확인
 
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
