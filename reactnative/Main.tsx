@@ -28,7 +28,6 @@ type MainProps = {
 
 //DB에서 루틴정보받아오기
 interface RoutineData {
-  id: number; //임시로number해놓음
   ertn_time: string;
   hrtn_time: string;
   prtn_time: string;
@@ -43,6 +42,7 @@ interface RoutineData {
   prtn_setting?: {
     prtn_time: string;
     prtn_tag: string;
+    prtn_id: string;
     [key: string]: any;
   };
 }
@@ -51,10 +51,13 @@ interface RoutineData {
 interface RoutineItem {
   hrtn_nm?: string;
   ertn_nm?: string;
-  prtn_nm?: string;
+  pill_nm?: string;
   hrtn_id?: string;
   ertn_id?: string;
   prtn_id?: string;
+  prtn_setting?: {
+    prtn_id: string;
+  };
 }
 
 type DatabaseData = {
@@ -162,29 +165,32 @@ const Main: React.FC<MainProps> = ({
     const hours = String(currentDateTime.getHours()).padStart(2, '0');
     const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`; // yyyy-mm-dd hh:mm 형식으로 변환
-    //console.log('11111111111111111111111111', item); //log
+
+    console.log('11111111111111111111111111', item); //log
+
     if (item.hrtn_nm) {
+      console.log('Condition for hrtn_nm is true');
       saveToDatabase('hrtn_fin', {
         hrtn_id: item.hrtn_id,
         fin_hrtn_time: formattedDateTime,
       });
     } else if (item.ertn_nm) {
+      console.log('Condition for ertn_nm is true');
       saveToDatabase('ertn_fin', {
         ertn_id: item.ertn_id,
         fin_ertn_time: formattedDateTime,
       });
-    } else if (item.prtn_nm) {
+    } else if (item.pill_nm && item.prtn_setting) {
       saveToDatabase('prtn_fin', {
-        prtn_id: item.prtn_id,
+        prtn_id: item.prtn_setting.prtn_id,
         fin_prtn_time: formattedDateTime,
       });
     }
   };
-
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
-      //console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
-
+      console.log('2222222222222222', tableName, 'With Data:', data); // 여기에 log 추가
+      Alert.alert;
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
         {
@@ -195,13 +201,14 @@ const Main: React.FC<MainProps> = ({
           body: JSON.stringify(data),
         },
       );
+      console.log('333333333333333333333:', response);
 
       if (!response.ok) {
         throw new Error('Failed to save data to server');
       }
 
       const result = await response.json();
-      //console.log('4444444444444444444444:', result);
+      console.log('4444444444444444444444:', result);
       return result;
     } catch (error) {
       console.error('Error:', error);
