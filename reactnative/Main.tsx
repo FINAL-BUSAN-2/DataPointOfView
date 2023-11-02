@@ -506,31 +506,43 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
       .then(chartData5 => setChartData5(chartData5))
       .catch(error => console.error('Error:', error));
   }, []);
+
   const renderEmojis = () => {
     let dataToMap = Array.isArray(chartData5) ? chartData5 : []; // chartData5가 배열인지 확인
     if (!dataToMap.length) {
       dataToMap = [
         {
-          h_time: '',
+          h_time: {fin_time: ''},
           h_emoji: '',
-          p_time: '',
+          p_time: {fin_time: ''},
           p_emoji: '',
-          e_time: '',
+          e_time: {fin_time: ''},
           e_emoji: '',
         },
       ]; // 기본값 변경
     }
     return dataToMap.map(data => {
       const width = Dimensions.get('window').width;
-      const times = [data.h_time, data.p_time, data.e_time];
-      const emojis = [data.h_emoji, data.p_emoji, data.e_emoji];
+
+      const times = [
+        data.h_time.fin_time,
+        data.p_time.fin_time,
+        data.e_time.fin_time,
+      ];
+      const emojis = [
+        data.h_emoji || '',
+        data.p_emoji.fin_emoji || '',
+        data.e_emoji || '',
+      ];
 
       return times.map((time, index) => {
-        const timeParts = time ? time.split(' ') : [''];
+        if (!time) return null; // time이 없는 경우에는 렌더링하지 않는다
+        const timeParts = time.split(' ');
         const [date, splitTime] = timeParts;
-        const [hour, minute] = splitTime ? splitTime.split(':') : ['', '']; // splitTime이 있는지 확인
+        const [hour, minute] = splitTime ? splitTime.split(':') : ['', ''];
         const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
-        const leftPosition = isNaN(position) ? 0 : position * width; // position이 숫자인지 확인
+        const leftPosition = isNaN(position) ? 0 : position * width;
+
         return (
           <Text key={index} style={[styles.emoji, {left: leftPosition}]}>
             {emojis[index]}
