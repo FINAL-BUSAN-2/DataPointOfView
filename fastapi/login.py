@@ -1179,36 +1179,40 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 
 @app.get("/emailtest")
-# def emailfind(userEmail: str):
-# email_data = email_test(userEmail)
-# return {"email_data": email_data, "userEmail": userEmail}
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-    email_data = email_test(userEmail)
-    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
     emoji_query = (
-        db.query(HRTN_FIN)
+        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
         .filter(
             and_(
                 HRTN_SETTING.hrtn_mem == userEmail,
                 HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
                 HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                func.substr(ERTN_FIN.ertn_id, 1, pos_h + 1) == email_data,
+                HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id,
             )
         )
         .all()
     )
+    time_emoji = [{"fin_time": t_e[0], "fin_emoji": t_e[1]} for t_e in emoji_query]
+    return time_emoji
 
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    # emoji_data = [
-    #     {
-    #         "fin_time": emoji[0],
-    #         "emoji": emoji[2],
-    #     }
-    #     for emoji in emoji_query
-    # ]
 
-    return emoji_query
+@app.get("/fintest")
+def fintest(userEmail: str, db: Session = Depends(get_db)):
+    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
+    email_data = email_test(userEmail)
+    hfin = (
+        db.query(HRTN_FIN)
+        .filter(
+            and_(
+                cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+                func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == email_data,
+            ),
+        )
+        .all()
+        # .count()
+    )
+    return hfin
 
 
 ############################################################## pill_prod((영양검색창활용)
