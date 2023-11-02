@@ -1179,36 +1179,110 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 
 @app.get("/emailtest")
-# def emailfind(userEmail: str):
-# email_data = email_test(userEmail)
-# return {"email_data": email_data, "userEmail": userEmail}
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-    email_data = email_test(userEmail)
-    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
-    emoji_query = (
-        db.query(HRTN_FIN)
+    e_t_es = (
+        db.query(ERTN_FIN.fin_ertn_time)
+        .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
         .filter(
             and_(
-                HRTN_SETTING.hrtn_mem == userEmail,
-                HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
-                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                func.substr(ERTN_FIN.ertn_id, 1, pos_h + 1) == email_data,
+                ERTN_SETTING.ertn_mem == userEmail,
+                cast(ERTN_FIN.fin_ertn_time, Date) == today,
             )
         )
         .all()
     )
+    h_t_es = (
+        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
+        .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == userEmail,
+                cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    p_t_es = (
+        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == userEmail,
+                cast(PRTN_FIN.fin_prtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    etc_time_emoji = []
+    if e_t_es:
+        etc_time_emoji = [{"fin_time": ete[0]} for ete in e_t_es]
+    health_time_emoji = []
+    if h_t_es:
+        health_time_emoji = [
+            {"fin_time": h_t_e[0], "fin_emoji": h_t_e[1]} for h_t_e in h_t_es
+        ]
+    pill_time_emoji = []
+    if p_t_es:
+        pill_time_emoji = [
+            {"fin_time": p_t_e[0], "fin_emoji": p_t_e[1]} for p_t_e in p_t_es
+        ]
+    return {
+        "h_time": health_time_emoji[0] if health_time_emoji else None,
+        "h_emoji": health_time_emoji[0]["fin_emoji"] if health_time_emoji else None,
+        "p_time": pill_time_emoji[0] if pill_time_emoji else None,
+        "p_emoji": pill_time_emoji[0]["fin_emoji"] if pill_time_emoji else None,
+        "e_time": etc_time_emoji[0] if etc_time_emoji else None,
+        "e_emoji": "❓",
+    }
 
-    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
-    # emoji_data = [
-    #     {
-    #         "fin_time": emoji[0],
-    #         "emoji": emoji[2],
-    #     }
-    #     for emoji in emoji_query
-    # ]
 
-    return emoji_query
+@app.get("/fintest")
+def fintest(userEmail: str, db: Session = Depends(get_db)):
+    ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    # e_test = (
+    #     db.query(ERTN_FIN.fin_ertn_time)
+    #     .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
+    #     .filter(
+    #         and_(
+    #             ERTN_SETTING.ertn_mem == userEmail,
+    #             cast(ERTN_FIN.fin_ertn_time, Date) == today,
+    #         )
+    #     )
+    #     .all()
+    # )
+    # h_test = (
+    #     db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+    #     .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
+    #     .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+    #     .filter(
+    #         and_(
+    #             HRTN_SETTING.hrtn_mem == userEmail,
+    #             cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+    #         )
+    #     )
+    #     .all()
+    # )
+    p_test = (
+        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == userEmail,
+                cast(PRTN_FIN.fin_prtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    return p_test
 
 
 ############################################################## pill_prod((영양검색창활용)
@@ -1337,3 +1411,76 @@ def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(prtn)
     return prtn
+
+
+class HrtnFin_list(BaseModel):
+    hrtn_id: str
+    fin_hrtn_time: str
+
+
+class ErtnFin_list(BaseModel):
+    ertn_id: str
+    fin_ertn_time: str
+
+
+class PrtnFin_list(BaseModel):
+    prtn_id: str
+    fin_prtn_time: str
+
+
+### 루틴달성테이블정보조회
+@app.get("/rtn_fin")
+def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
+    try:
+        # 현재 날짜 가져오기
+        today_date = datetime.now().strftime("%Y-%m-%d")
+
+        at_index = finemail.find("@")
+        first_part = finemail[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = finemail[at_index + 1]  # "@" 다음 첫 문자 추출
+
+        # 이메일에서 @ 뒷자리 추출
+        domain = f"{first_part}@{first_char_after_at}"
+
+        # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
+        hrtn_id_fin = f"{domain}h"
+        ertn_id_fin = f"{domain}e"
+        prtn_id_fin = f"{domain}p"
+
+        # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
+        ttt = cast(HRTN_FIN.fin_hrtn_time, Date)
+        hrtn_fin_info = (
+            db.query(HRTN_FIN)
+            .filter(ttt == today_date)
+            .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
+            .all()
+        )
+
+        ertn_fin_info = (
+            db.query(ERTN_FIN)
+            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
+            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
+            .all()
+        )
+        prtn_fin_info = (
+            db.query(PRTN_FIN)
+            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
+            .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
+            .all()
+        )
+
+        # 조회한 루틴 달성 정보를 클라이언트에 반환
+        return {
+            "h info ": hrtn_fin_info,
+            "e info ": ertn_fin_info,
+            "p info ": prtn_fin_info,
+            "이메일": finemail,
+            "h 아이디": hrtn_id_fin,
+            "e 아이디": ertn_id_fin,
+            "p 아이디": prtn_id_fin,
+            "오늘날짜": today_date,
+            "시간": ttt,
+        }
+    except Exception as e:
+        # 오류 발생 시 404 응답 반환
+        raise HTTPException(status_code=404, detail="데이터가 없습니다.")

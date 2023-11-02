@@ -9,6 +9,7 @@ import {
   FlatList,
   Linking,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
@@ -28,7 +29,6 @@ type MainProps = {
 
 //DB에서 루틴정보받아오기
 interface RoutineData {
-  id: number; //임시로number해놓음
   ertn_time: string;
   hrtn_time: string;
   prtn_time: string;
@@ -40,9 +40,12 @@ interface RoutineData {
   hrtn_nm: string;
   pill_nm: string;
   prtn_cat: string;
+  hrtn_id: string;
+  ertn_id: string;
   prtn_setting?: {
     prtn_time: string;
     prtn_tag: string;
+    prtn_id: string;
     [key: string]: any;
   };
 }
@@ -51,12 +54,24 @@ interface RoutineData {
 interface RoutineItem {
   hrtn_nm?: string;
   ertn_nm?: string;
-  prtn_nm?: string;
+  pill_nm?: string;
   hrtn_id?: string;
   ertn_id?: string;
   prtn_id?: string;
+  prtn_setting?: {
+    prtn_id: string;
+  };
 }
 
+// 타임라인 이모지
+interface Findata {
+  h_time: string;
+  h_emoji: string;
+  p_time: string;
+  p_emoji: string;
+  e_time: string;
+  e_emoji: string;
+}
 type DatabaseData = {
   hrtn_id?: string;
   fin_hrtn_time?: string;
@@ -76,9 +91,12 @@ const Main: React.FC<MainProps> = ({
 }) => {
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
+  //루틴달성여부
+  const [completedItems, setCompletedItems] = useState<string[]>([]);
 
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
+    fetchRoutineCompletionData();
 
     //카메라
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
@@ -97,6 +115,7 @@ const Main: React.FC<MainProps> = ({
     return item.ertn_time || item.prtn_setting?.prtn_time || item.hrtn_time;
   };
 
+  // 루틴리스트가져오기
   const fetchData = async () => {
     try {
       const fetchDataUrl = `http://43.200.178.131:3344/rtnlist/?userEmail=${userEmail}`;
@@ -122,6 +141,32 @@ const Main: React.FC<MainProps> = ({
     }
   };
 
+  //루틴달성데이터 가져오기
+  const fetchRoutineCompletionData = async () => {
+    try {
+      // 사용자 이메일 정보를 email 변수에 저장
+      const finemail = userEmail;
+      console.log('이메일', userEmail);
+      // axios를 사용하여 서버로 요청 보내기
+      const response = await axios.get('http://43.200.178.131:3344/rtn_fin', {
+        params: {finemail: finemail},
+      });
+      if (response.data) {
+        // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
+        const completionData = response.data;
+        console.log('Fetched completion data:', completionData);
+        return completionData;
+      } else {
+        console.error('데이터가 없습니다.');
+        return null;
+      }
+    } catch (error) {
+      console.error('루틴달성 오류');
+      return null;
+    }
+  };
+
+  // 플로팅 바 핸들러
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
   const handleFloatingBarClick = () => {
@@ -162,29 +207,46 @@ const Main: React.FC<MainProps> = ({
     const hours = String(currentDateTime.getHours()).padStart(2, '0');
     const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`; // yyyy-mm-dd hh:mm 형식으로 변환
-    //console.log('11111111111111111111111111', item); //log
+
+    console.log('11111111111111111111111111', item); //log
+
+    if (
+      completedItems.includes(
+        item.hrtn_id || item.ertn_id || item.prtn_id || '',
+      )
+    ) {
+      Alert.alert('이미 루틴을 수행하셨습니다1111');
+      99;
+      return;
+    }
+
     if (item.hrtn_nm) {
       saveToDatabase('hrtn_fin', {
-        hrtn_id: item.hrtn_id,
+        hrtn_id: item.hrtn_id || '',
         fin_hrtn_time: formattedDateTime,
       });
     } else if (item.ertn_nm) {
       saveToDatabase('ertn_fin', {
-        ertn_id: item.ertn_id,
+        ertn_id: item.ertn_id || '',
         fin_ertn_time: formattedDateTime,
       });
-    } else if (item.prtn_nm) {
+    } else if (item.pill_nm && item.prtn_setting) {
       saveToDatabase('prtn_fin', {
-        prtn_id: item.prtn_id,
+        prtn_id: item.prtn_setting.prtn_id || '',
         fin_prtn_time: formattedDateTime,
       });
     }
+    setCompletedItems([
+      ...completedItems,
+      item.hrtn_id || item.ertn_id || item.prtn_id || '',
+    ]);
   };
+  console.log('Updated completedItems:', completedItems);
 
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
-      //console.log('333333333333333333', tableName, 'With Data:', data); // 여기에 log 추가
-
+      console.log('2222222222222222', tableName, 'With Data:', data);
+      Alert.alert;
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
         {
@@ -195,17 +257,18 @@ const Main: React.FC<MainProps> = ({
           body: JSON.stringify(data),
         },
       );
+      console.log('333333333333333333333:', response);
 
       if (!response.ok) {
         throw new Error('Failed to save data to server');
       }
 
       const result = await response.json();
-      //console.log('4444444444444444444444:', result);
+      console.log('4444444444444444444444:', result);
       return result;
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('데이터 저장에 실패했습니다.');
+      Alert.alert('이미 루틴을 수행하셨습니다222');
     }
   };
 
@@ -238,8 +301,8 @@ const Main: React.FC<MainProps> = ({
           <Image
             source={require('./android/app/src/img/logo.png')}
             style={{
-              width: 150,
-              height: 50,
+              width: 90,
+              height: 30,
               // marginRight: 16,
             }}
           />
@@ -259,7 +322,7 @@ const Main: React.FC<MainProps> = ({
         </View>
       </View>
       {/* 타임라인바 */}
-      <TimelineBar />
+      <TimelineBar userEmail={userEmail} />
 
       <View style={{marginTop: 30}}></View>
 
@@ -272,7 +335,11 @@ const Main: React.FC<MainProps> = ({
           width: '90%',
         }}
       />
-
+      <View>
+        {/* <Text>
+          {fin_emoji},{fin_time}
+        </Text> */}
+      </View>
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
         <Text style={styles.memtex}>{userName}님 Daily routine</Text>
@@ -313,10 +380,24 @@ const Main: React.FC<MainProps> = ({
             </View>
 
             <View style={styles.routineItemSection_done}>
-              {/* routineInfo  루틴 달성 테스트중*/}
-              <Text
-                style={styles.dottedCircle}
-                onPress={() => handleRoutineCompletion(item)}></Text>
+              {completedItems.includes(
+                item.hrtn_id ||
+                  item.ertn_id ||
+                  item.prtn_setting?.prtn_id ||
+                  '',
+              ) ? (
+                <Text
+                  style={[styles.dottedCircle, styles.completedCircle]}
+                  onPress={() => handleRoutineCompletion(item)}>
+                  ✔️
+                </Text>
+              ) : (
+                <Text
+                  style={styles.dottedCircle}
+                  onPress={() => handleRoutineCompletion(item)}>
+                  {/* Display an empty circle */}
+                </Text>
+              )}
             </View>
           </View>
         )}
@@ -411,8 +492,65 @@ const Main: React.FC<MainProps> = ({
   );
 };
 // 타임라인바
-const TimelineBar: React.FC = () => {
+// 주석
+interface TimelineBarProps {
+  userEmail: string;
+}
+const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
   const [progress, setProgress] = useState(0);
+  const [chartData5, setChartData5] = useState<Findata[]>([]); // 데이터상태추가
+  // 타임라인 이모지 추가하기
+  useEffect(() => {
+    fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData5 => setChartData5(chartData5))
+      .catch(error => console.error('Error:', error));
+  }, []);
+
+  const renderEmojis = () => {
+    let dataToMap = Array.isArray(chartData5) ? chartData5 : []; // chartData5가 배열인지 확인
+    if (!dataToMap.length) {
+      dataToMap = [
+        {
+          h_time: {fin_time: ''},
+          h_emoji: '',
+          p_time: {fin_time: ''},
+          p_emoji: '',
+          e_time: {fin_time: ''},
+          e_emoji: '',
+        },
+      ]; // 기본값 변경
+    }
+    return dataToMap.map(data => {
+      const width = Dimensions.get('window').width;
+
+      const times = [
+        data.h_time.fin_time,
+        data.p_time.fin_time,
+        data.e_time.fin_time,
+      ];
+      const emojis = [
+        data.h_emoji || '',
+        data.p_emoji.fin_emoji || '',
+        data.e_emoji || '',
+      ];
+
+      return times.map((time, index) => {
+        if (!time) return null; // time이 없는 경우에는 렌더링하지 않는다
+        const timeParts = time.split(' ');
+        const [date, splitTime] = timeParts;
+        const [hour, minute] = splitTime ? splitTime.split(':') : ['', ''];
+        const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
+        const leftPosition = isNaN(position) ? 0 : position * width;
+
+        return (
+          <Text key={index} style={[styles.emoji, {left: leftPosition}]}>
+            {emojis[index]}
+          </Text>
+        );
+      });
+    });
+  };
 
   useEffect(() => {
     const updateProgress = () => {
@@ -421,12 +559,12 @@ const TimelineBar: React.FC = () => {
     };
     updateProgress();
     const intervalId = setInterval(updateProgress, 60 * 1000);
-
     return () => clearInterval(intervalId);
   }, []);
 
   return (
     <View style={styles.timelineContainer}>
+      {renderEmojis()}
       <View style={[styles.rectangle, {width: `${progress * 100}%`}]} />
       <Text style={[styles.timeText, {left: '2%'}]}>00:00</Text>
       <Text
@@ -491,7 +629,14 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontWeight: 'bold',
   },
-
+  // 루틴달성 이모지
+  emoji: {
+    position: 'absolute',
+    top: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   // 즐겨찾기
   favoritesbox: {
     flexDirection: 'row',
@@ -813,6 +958,13 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted', // 점선 스타일
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  completedCircle: {
+    // Add styles for the completed circle here
+    // For example, you can set the color and font size.
+    color: 'green', // Change the color as needed
+    fontSize: 24, // Change the font size as needed
   },
 });
 export default Main;

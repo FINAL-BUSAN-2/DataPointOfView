@@ -29,6 +29,16 @@ type AccessProps = {
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
+// type chartData = {
+//     tag:
+//   count:number
+//   emoji:
+//   color:
+// };
+// type chartData2 = {
+//   result: number;
+//   finemoji: string;
+// };
 type chartData3 = {
   result: number;
   finemoji: string;
@@ -45,7 +55,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
+  const [chartData7, setChartData7] = useState<chartData7 | null>(null);
   const [chartData4, setChartData4] = useState([]);
+  const [chartData5, setChartData5] = useState([]);
+  const [chartData6, setChartData6] = useState([]);
   const [showRecommend, setShowRecommend] = useState(false);
   const [recommend, setRecommend] = useState([]);
   useEffect(() => {
@@ -65,11 +78,24 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(chartData3 =>
         setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
+      );
+    fetch(`http://127.0.0.1:8000/finfunc/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData7 =>
+        setChartData7({result: chartData7[0], finemoji: chartData7[1]}),
       )
       .catch(error => console.error('Error:', error));
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
       .then(response => response.json())
       .then(chartData4 => setChartData4(chartData4))
+      .catch(error => console.error('Error:', error));
+    fetch(`http://127.0.0.1:8000/emailtest/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData5 => setChartData5(chartData5))
+      .catch(error => console.error('Error:', error));
+    fetch(`http://127.0.0.1:8000/fintest/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData6 => setChartData6(chartData6))
       .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
@@ -96,6 +122,8 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
+  const fin_time = chartData5.map(item => item.fin_time);
+  const fin_emoji = chartData5.map(item => item.fin_emoji);
 
   const showRecommendButton = async () => {
     try {
@@ -143,8 +171,8 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           <Image
             source={require('./android/app/src/img/logo.png')}
             style={{
-              width: 150,
-              height: 50,
+              width: 90,
+              height: 30,
               // marginRight: 16,
             }}
           />
@@ -319,8 +347,10 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
               <Text style={styles.cautiontext}>{recommend[2]}</Text>
               {/* 추천 제품3 */}
               <Text style={styles.cautiontext2}>{recommend[3]}</Text>
+
             </>
           )}
+          <View></View>
         </View>
       </View>
 
@@ -644,6 +674,7 @@ const styles = StyleSheet.create({
   statisticstextbox: {
     flex: 5,
     height: 100,
+    flexDirection: 'column',
     alignSelf: 'flex-start',
     marginTop: 25,
     marginLeft: 65,
