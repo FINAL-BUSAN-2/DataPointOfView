@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
@@ -35,8 +36,8 @@ const HplogSet: React.FC<HplogSetProps> = ({
     setShowSubButtons(!showSubButtons);
   };
 
-  const notyetPress = () => {
-    Alert.alert('아직', '미구현');
+  const updateMem = () => {
+    axios.post('http://43.200.178.131:3344/');
   };
 
   const goHplogSet = async () => {
@@ -162,23 +163,17 @@ const HplogSet: React.FC<HplogSetProps> = ({
             {showSubButtons && (
               <View style={styles.themesection}>
                 <TouchableOpacity style={styles.themeButton1}>
-                  <Text>1</Text>
+                  <Text style={{color: 'black'}}>기본</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.themeButton2}>
-                  <Text>2</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.themeButton3}>
-                  <Text>3</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.themeButton4}>
-                  <Text>4</Text>
+                  <Text style={{color: 'white'}}>다크모드</Text>
                 </TouchableOpacity>
               </View>
             )}
             <TouchableOpacity onPress={logOut} style={styles.settButton}>
               <Text style={styles.buttonText}>로그아웃</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={notyetPress} style={styles.settButton}>
+            <TouchableOpacity onPress={updateMem} style={styles.settButton}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -385,6 +380,7 @@ const styles = StyleSheet.create({
   themeButton1: {
     backgroundColor: 'white',
     alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 10,
     marginHorizontal: '2%',
     height: 70,
@@ -394,30 +390,9 @@ const styles = StyleSheet.create({
   },
 
   themeButton2: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: '2%',
-    height: 70,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(231,230,230)',
-  },
-
-  themeButton3: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: '2%',
-    height: 70,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(231,230,230)',
-  },
-
-  themeButton4: {
-    backgroundColor: 'white',
-    alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 10,
     marginHorizontal: '2%',
     height: 70,

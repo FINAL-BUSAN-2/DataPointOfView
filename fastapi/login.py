@@ -1480,3 +1480,8 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
     except Exception as e:
         # 오류 발생 시 404 응답 반환
         raise HTTPException(status_code=404, detail="데이터가 없습니다.")
+    
+@app.post('/getMemInfo')
+def getMemInfo(userEmail: str, db: Session = Depends(get_db)):
+    mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
+    return(mem_info)
