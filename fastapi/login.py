@@ -1469,6 +1469,8 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
             "ertn_fin": ertn_fin_info,
             "prtn_fin": prtn_fin_info,
             "이메일": finemail,
+            "도메인": domain,
+            "아이디생성": {hrtn_id_fin, ertn_id_fin, prtn_id_fin},
         }
     except Exception as e:
         # 오류 발생 시 404 응답 반환
