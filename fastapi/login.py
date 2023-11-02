@@ -1316,8 +1316,12 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
         # 현재 날짜 가져오기
         today_date = datetime.now().strftime("%Y-%m-%d")
 
+        at_index = finemail.find("@")
+        first_part = finemail[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = finemail[at_index + 1]  # "@" 다음 첫 문자 추출
+
         # 이메일에서 @ 뒷자리 추출
-        domain = finemail.split("@")[1]
+        domain = f"{first_part}@{first_char_after_at}"
 
         # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
         hrtn_id_fin = f"{domain}h"
