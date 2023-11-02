@@ -280,6 +280,7 @@ const Main: React.FC<MainProps> = ({
 
       {/* 루틴리스트 */}
       <FlatList
+        style={{marginBottom: 70}}
         data={data}
         renderItem={({item}) => (
           <View style={styles.routineItem2}>
@@ -731,7 +732,6 @@ const styles = StyleSheet.create({
   },
   //회원명
   memTextContainer: {
-    flex: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,

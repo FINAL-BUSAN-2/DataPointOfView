@@ -9,6 +9,7 @@ import {
   Image,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
@@ -208,14 +209,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
       </View>
 
       <View style={styles.container}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={{flexGrow: 5}}>
+        <View style={styles.scrollView}>
           {/* <ScrollView style={styles.scrollView}> */}
           {/* 루틴입력 */}
           <View
             style={{
-              flex: 0.1,
               flexDirection: 'row',
               alignItems: 'center',
               alignSelf: 'center',
@@ -235,7 +233,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
             <View
               style={{
                 alignSelf: 'center',
-                width: '80%',
+                width: '75%',
                 // backgroundColor: 'green',
               }}>
               {/* <View> */}
@@ -285,20 +283,26 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     onPress={() => setShowCalendar(true)}></TouchableOpacity>
                 </View>
               ) : (
-                <View>
-                  <Calendar
-                    style={{flex: 0.1}}
-                    onDayPress={handleDateSelect}
-                    markedDates={{[selectedDate]: {selected: true}}}
-                  />
-                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                    <View style={{flex: 0.3}}>
-                      <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                        취소
-                      </Text>
+                <Modal>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Calendar
+                        onDayPress={handleDateSelect}
+                        markedDates={{[selectedDate]: {selected: true}}}
+                      />
+                      <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                        <View
+                          style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            marginTop: 10,
+                          }}>
+                          <Text>취소</Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                </View>
+                  </View>
+                </Modal>
               )}
             </TouchableOpacity>
           </View>
@@ -306,14 +310,14 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           <View style={styles.Timecontainer}>
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
-          <View style={{zIndex: 2}}>
+          <View>
             <Toggle
               label={'알림'}
               value={notificationEnabled}
               onChange={setNotificationEnabled}
             />
           </View>
-          <View style={{zIndex: 2}}>
+          <View>
             {/* 반복 설정 */}
             <Toggle
               label={'반복'}
@@ -326,12 +330,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                       {['월', '화', '수', '목', '금', '토', '일'].map(day => (
                         <TouchableOpacity
                           key={`day-${day}`}
-                          onPress={() => handleDayOfWeekToggle(day)}
-                          style={[
-                            styles.dayButton,
-                            selectedDaysOfWeek.includes(day) &&
-                              styles.selectedDayButton,
-                          ]}>
+                          onPress={() => handleDayOfWeekToggle(day)}>
                           <Text
                             key={`text-${day}`}
                             style={[
@@ -349,7 +348,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               )}
             </Toggle>
           </View>
-        </ScrollView>
+        </View>
         {/* </ScrollView> */}
         {/* </KeyboardAvoidingView> */}
         {/* 추가하기 */}
@@ -365,6 +364,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: '10%',
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
@@ -390,7 +390,6 @@ const styles = StyleSheet.create({
     width: '100%',
     // backgroundColor: 'purple',
     marginBottom: '18%',
-    zIndex: 1,
   },
 
   /// 몇회 & 몇정 설정
@@ -402,6 +401,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // 수직 가운데 정렬
     alignItems: 'center',
     alignSelf: 'center',
+    marginTop: 30,
     // top: 20,
     // backgroundColor: 'red',
     // marginTop: 20,
@@ -421,12 +421,10 @@ const styles = StyleSheet.create({
 
   /// 캘린더
   caltotal: {
-    flex: 0.1,
     // top: 30,
     marginTop: 30,
   },
   calendarContainer: {
-    flex: 1,
     marginTop: 5,
     width: '80%',
     // position: 'absolute',
@@ -476,10 +474,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-
-  dayButton: {},
-
-  selectedDayButton: {},
 
   dayButtonText: {
     fontSize: 18,
@@ -533,6 +527,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
   },
 });
 

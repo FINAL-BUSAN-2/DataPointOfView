@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
@@ -229,15 +230,26 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                   onPress={() => setShowCalendar(true)}></TouchableOpacity>
               </>
             ) : (
-              <>
-                <Calendar
-                  onDayPress={handleDateSelect}
-                  markedDates={{[selectedDate]: {selected: true}}}
-                />
-                <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                  <Text>취소</Text>
-                </TouchableOpacity>
-              </>
+              <Modal>
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Calendar
+                      onDayPress={handleDateSelect}
+                      markedDates={{[selectedDate]: {selected: true}}}
+                    />
+                    <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                      <View
+                        style={{
+                          width: '100%',
+                          alignItems: 'center',
+                          marginTop: 10,
+                        }}>
+                        <Text>취소</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
             )}
           </TouchableOpacity>
 
@@ -456,6 +468,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 10,
     color: 'black',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
   },
 });
 
