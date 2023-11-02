@@ -37,7 +37,14 @@ const HplogSet: React.FC<HplogSetProps> = ({
   };
 
   const updateMem = () => {
-    axios.post('http://43.200.178.131:3344/');
+    axios
+      .get(`http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`)
+      .then(response => {
+        console.log('응답 데이터:', response.data);
+      })
+      .catch(error => {
+        console.error('오류:', error);
+      });
   };
 
   const goHplogSet = async () => {
