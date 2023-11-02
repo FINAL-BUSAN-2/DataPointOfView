@@ -1344,7 +1344,7 @@ def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
 
 
 ### 루틴달성테이블정보조회
-@app.post("/rtn_fin")
+@app.get("/rtn_fin")
 def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
     try:
         # 현재 날짜 가져오기
