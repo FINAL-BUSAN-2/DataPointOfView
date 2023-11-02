@@ -1413,6 +1413,21 @@ def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
     return prtn
 
 
+class HrtnFin_list(BaseModel):
+    hrtn_id: str
+    fin_hrtn_time: str
+
+
+class ErtnFin_list(BaseModel):
+    ertn_id: str
+    fin_ertn_time: str
+
+
+class PrtnFin_list(BaseModel):
+    prtn_id: str
+    fin_prtn_time: str
+
+
 ### 루틴달성테이블정보조회
 @app.get("/rtn_fin")
 def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
@@ -1431,19 +1446,19 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
             db.query(HRTN_FIN)
-            .filter(func.DATE(HRTN_FIN.fin_hrtn_time) == today_date)
+            .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
             .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
             .all()
         )
         ertn_fin_info = (
             db.query(ERTN_FIN)
-            .filter(func.DATE(ERTN_FIN.fin_ertn_time) == today_date)
+            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
             .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
             .all()
         )
         prtn_fin_info = (
             db.query(PRTN_FIN)
-            .filter(func.DATE(PRTN_FIN.fin_prtn_time) == today_date)
+            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
             .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
             .all()
         )
