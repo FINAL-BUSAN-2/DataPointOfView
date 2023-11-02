@@ -1311,19 +1311,18 @@ class PrtnFin_list(BaseModel):
 
 ### 루틴달성테이블정보조회
 @app.get("/rtn_fin")
-# finemail: str,
-def search_rtn_fin(db: Session = Depends(get_db)):
+def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
     try:
         # 현재 날짜 가져오기
         today_date = datetime.now().strftime("%Y-%m-%d")
 
         # 이메일에서 @ 뒷자리 추출
-        # domain = finemail.split("@")[1]
+        domain = finemail.split("@")[1]
 
         # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
-        # hrtn_id_fin = f"{domain}h"
-        # ertn_id_fin = f"{domain}e"
-        # prtn_id_fin = f"{domain}p"
+        hrtn_id_fin = f"{domain}h"
+        ertn_id_fin = f"{domain}e"
+        prtn_id_fin = f"{domain}p"
 
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
@@ -1350,6 +1349,7 @@ def search_rtn_fin(db: Session = Depends(get_db)):
             "hrtn_fin": hrtn_fin_info,
             "ertn_fin": ertn_fin_info,
             "prtn_fin": prtn_fin_info,
+            "이메일": finemail,
         }
     except Exception as e:
         # 오류 발생 시 404 응답 반환
