@@ -310,14 +310,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           <View style={styles.Timecontainer}>
             <TimeComponent onTimeChange={handleTimeChange} />
           </View>
-          <View>
+          <View style={{alignItems: 'center'}}>
             <Toggle
               label={'알림'}
               value={notificationEnabled}
               onChange={setNotificationEnabled}
             />
-          </View>
-          <View>
             {/* 반복 설정 */}
             <Toggle
               label={'반복'}
@@ -366,9 +364,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: '10%',
     flex: 1,
-    flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: 'center',
     alignContent: 'flex-start',
     backgroundColor: '#fff',
   },

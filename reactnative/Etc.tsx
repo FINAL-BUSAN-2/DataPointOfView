@@ -180,7 +180,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView>
           <View style={styles.etcheader}>
             {/* 루틴명 입력 */}
 
@@ -321,7 +321,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: '100%',
   },
-  scrollView: {},
   etcheader: {
     flexDirection: 'row',
     alignItems: 'flex-start',

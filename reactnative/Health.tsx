@@ -301,6 +301,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               RNFS.unlink(`${internalStoragePath}/${newFileName}`);
               setModalVisible(!isModalVisible);
               setCameraImgPath('');
+              setSelectedValue(response.data['predicted_class']);
             },
           },
           {
