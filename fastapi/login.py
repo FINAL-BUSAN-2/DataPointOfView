@@ -1180,39 +1180,109 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 @app.get("/emailtest")
 def emailfind(userEmail: str, db: Session = Depends(get_db)):
-    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
-    emoji_query = (
-        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+    e_t_es = (
+        db.query(ERTN_FIN.fin_ertn_time)
+        .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
         .filter(
             and_(
-                HRTN_SETTING.hrtn_mem == userEmail,
-                HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
-                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
-                HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id,
+                ERTN_SETTING.ertn_mem == userEmail,
+                cast(ERTN_FIN.fin_ertn_time, Date) == today,
             )
         )
         .all()
     )
-    time_emoji = [{"fin_time": t_e[0], "fin_emoji": t_e[1]} for t_e in emoji_query]
-    return time_emoji
+    h_t_es = (
+        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
+        .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == userEmail,
+                cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    p_t_es = (
+        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == userEmail,
+                cast(PRTN_FIN.fin_prtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    etc_time_emoji = []
+    if e_t_es:
+        etc_time_emoji = [{"fin_time": ete[0]} for ete in e_t_es]
+    health_time_emoji = []
+    if h_t_es:
+        health_time_emoji = [
+            {"fin_time": h_t_e[0], "fin_emoji": h_t_e[1]} for h_t_e in h_t_es
+        ]
+    pill_time_emoji = []
+    if p_t_es:
+        pill_time_emoji = [
+            {"fin_time": p_t_e[0], "fin_emoji": p_t_e[1]} for p_t_e in p_t_es
+        ]
+    return {
+        "h_time": health_time_emoji[0] if health_time_emoji else None,
+        "h_emoji": health_time_emoji[1] if len(health_time_emoji) > 1 else None,
+        "p_time": pill_time_emoji[0] if pill_time_emoji else None,
+        "p_emoji": pill_time_emoji[1] if len(pill_time_emoji) > 1 else None,
+        "e_time": etc_time_emoji[0] if etc_time_emoji else None,
+        "e_emoji": "❓",
+    }
 
 
 @app.get("/fintest")
 def fintest(userEmail: str, db: Session = Depends(get_db)):
-    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
-    email_data = email_test(userEmail)
-    hfin = (
-        db.query(HRTN_FIN)
+    ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
+    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
+    prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
+    # e_test = (
+    #     db.query(ERTN_FIN.fin_ertn_time)
+    #     .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
+    #     .filter(
+    #         and_(
+    #             ERTN_SETTING.ertn_mem == userEmail,
+    #             cast(ERTN_FIN.fin_ertn_time, Date) == today,
+    #         )
+    #     )
+    #     .all()
+    # )
+    # h_test = (
+    #     db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+    #     .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
+    #     .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+    #     .filter(
+    #         and_(
+    #             HRTN_SETTING.hrtn_mem == userEmail,
+    #             cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+    #         )
+    #     )
+    #     .all()
+    # )
+    p_test = (
+        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
+        .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
+        .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
+        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
         .filter(
             and_(
-                cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-                func.substr(HRTN_FIN.hrtn_id, 1, pos_h + 1) == email_data,
-            ),
+                PRTN_SETTING.prtn_mem == userEmail,
+                cast(PRTN_FIN.fin_prtn_time, Date) == today,
+            )
         )
         .all()
-        # .count()
     )
-    return hfin
+    return p_test
 
 
 ############################################################## pill_prod((영양검색창활용)
