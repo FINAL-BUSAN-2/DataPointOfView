@@ -1329,38 +1329,34 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
         prtn_id_fin = f"{domain}p"
 
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
-        ttt = cast(HRTN_FIN.fin_hrtn_time, Date)
         hrtn_fin_info = (
-            db.query(HRTN_FIN)
-            .filter(ttt == today_date)
-            .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
+            db.query(HRTN_FIN).filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
+            # .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
             .all()
         )
-
         ertn_fin_info = (
             db.query(ERTN_FIN)
-            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
-            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
-            .all()
+            # .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
+            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin)).all()
         )
         prtn_fin_info = (
             db.query(PRTN_FIN)
-            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
-            .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
+            # .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
+            # .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
             .all()
         )
 
         # 조회한 루틴 달성 정보를 클라이언트에 반환
         return {
-            "h info ": hrtn_fin_info,
-            "e info ": ertn_fin_info,
-            "p info ": prtn_fin_info,
+            "hrtn_fin": hrtn_fin_info,
+            "ertn_fin": ertn_fin_info,
+            "prtn_fin": prtn_fin_info,
             "이메일": finemail,
-            "h 아이디": hrtn_id_fin,
-            "e 아이디": ertn_id_fin,
-            "p 아이디": prtn_id_fin,
-            "오늘날짜": today_date,
-            "시간": ttt,
+            "도메인": domain,
+            "아이디생성1": hrtn_id_fin,
+            "아이디생성2": ertn_id_fin,
+            "아이디생성3": prtn_id_fin,
+            "날짜": today_date,
         }
     except Exception as e:
         # 오류 발생 시 404 응답 반환
