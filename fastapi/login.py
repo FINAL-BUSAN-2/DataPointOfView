@@ -1311,36 +1311,37 @@ class PrtnFin_list(BaseModel):
 
 ### 루틴달성테이블정보조회
 @app.get("/rtn_fin")
-def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
+# finemail: str,
+def search_rtn_fin(db: Session = Depends(get_db)):
     try:
         # 현재 날짜 가져오기
         today_date = datetime.now().strftime("%Y-%m-%d")
 
         # 이메일에서 @ 뒷자리 추출
-        domain = finemail.split("@")[1]
+        # domain = finemail.split("@")[1]
 
         # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
-        hrtn_id_fin = f"{domain}h"
-        ertn_id_fin = f"{domain}e"
-        prtn_id_fin = f"{domain}p"
+        # hrtn_id_fin = f"{domain}h"
+        # ertn_id_fin = f"{domain}e"
+        # prtn_id_fin = f"{domain}p"
 
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
             db.query(HRTN_FIN)
-            .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
-            .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
+            # .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
+            # .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
             .all()
         )
         ertn_fin_info = (
             db.query(ERTN_FIN)
-            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
-            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
+            # .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
+            # .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
             .all()
         )
         prtn_fin_info = (
             db.query(PRTN_FIN)
-            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
-            .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
+            # .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
+            # .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
             .all()
         )
 
