@@ -14,11 +14,7 @@ import {Calendar} from 'react-native-calendars';
 import TimeComponent from './datetimepicker';
 import {Toggle} from './components';
 import {HaddRoutine} from './api';
-import {
-  Camera,
-  useCameraDevice,
-  // useCameraDevices,
-} from 'react-native-vision-camera';
+import {Camera, useCameraDevice} from 'react-native-vision-camera';
 
 import RNFS from 'react-native-fs';
 import axios from 'axios';
@@ -38,6 +34,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   userName,
   userEmail,
 }) => {
+  const [predictImg, setPredictImg] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [newFileName, setNewFileName] = useState('');
   const toggleModal = () => {
@@ -117,6 +114,10 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   const [repeatEnabled, setRepeatEnabled] = useState<boolean>(false);
   // 반복 요일 선택
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<string[]>([]);
+
+  const delPredictImg = () => {
+    setPredictImg(null);
+  };
 
   //태그 설정
   // 초기 상태로 빈 문자열 ('')을 가진 tagsEnabled 상태 생성
@@ -273,6 +274,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
   // const https = require('https');
 
   const imageSearch = async () => {
+    Alert.alert('검색중...', '잠시만 기다려주세요...', []);
     const formData = new FormData();
     formData.append('file', {
       uri: `file://${internalStoragePath}/${newFileName}`,
@@ -301,7 +303,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               RNFS.unlink(`${internalStoragePath}/${newFileName}`);
               setModalVisible(!isModalVisible);
               setCameraImgPath('');
-              setSelectedValue(response.data['predicted_class']);
+              setPredictImg(response.data['predicted_class']);
             },
           },
           {
@@ -425,29 +427,59 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               </TouchableOpacity>
 
               <View style={styles.cameraInfo}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: 17,
-                  }}>
-                  운동기구 카메라 인식
-                </Text>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 15,
-                  }}>
-                  - 이 기구 이름 뭐에요?
-                </Text>
+                {predictImg === null ? (
+                  <>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontWeight: 'bold',
+                        fontSize: 17,
+                      }}>
+                      운동기구 카메라 인식
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 15,
+                      }}>
+                      - 이 기구 이름 뭐에요?
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontWeight: 'bold',
+                        fontSize: 17,
+                      }}>
+                      {predictImg}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 15,
+                      }}>
+                      - 숨쉬기 운동(호흡)
+                    </Text>
+                  </>
+                )}
               </View>
             </View>
             <View style={styles.searchSection}>
               <View style={{zIndex: 1, width: '100%'}}>
-                <HealthSearch
-                  onKeywordChange={handleKeywordChange}
-                  onSelect={handleSearchSelect}
-                />
+                {predictImg === null ? (
+                  <HealthSearch
+                    onKeywordChange={handleKeywordChange}
+                    onSelect={handleSearchSelect}
+                  />
+                ) : (
+                  <TouchableOpacity
+                    onPress={delPredictImg}
+                    style={styles.delPredictImgButton}>
+                    <Text>취소</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
 
@@ -887,6 +919,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
+  },
+
+  delPredictImgButton: {
+    width: 100,
+    height: 40,
+    backgroundColor: 'white',
+    borderColor: 'rgb(175, 171, 171)',
+    borderWidth: 1,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: -50,
   },
 });
 
