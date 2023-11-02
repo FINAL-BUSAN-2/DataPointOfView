@@ -1231,12 +1231,9 @@ def emailfind(userEmail: str, db: Session = Depends(get_db)):
             {"fin_time": p_t_e[0], "fin_emoji": p_t_e[1]} for p_t_e in p_t_es
         ]
     return {
-        "h_time": health_time_emoji[0] if health_time_emoji else None,
-        "h_emoji": health_time_emoji[0]["fin_emoji"] if health_time_emoji else None,
-        "p_time": pill_time_emoji[0] if pill_time_emoji else None,
-        "p_emoji": pill_time_emoji[0]["fin_emoji"] if pill_time_emoji else None,
-        "e_time": etc_time_emoji[0] if etc_time_emoji else None,
-        "e_emoji": "❓",
+        "h_time": health_time_emoji if health_time_emoji else None,
+        "p_time": pill_time_emoji if pill_time_emoji else None,
+        "e_time": etc_time_emoji if etc_time_emoji else None,
     }
 
 
@@ -1245,29 +1242,29 @@ def fintest(userEmail: str, db: Session = Depends(get_db)):
     ertn_ids_query = db.query(ERTN_FIN.ertn_id).distinct().subquery()
     hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     prtn_ids_query = db.query(PRTN_FIN.prtn_id).distinct().subquery()
-    # e_test = (
-    #     db.query(ERTN_FIN.fin_ertn_time)
-    #     .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
-    #     .filter(
-    #         and_(
-    #             ERTN_SETTING.ertn_mem == userEmail,
-    #             cast(ERTN_FIN.fin_ertn_time, Date) == today,
-    #         )
-    #     )
-    #     .all()
-    # )
-    # h_test = (
-    #     db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
-    #     .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
-    #     .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
-    #     .filter(
-    #         and_(
-    #             HRTN_SETTING.hrtn_mem == userEmail,
-    #             cast(HRTN_FIN.fin_hrtn_time, Date) == today,
-    #         )
-    #     )
-    #     .all()
-    # )
+    e_test = (
+        db.query(ERTN_FIN.fin_ertn_time)
+        .join(ERTN_SETTING, ERTN_FIN.ertn_id == ERTN_SETTING.ertn_id)
+        .filter(
+            and_(
+                ERTN_SETTING.ertn_mem == userEmail,
+                cast(ERTN_FIN.fin_ertn_time, Date) == today,
+            )
+        )
+        .all()
+    )
+    h_test = (
+        db.query(HRTN_FIN.fin_hrtn_time, HEALTH.health_emoji)
+        .join(HRTN_SETTING, HRTN_SETTING.hrtn_id == HRTN_FIN.hrtn_id)
+        .join(HEALTH, HRTN_SETTING.hrtn_nm == HEALTH.health_nm)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == userEmail,
+                cast(HRTN_FIN.fin_hrtn_time, Date) == today,
+            )
+        )
+        .all()
+    )
     p_test = (
         db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
@@ -1282,7 +1279,7 @@ def fintest(userEmail: str, db: Session = Depends(get_db)):
         )
         .all()
     )
-    return p_test
+    return e_test, h_test, p_test
 
 
 ############################################################## pill_prod((영양검색창활용)
@@ -1476,8 +1473,9 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
     except Exception as e:
         # 오류 발생 시 404 응답 반환
         raise HTTPException(status_code=404, detail="데이터가 없습니다.")
-    
-@app.get('/getMemInfo')
+
+
+@app.get("/getMemInfo")
 def getMemInfo(userEmail: str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-    return(mem_info)
+    return mem_info
