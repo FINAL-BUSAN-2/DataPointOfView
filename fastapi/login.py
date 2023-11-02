@@ -1232,9 +1232,9 @@ def emailfind(userEmail: str, db: Session = Depends(get_db)):
         ]
     return {
         "h_time": health_time_emoji[0] if health_time_emoji else None,
-        "h_emoji": health_time_emoji[1] if len(health_time_emoji) > 1 else None,
+        "h_emoji": health_time_emoji[0]["fin_emoji"] if health_time_emoji else None,
         "p_time": pill_time_emoji[0] if pill_time_emoji else None,
-        "p_emoji": pill_time_emoji[1] if len(pill_time_emoji) > 1 else None,
+        "p_emoji": pill_time_emoji[0]["fin_emoji"] if pill_time_emoji else None,
         "e_time": etc_time_emoji[0] if etc_time_emoji else None,
         "e_emoji": "❓",
     }
