@@ -121,6 +121,17 @@ const Main: React.FC<MainProps> = ({
       console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
     }
   };
+  // 타임라인 이모지 추가하기
+  // 주석
+  // useEffect(() => {
+  //   fetch(`http://127.0.0.1:8000/emailtest/?userEmail=${userEmail}`)
+  //     .then(response => response.json())
+  //     .then(chartData5 => setChartData5(chartData5))
+  //     .catch(error => console.error('Error:', error));
+  // }, []);
+  // console.log(chartData5);
+  // const fin_time = chartData5.map(item => item.fin_time);
+  // const fin_emoji = chartData5.map(item => item.fin_emoji);
 
   const [showImageItems, setShowImageItems] = useState(false);
   // 플로팅 바 핸들러
@@ -272,7 +283,11 @@ const Main: React.FC<MainProps> = ({
           width: '90%',
         }}
       />
-
+      <View>
+        {/* <Text>
+          {fin_emoji},{fin_time}
+        </Text> */}
+      </View>
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
         <Text style={styles.memtex}>{userName}님 Daily routine</Text>
@@ -411,9 +426,14 @@ const Main: React.FC<MainProps> = ({
   );
 };
 // 타임라인바
+// 주석
+// interface Findata {
+//   fin_time: string; // YYYY-MM-DD hh:mm 형식의 시간
+//   fin_emoji: string; // 이모지
+// }
 const TimelineBar: React.FC = () => {
   const [progress, setProgress] = useState(0);
-
+  // const [chartData5, setChartData5] = useState<Findata[]>([]);
   useEffect(() => {
     const updateProgress = () => {
       const now = new Date();
@@ -424,9 +444,33 @@ const TimelineBar: React.FC = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+  // 주석
+  // const renderEmojis = () => {
+  //   return chartData5.map(data => {
+  //     const timeParts = data.fin_time.split(' ');
+  //     const [date, time] = timeParts;
+  //     const [hour, minute] = time.split(':');
+
+  //     const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
+  //     const leftPercentage = `${position * 100}%`;
+
+  //     return (
+  //       <Text
+  //         key={data.fin_time}
+  //         style={[
+  //           styles.emoji,
+  //           {left: leftPercentage},
+  //         ]}
+  //       >
+  //         {data.fin_emoji}
+  //       </Text>
+  //     );
+  //   });
+  // };
 
   return (
     <View style={styles.timelineContainer}>
+      {/* {renderEmojis()} */}
       <View style={[styles.rectangle, {width: `${progress * 100}%`}]} />
       <Text style={[styles.timeText, {left: '2%'}]}>00:00</Text>
       <Text
