@@ -1331,31 +1331,28 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
             db.query(HRTN_FIN)
-            # .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
-            # .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
+            .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
+            .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
             .all()
         )
         ertn_fin_info = (
             db.query(ERTN_FIN)
-            # .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
-            # .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
+            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
+            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
             .all()
         )
         prtn_fin_info = (
             db.query(PRTN_FIN)
-            # .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
-            # .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
+            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
+            .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
             .all()
         )
 
         # 조회한 루틴 달성 정보를 클라이언트에 반환
         return {
-            "hrtn_fin": hrtn_fin_info,
-            "ertn_fin": ertn_fin_info,
-            "prtn_fin": prtn_fin_info,
-            "이메일": finemail,
-            "도메인": domain,
-            "아이디생성": {hrtn_id_fin, ertn_id_fin, prtn_id_fin},
+            hrtn_fin_info,
+            ertn_fin_info,
+            prtn_fin_info,
         }
     except Exception as e:
         # 오류 발생 시 404 응답 반환
