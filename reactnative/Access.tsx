@@ -54,6 +54,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
+  const [chartData7, setChartData7] = useState<chartData7 | null>(null);
   const [chartData4, setChartData4] = useState([]);
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
@@ -75,6 +76,11 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(chartData3 =>
         setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
+      );
+    fetch(`http://127.0.0.1:8000/finfunc/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(chartData7 =>
+        setChartData7({result: chartData7[0], finemoji: chartData7[1]}),
       )
       .catch(error => console.error('Error:', error));
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
