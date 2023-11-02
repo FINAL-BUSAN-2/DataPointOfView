@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import PieChart from 'react-native-pie-chart';
+import axios from 'axios';
 
 // 화면 관리
 type AccessProps = {
@@ -59,6 +60,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData5, setChartData5] = useState([]);
   const [chartData6, setChartData6] = useState([]);
   const [showRecommend, setShowRecommend] = useState(false);
+  const [recommend, setRecommend] = useState([]);
   useEffect(() => {
     fetch(
       `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
@@ -123,8 +125,17 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const fin_time = chartData5.map(item => item.fin_time);
   const fin_emoji = chartData5.map(item => item.fin_emoji);
 
-  const showRecommendButton = () => {
-    setShowRecommend(!showRecommend);
+  const showRecommendButton = async () => {
+    try {
+      const recommendresponse = await axios.post(
+        'http://13.209.7.124:5000/recommend',
+        userEmail,
+      );
+      setShowRecommend(!showRecommend);
+      setRecommend(recommendresponse.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   console.log('finper:', chartData3?.result, chartData3?.finemoji);
@@ -329,15 +340,14 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
           {showRecommend && (
             <>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>다른 사람은 이런 것도 먹어요!</Text>
+              <Text style={styles.recotext}>{recommend[0]}</Text>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>🎃 비타민군 - 쏠라c</Text>
+              <Text style={styles.recoproducttext}>{recommend[1]}</Text>
               {/* 추천 제품2 */}
-              <Text style={styles.cautiontext}>🎃 비타민군 - 쏠라c</Text>
+              <Text style={styles.cautiontext}>{recommend[2]}</Text>
               {/* 추천 제품3 */}
-              <Text style={styles.cautiontext2}>🎃 비타민군 - 쏠라c</Text>
-              <Text>{fin_emoji}</Text>
-              <Text>{fin_time}</Text>
+              <Text style={styles.cautiontext2}>{recommend[3]}</Text>
+
             </>
           )}
           <View></View>
