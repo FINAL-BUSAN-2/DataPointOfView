@@ -318,11 +318,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
       })
       .catch(error => {
         if (error.response) {
-          console.error('서버 응답 오류:', error.response.data);
+          Alert.alert('서버 응답 오류:', error.response.data);
         } else if (error.request) {
-          console.error('네트워크 오류', error.message);
+          Alert.alert('네트워크 오류', error.message);
         } else {
-          console.error('오류', error.message);
+          Alert.alert('오류', error.message);
         }
       });
   };
