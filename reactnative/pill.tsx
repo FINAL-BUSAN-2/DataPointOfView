@@ -330,12 +330,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                       {['월', '화', '수', '목', '금', '토', '일'].map(day => (
                         <TouchableOpacity
                           key={`day-${day}`}
-                          onPress={() => handleDayOfWeekToggle(day)}
-                          style={[
-                            styles.dayButton,
-                            selectedDaysOfWeek.includes(day) &&
-                              styles.selectedDayButton,
-                          ]}>
+                          onPress={() => handleDayOfWeekToggle(day)}>
                           <Text
                             key={`text-${day}`}
                             style={[
@@ -479,10 +474,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-
-  dayButton: {},
-
-  selectedDayButton: {},
 
   dayButtonText: {
     fontSize: 18,

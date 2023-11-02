@@ -407,62 +407,13 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           </Modal>
         </View>
       ) : (
-        // <View style={styles.cameraContainer}>
-        //   <Camera
-        //     style={styles.camera}
-        //     device={device}
-        //     photo={true}
-        //     isActive={true}
-        //     ref={camera}
-        //   />
-        // </View>
         <View style={styles.headercontainer}>
           <View style={styles.header}>
-            {/* 앱 로고 및 이름 */}
-            <View style={styles.leftContainer}>
-              {/* 알림 아이콘 */}
-              <TouchableOpacity>
-                <Image
-                  source={require('./android/app/src/img/notification.png')}
-                  style={{
-                    width: 30,
-                    height: 30,
-                  }}
-                />
-              </TouchableOpacity>
-
-              {/* <Text style={styles.title}>웰라밸 / {userName}님</Text> */}
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                console.log('제발');
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'Main'}],
-                });
-              }}>
-              <Image
-                source={require('./android/app/src/img/logo.png')}
-                style={{
-                  width: 150,
-                  height: 50,
-                  // marginRight: 16,
-                }}
-              />
+            <TouchableOpacity onPress={() => handleBackPress()}>
+              <Text style={styles.backButton}>
+                {'<              건강 루틴 추가하기'}
+              </Text>
             </TouchableOpacity>
-            {/* 우측 상단 */}
-            <View style={styles.rightContainer}>
-              {/* 환경설정 아이콘 */}
-              <TouchableOpacity onPress={goHplogSet}>
-                <Image
-                  source={require('./android/app/src/img/settings.png')}
-                  style={{
-                    width: 30,
-                    height: 30,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
           <View style={styles.container}>
             <View style={styles.cameraSection}>
@@ -632,31 +583,29 @@ const styles = StyleSheet.create({
   },
 
   headercontainer: {
+    flex: 1,
     backgroundColor: '#fff',
   },
 
   header: {
+    flex: 0.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    // padding: 20,
+    // height: 30,
+    // borderBottomWidth: 0,
     backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    borderBottomColor: '#ddd',
   },
-  leftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rightContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  // 앱 이름
-  title: {
-    fontSize: 23,
+
+  backButton: {
+    fontSize: 20,
     fontWeight: 'bold',
+    marginRight: 10,
+    color: 'black',
+    left: 10,
   },
 
   healthheader: {
@@ -906,7 +855,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: '8%',
+    marginTop: '5%',
   },
 
   cameraInfo: {
