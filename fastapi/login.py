@@ -1305,28 +1305,28 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
         domain = finemail.split("@")[1]
 
         # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
-        hrtn_id = f"{domain}h"
-        ertn_id = f"{domain}e"
-        prtn_id = f"{domain}p"
+        hrtn_id_fin = f"{domain}h"
+        ertn_id_fin = f"{domain}e"
+        prtn_id_fin = f"{domain}p"
 
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
             db.query(HRTN_FIN)
             .filter(func.DATE(HRTN_FIN.fin_hrtn_time) == today_date)
-            .filter(HRTN_FIN.hrtn_id == hrtn_id)
-            .first()
+            .filter(HRTN_FIN.hrtn_id.like(hrtn_id_fin))
+            .all()
         )
         ertn_fin_info = (
             db.query(ERTN_FIN)
             .filter(func.DATE(ERTN_FIN.fin_ertn_time) == today_date)
-            .filter(ERTN_FIN.ertn_id == ertn_id)
-            .first()
+            .filter(ERTN_FIN.ertn_id.like(ertn_id_fin))
+            .all()
         )
         prtn_fin_info = (
             db.query(PRTN_FIN)
             .filter(func.DATE(PRTN_FIN.fin_prtn_time) == today_date)
-            .filter(PRTN_FIN.prtn_id == prtn_id)
-            .first()
+            .filter(PRTN_FIN.prtn_id.like(prtn_id_fin))
+            .all()
         )
 
         # 조회한 루틴 달성 정보를 클라이언트에 반환

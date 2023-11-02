@@ -136,14 +136,15 @@ const Main: React.FC<MainProps> = ({
     try {
       // 사용자 이메일 정보를 email 변수에 저장
       const finemail = userEmail;
+      console.log('이메일', userEmail);
       // axios를 사용하여 서버로 요청 보내기
       const response = await axios.get('http://43.200.178.131:3344/rtn_fin', {
-        params: {finemail},
+        params: {finemail: finemail},
       });
-
       if (response.data) {
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
+        console.log('Fetched completion data:', completionData);
         return completionData;
       } else {
         console.error('데이터가 없습니다.');
