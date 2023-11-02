@@ -86,8 +86,8 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
             <Image
               source={require('./android/app/src/img/logo.png')}
               style={{
-                width: 150,
-                height: 50,
+                width: 90,
+                height: 30,
                 // marginRight: 16,
               }}
             />
