@@ -1341,3 +1341,49 @@ def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(prtn)
     return prtn
+
+
+### 루틴달성테이블정보조회
+@app.post("/rtn_fin")
+def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
+    try:
+        # 현재 날짜 가져오기
+        today_date = datetime.now().strftime("%Y-%m-%d")
+
+        # 이메일에서 @ 뒷자리 추출
+        domain = finemail.split("@")[1]
+
+        # 각 테이블의 아이디 생성 (hrtn_fin, ertn_fin, prtn_fin)
+        hrtn_id = f"{domain}h"
+        ertn_id = f"{domain}e"
+        prtn_id = f"{domain}p"
+
+        # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
+        hrtn_fin_info = (
+            db.query(HRTN_FIN)
+            .filter(func.DATE(HRTN_FIN.fin_hrtn_time) == today_date)
+            .filter(HRTN_FIN.hrtn_id == hrtn_id)
+            .first()
+        )
+        ertn_fin_info = (
+            db.query(ERTN_FIN)
+            .filter(func.DATE(ERTN_FIN.fin_ertn_time) == today_date)
+            .filter(ERTN_FIN.ertn_id == ertn_id)
+            .first()
+        )
+        prtn_fin_info = (
+            db.query(PRTN_FIN)
+            .filter(func.DATE(PRTN_FIN.fin_prtn_time) == today_date)
+            .filter(PRTN_FIN.prtn_id == prtn_id)
+            .first()
+        )
+
+        # 조회한 루틴 달성 정보를 클라이언트에 반환
+        return {
+            "hrtn_fin": hrtn_fin_info,
+            "ertn_fin": ertn_fin_info,
+            "prtn_fin": prtn_fin_info,
+        }
+    except Exception as e:
+        # 오류 발생 시 404 응답 반환
+        raise HTTPException(status_code=404, detail="데이터가 없습니다.")
