@@ -65,8 +65,12 @@ interface RoutineItem {
 
 // 타임라인 이모지
 interface Findata {
-  fin_time: string; // YYYY-MM-DD hh:mm 형식의 시간
-  fin_emoji: string; // 이모지
+  h_time: string;
+  h_emoji: string;
+  p_time: string;
+  p_emoji: string;
+  e_time: string;
+  e_emoji: string;
 }
 type DatabaseData = {
   hrtn_id?: string;
@@ -502,22 +506,37 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
       .then(chartData5 => setChartData5(chartData5))
       .catch(error => console.error('Error:', error));
   }, []);
-
   const renderEmojis = () => {
-    return chartData5.map(data => {
-      console.log(chartData5);
-      const {width} = Dimensions.get('window');
-      const timeParts = data.fin_time.split(' ');
-      const [date, time] = timeParts;
-      const [hour, minute] = time.split(':');
-      const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
-      const leftPosition = position * width;
-      // const leftPercentage = `${position * 100}%`;
-      return (
-        <Text key={data.fin_time} style={[styles.emoji, {left: leftPosition}]}>
-          {data.fin_emoji}
-        </Text>
-      );
+    let dataToMap = Array.isArray(chartData5) ? chartData5 : []; // chartData5가 배열인지 확인
+    if (!dataToMap.length) {
+      dataToMap = [
+        {
+          h_time: '',
+          h_emoji: '',
+          p_time: '',
+          p_emoji: '',
+          e_time: '',
+          e_emoji: '',
+        },
+      ]; // 기본값 변경
+    }
+    return dataToMap.map(data => {
+      const width = Dimensions.get('window').width;
+      const times = [data.h_time, data.p_time, data.e_time];
+      const emojis = [data.h_emoji, data.p_emoji, data.e_emoji];
+
+      return times.map((time, index) => {
+        const timeParts = time ? time.split(' ') : [''];
+        const [date, splitTime] = timeParts;
+        const [hour, minute] = splitTime ? splitTime.split(':') : ['', '']; // splitTime이 있는지 확인
+        const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
+        const leftPosition = isNaN(position) ? 0 : position * width; // position이 숫자인지 확인
+        return (
+          <Text key={time} style={[styles.emoji, {left: leftPosition}]}>
+            {emojis[index]}
+          </Text>
+        );
+      });
     });
   };
 
