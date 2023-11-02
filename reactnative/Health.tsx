@@ -1,7 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {
   View,
-  ScrollView,
   Text,
   TextInput,
   Switch,
@@ -536,15 +535,26 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                     onPress={() => setShowCalendar(true)}></TouchableOpacity>
                 </>
               ) : (
-                <>
-                  <Calendar
-                    onDayPress={handleDateSelect}
-                    markedDates={{[selectedDate]: {selected: true}}}
-                  />
-                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                    <Text>취소</Text>
-                  </TouchableOpacity>
-                </>
+                <Modal>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Calendar
+                        onDayPress={handleDateSelect}
+                        markedDates={{[selectedDate]: {selected: true}}}
+                      />
+                      <TouchableOpacity onPress={() => setShowCalendar(false)}>
+                        <View
+                          style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            marginTop: 10,
+                          }}>
+                          <Text>취소</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
               )}
             </TouchableOpacity>
 
@@ -618,12 +628,10 @@ const styles = StyleSheet.create({
   container: {
     height: '80%',
     alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
   },
 
   headercontainer: {
-    flex: 1,
     backgroundColor: '#fff',
   },
 
@@ -651,7 +659,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  scrollView: {},
   healthheader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -895,10 +902,11 @@ const styles = StyleSheet.create({
   },
 
   cameraSection: {
-    width: '85%',
+    width: '72%',
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
+    marginTop: '8%',
   },
 
   cameraInfo: {
@@ -915,6 +923,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: '4%',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
   },
 });
 

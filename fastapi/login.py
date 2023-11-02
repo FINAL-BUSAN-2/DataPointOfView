@@ -1179,9 +1179,36 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
 
 
 @app.get("/emailtest")
-def emailfind(userEmail: str):
+# def emailfind(userEmail: str):
+# email_data = email_test(userEmail)
+# return {"email_data": email_data, "userEmail": userEmail}
+def emailfind(userEmail: str, db: Session = Depends(get_db)):
+    hrtn_ids_query = db.query(HRTN_FIN.hrtn_id).distinct().subquery()
     email_data = email_test(userEmail)
-    return {"email_data": email_data, "userEmail": userEmail}
+    pos_h = func.instr(HRTN_FIN.hrtn_id, "@")
+    emoji_query = (
+        db.query(HRTN_FIN)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == userEmail,
+                HRTN_SETTING.hrtn_nm == HEALTH.health_nm,
+                HRTN_SETTING.hrtn_id.in_(hrtn_ids_query),
+                func.substr(ERTN_FIN.ertn_id, 1, pos_h + 1) == email_data,
+            )
+        )
+        .all()
+    )
+
+    # 파이 차트 데이터 구성 (태그별 빈도수와 색상 지정)
+    # emoji_data = [
+    #     {
+    #         "fin_time": emoji[0],
+    #         "emoji": emoji[2],
+    #     }
+    #     for emoji in emoji_query
+    # ]
+
+    return emoji_query
 
 
 ############################################################## pill_prod((영양검색창활용)
@@ -1285,7 +1312,7 @@ class PrtnFinCreate(BaseModel):
     fin_prtn_time: str
 
 
-@app.post("/rtn_done/hrtn_fin/")
+@app.post("/rtn_done/hrtn_fin")
 def create_hrtn(data: HrtnFinCreate, db: Session = Depends(get_db)):
     hrtn = HRTN_FIN(**data.dict())
     db.add(hrtn)
@@ -1294,7 +1321,7 @@ def create_hrtn(data: HrtnFinCreate, db: Session = Depends(get_db)):
     return hrtn
 
 
-@app.post("/rtn_done/ertn_fin/")
+@app.post("/rtn_done/ertn_fin")
 def create_ertn(data: ErtnFinCreate, db: Session = Depends(get_db)):
     ertn = ERTN_FIN(**data.dict())
     db.add(ertn)
@@ -1303,7 +1330,7 @@ def create_ertn(data: ErtnFinCreate, db: Session = Depends(get_db)):
     return ertn
 
 
-@app.post("/rtn_done/prtn_fin/")
+@app.post("/rtn_done/prtn_fin")
 def create_prtn(data: PrtnFinCreate, db: Session = Depends(get_db)):
     prtn = PRTN_FIN(**data.dict())
     db.add(prtn)
