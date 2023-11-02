@@ -93,8 +93,13 @@ const Main: React.FC<MainProps> = ({
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   //루틴달성여부
   const [completedItems, setCompletedItems] = useState<string[]>([]);
+  const [findata, setFindata] = useState<Findata[]>([]);
 
   useEffect(() => {
+    fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
+      .then(response => response.json())
+      .then(data => setFindata(data))
+      .catch(error => console.error('Error:', error));
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
     fetchRoutineCompletionData();
 
@@ -322,7 +327,7 @@ const Main: React.FC<MainProps> = ({
         </View>
       </View>
       {/* 타임라인바 */}
-      <TimelineBar userEmail={userEmail} />
+      <TimelineBar userEmail={userEmail} findata={findata} />
 
       <View style={{marginTop: 30}}></View>
 
@@ -495,8 +500,9 @@ const Main: React.FC<MainProps> = ({
 // 주석
 interface TimelineBarProps {
   userEmail: string;
+  findata: Findata[];
 }
-const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
+const TimelineBar: React.FC<TimelineBarProps> = ({userEmail, findata}) => {
   const [progress, setProgress] = useState(0);
   const [chartData5, setChartData5] = useState<Findata[]>([]); // 데이터상태추가
   // 타임라인 이모지 추가하기
@@ -508,7 +514,7 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
   }, []);
 
   const renderEmojis = () => {
-    let dataToMap = Array.isArray(chartData5) ? chartData5 : []; // chartData5가 배열인지 확인
+    let dataToMap = Array.isArray(chartData5) ? chartData5 : [chartData5]; // chartData5가 객체인 경우 배열로 변환
     if (!dataToMap.length) {
       dataToMap = [
         {
@@ -521,17 +527,18 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
         },
       ]; // 기본값 변경
     }
+    console.log(chartData5);
     return dataToMap.map(data => {
-      const width = Dimensions.get('window').width;
+      const width = Dimensions.get('window').width * 0.7;
 
       const times = [
-        data.h_time.fin_time,
-        data.p_time.fin_time,
-        data.e_time.fin_time,
+        data.h_time?.fin_time,
+        data.p_time?.fin_time,
+        data.e_time?.fin_time,
       ];
       const emojis = [
         data.h_emoji || '',
-        data.p_emoji.fin_emoji || '',
+        data.p_emoji || '',
         data.e_emoji || '',
       ];
 
@@ -542,7 +549,9 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
         const [hour, minute] = splitTime ? splitTime.split(':') : ['', ''];
         const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
         const leftPosition = isNaN(position) ? 0 : position * width;
-
+        console.log('position', position);
+        console.log('width', width);
+        console.log('leftPosition', leftPosition);
         return (
           <Text key={index} style={[styles.emoji, {left: leftPosition}]}>
             {emojis[index]}
@@ -632,7 +641,8 @@ const styles = StyleSheet.create({
   // 루틴달성 이모지
   emoji: {
     position: 'absolute',
-    top: 10,
+    // top: 10,
+    bottom: 30,
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
