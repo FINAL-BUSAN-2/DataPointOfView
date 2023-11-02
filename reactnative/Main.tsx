@@ -464,7 +464,7 @@ const TimelineBar: React.FC<TimelineBarProps> = ({userEmail}) => {
         const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
         const leftPosition = isNaN(position) ? 0 : position * width; // position이 숫자인지 확인
         return (
-          <Text key={time} style={[styles.emoji, {left: leftPosition}]}>
+          <Text key={index} style={[styles.emoji, {left: leftPosition}]}>
             {emojis[index]}
           </Text>
         );
