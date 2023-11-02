@@ -159,7 +159,7 @@ const Main: React.FC<MainProps> = ({
       if (response.data) {
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
-        console.log('Fetched completion data:', completionData);
+        // console.log('Fetched completion data:', completionData);
         return completionData;
       } else {
         console.error('데이터가 없습니다.');
@@ -504,59 +504,55 @@ interface TimelineBarProps {
 }
 const TimelineBar: React.FC<TimelineBarProps> = ({userEmail, findata}) => {
   const [progress, setProgress] = useState(0);
-  const [chartData5, setChartData5] = useState<Findata[]>([]); // 데이터상태추가
+  // const [chartData5, setChartData5] = useState<Findata[]>([]); // 데이터상태추가
   // 타임라인 이모지 추가하기
-  useEffect(() => {
-    fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData5 => setChartData5(chartData5))
-      .catch(error => console.error('Error:', error));
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
+  //     .then(response => response.json())
+  //     .then(chartData5 => setChartData5(chartData5))
+  //     .catch(error => console.error('Error:', error));
+  // }, []);
 
   const renderEmojis = () => {
-    let dataToMap = Array.isArray(chartData5) ? chartData5 : [chartData5]; // chartData5가 객체인 경우 배열로 변환
+    let dataToMap = Array.isArray(findata) ? findata : [findata];
+    // 각 속성이 배열인지 확인하고, 배열이 아니라면 배열로 변환합니다.
+    dataToMap = dataToMap.map(data => ({
+      h_time: Array.isArray(data.h_time) ? data.h_time : [data.h_time],
+      p_time: Array.isArray(data.p_time) ? data.p_time : [data.p_time],
+      e_time: Array.isArray(data.e_time) ? data.e_time : [data.e_time],
+    }));
     if (!dataToMap.length) {
       dataToMap = [
         {
-          h_time: {fin_time: ''},
-          h_emoji: '',
-          p_time: {fin_time: ''},
-          p_emoji: '',
-          e_time: {fin_time: ''},
-          e_emoji: '',
+          h_time: [{fin_time: '', fin_emoji: ''}],
+          p_time: [{fin_time: '', fin_emoji: ''}],
+          e_time: [{fin_time: ''}],
         },
-      ]; // 기본값 변경
+      ];
     }
-    console.log(chartData5);
-    return dataToMap.map(data => {
-      const width = Dimensions.get('window').width * 0.7;
+    const width = Dimensions.get('window').width * 0.75;
 
-      const times = [
-        data.h_time?.fin_time,
-        data.p_time?.fin_time,
-        data.e_time?.fin_time,
-      ];
-      const emojis = [
-        data.h_emoji || '',
-        data.p_emoji || '',
-        data.e_emoji || '',
-      ];
-
-      return times.map((time, index) => {
-        if (!time) return null; // time이 없는 경우에는 렌더링하지 않는다
-        const timeParts = time.split(' ');
-        const [date, splitTime] = timeParts;
-        const [hour, minute] = splitTime ? splitTime.split(':') : ['', ''];
-        const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
-        const leftPosition = isNaN(position) ? 0 : position * width;
-        console.log('position', position);
-        console.log('width', width);
-        console.log('leftPosition', leftPosition);
-        return (
-          <Text key={index} style={[styles.emoji, {left: leftPosition}]}>
-            {emojis[index]}
-          </Text>
-        );
+    return dataToMap.map((data, index) => {
+      console.log('h_time', data.h_time, Array.isArray(data.h_time));
+      console.log('p_time', data.p_time, Array.isArray(data.p_time));
+      console.log('e_time', data.e_time, Array.isArray(data.e_time));
+      const timesEmojis = [data.h_time, data.p_time, data.e_time];
+      return timesEmojis.map((items, timeIndex) => {
+        return items.map((item, itemIndex) => {
+          if (!item?.fin_time) return null;
+          const [date, splitTime] = item.fin_time.split(' ');
+          const [hour, minute] = splitTime ? splitTime.split(':') : ['', ''];
+          const position = (parseInt(hour) + parseInt(minute) / 60) / 24;
+          const leftPosition = isNaN(position) ? 0 : position * width;
+          const emoji = timeIndex === 2 ? '❓' : item.fin_emoji;
+          return (
+            <Text
+              key={`${index}-${timeIndex}-${itemIndex}`}
+              style={[styles.emoji, {left: leftPosition}]}>
+              {emoji || ''}
+            </Text>
+          );
+        });
       });
     });
   };
