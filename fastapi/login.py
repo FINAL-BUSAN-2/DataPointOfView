@@ -1314,7 +1314,7 @@ def pill_prod_search(
     if q:
         query = query.filter(PILL_PROD.pill_nm.like(f"%{q}%"))  # 검색어에 따른 필터링
 
-    # query = query.distinct()  # 중복된 결과 제거
+    query = query.distinct()  # 중복된 결과 제거
 
     results = query.all()
 
