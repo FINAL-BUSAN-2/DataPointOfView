@@ -284,9 +284,9 @@ class PILL_PROD(Base):
 class PILL_SIDEEFF(Base):
     __tablename__ = "pill_sideeff"
     sideeff_cd1 = Column(String(10), primary_key=True)
-    sideeff_nm1 = Column(String(90), nullable=False)
+    # sideeff_nm1 = Column(String(90), nullable=False)  컬럼삭제
     sideeff_cd2 = Column(String(10), primary_key=True)
-    sideeff_nm2 = Column(String(90), nullable=False)
+    # sideeff_nm2 = Column(String(90), nullable=False) 컬럼삭제
     sideeff_txt = Column(String(255), nullable=False)
     sideeff_caution = Column(String(255), nullable=False)
 
@@ -295,7 +295,7 @@ class PILL_FUNC(Base):
     __tablename__ = "pill_func"
     func_cd = Column(String(10), primary_key=True)
     func_nm = Column(String(60))
-    func_emoji = Column(String(90))
+    # func_emoji = Column(String(90)) 컬럼삭제됨
 
 
 class PILL_NUTR(Base):
@@ -306,9 +306,18 @@ class PILL_NUTR(Base):
 
 class PILL_CMB(Base):
     __tablename__ = "pill_cmb"
+    cmb_cat = Column(String(10), primary_key=True, nullable=False)  # 추가 조합분류
     cmb_nutr = Column(String(10), primary_key=True, nullable=False)
     cmb_func = Column(String(10), primary_key=True, nullable=False)
     cmb_pill = Column(String(20), primary_key=True, nullable=False)
+
+
+# 테이블추가됨
+class PILL_CAT(Base):
+    __tablename__ = "pill_cat"
+    cat_cd = Column(String(10), primary_key=True)
+    cat_nm = Column(String(40))
+    cat_emoji = Column(String(5))
 
 
 class PRTN_FIN(Base):
@@ -1297,9 +1306,9 @@ def pill_prod_search(
     q: Optional[str] = None, db: Session = Depends(get_db)
 ):  # 'q'는 검색어입니다.
     query = (
-        db.query(PILL_PROD.pill_cd, PILL_PROD.pill_nm, PILL_FUNC.func_emoji)
+        db.query(PILL_PROD.pill_cd, PILL_PROD.pill_nm, PILL_CAT.cat_emoji)
         .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
-        .join(PILL_FUNC, PILL_CMB.cmb_func == PILL_FUNC.func_cd)
+        .join(PILL_CAT, PILL_CMB.cmb_cat == PILL_CAT.cat_cd)
     )
 
     if q:
@@ -1313,7 +1322,7 @@ def pill_prod_search(
         {
             "pill_cd": item[0],
             "pill_nm": item[1],
-            "func_emoji": item[2],
+            "cat_emoji": item[2],
         }
         for item in results
     ]
