@@ -103,16 +103,17 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const ptopEmoji = chartData2.top_emoji1;
 
   const showRecommendButton = async () => {
-    try {
-      const recommendresponse = await axios.post(
-        'http://13.209.7.124:5000/recommend',
-        userEmail,
-      );
-      setShowRecommend(!showRecommend);
-      setRecommend(recommendresponse.data);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const recommendresponse = await axios.post(
+    //     'http://13.209.7.124:5000/recommend',
+    //     userEmail,
+    //   );
+    //   setShowRecommend(!showRecommend);
+    //   setRecommend(recommendresponse.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    setShowRecommend(!showRecommend);
   };
 
   console.log('finper:', chartData3?.result, chartData3?.finemoji);
@@ -326,16 +327,45 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
             <Text style={styles.statictitletext}>추천 영양제</Text>
           </TouchableOpacity>
           {showRecommend && (
-            <>
+            // <>
+            //   {/* 추천 타이틀 */}
+            //   <Text style={styles.recotext}>{recommend[0]}</Text>
+            //   {/* 추천 제품1 */}
+            //   <Text style={styles.recoproducttext}>{recommend[1]}</Text>
+            //   {/* 추천 제품2 */}
+            //   <Text style={styles.cautiontext}>{recommend[2]}</Text>
+            //   {/* 추천 제품3 */}
+            //   <Text style={styles.cautiontext2}>{recommend[3]}</Text>
+            // </>
+            <View style={{alignItems: 'flex-start'}}>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>{recommend[0]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.recotext}>❗</Text>
+                <Text style={styles.recotext}>
+                  "비비랩 저분자 콜라겐 비오틴 플러스" & "애니멀 트레이닝 팩"
+                </Text>
+              </View>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>{recommend[1]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.recoproducttext}>
+                  함께 섭취 시 부작용이 있을 수 있어요!
+                </Text>
+              </View>
               {/* 추천 제품2 */}
-              <Text style={styles.cautiontext}>{recommend[2]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.cautiontext}>👍</Text>
+                <Text style={styles.cautiontext}>
+                  추천제품 : "비타민"군의 "엠에스엠비타민C부스터"
+                </Text>
+              </View>
               {/* 추천 제품3 */}
-              <Text style={styles.cautiontext2}>{recommend[3]}</Text>
-            </>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.cautiontext2}>👍</Text>
+                <Text style={styles.cautiontext2}>
+                  추천제품 : "비타민"군의 "코드 레드 팻 버너"
+                </Text>
+              </View>
+            </View>
           )}
         </View>
       </View>
@@ -662,9 +692,9 @@ const styles = StyleSheet.create({
     flex: 5,
     height: 100,
     flexDirection: 'column',
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
+    alignItems: 'center',
     marginTop: 25,
-    marginLeft: 65,
   },
   statictitle: {
     alignItems: 'center',
@@ -682,26 +712,27 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   recotext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     marginTop: 12,
+    maxWidth: '70%',
   },
   recoproducttext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
     marginLeft: 10,
   },
   cautiontext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
     marginLeft: 10,
   },
   cautiontext2: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
