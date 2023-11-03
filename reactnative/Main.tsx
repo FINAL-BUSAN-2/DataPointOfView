@@ -267,7 +267,6 @@ const Main: React.FC<MainProps> = ({
       if (!response.ok) {
         throw new Error('Failed to save data to server');
       }
-
       const result = await response.json();
       console.log('4444444444444444444444:', result);
       return result;
@@ -347,7 +346,18 @@ const Main: React.FC<MainProps> = ({
       </View>
       {/* 회원명*/}
       <View style={styles.memTextContainer}>
-        <Text style={styles.memtex}>{userName}님 Daily routine</Text>
+        <Text style={styles.memtex}>
+          {userName}님{' '}
+          <Text
+            style={{
+              fontStyle: 'italic',
+              fontSize: 22,
+              color: 'black',
+              fontWeight: 'bold',
+            }}>
+            Daily routine
+          </Text>
+        </Text>
       </View>
 
       {/* 루틴리스트 */}
@@ -892,6 +902,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
     textAlign: 'center',
+    margin: 15,
   },
   //루틴리스트
   routineItem2: {

@@ -171,7 +171,18 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>📍{userName}님의 daily log</Text>
+        <Text style={styles.usertext}>
+          📍{userName}님의{' '}
+          <Text
+            style={{
+              fontStyle: 'italic',
+              fontSize: 22,
+              color: 'black',
+              fontWeight: 'bold',
+            }}>
+            Daily log
+          </Text>
+        </Text>
       </View>
 
       <View style={styles.titletop}>
@@ -412,6 +423,7 @@ const styles = StyleSheet.create({
   // user 정보
   userinfo: {
     flex: 0.5,
+    margin: 17,
   },
   usertext: {
     fontSize: 22,
