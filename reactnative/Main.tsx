@@ -63,6 +63,13 @@ interface RoutineItem {
   };
 }
 
+//루틴fin
+//interface Fin {
+//  ertn_id: string;
+//prtn_id: string;
+// hrtn_id: string;
+//}
+
 // 타임라인 이모지
 interface Findata {
   h_time: string;
@@ -101,7 +108,21 @@ const Main: React.FC<MainProps> = ({
       .then(data => setFindata(data))
       .catch(error => console.error('Error:', error));
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
+
     fetchRoutineCompletionData();
+    // .then(data => {
+    //   if (data) {
+    //     const ids = data.map(
+    //       (item: Fin) => item.hrtn_id || item.ertn_id || item.prtn_id || '',
+    //     );
+    //     setCompletedItems(ids);
+    //   } else {
+    //     console.error('Data is not an array:', data);
+    //   }
+    // })
+    // .catch(error => {
+    //   console.error('오류!:', error);
+    // });
 
     //카메라
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
