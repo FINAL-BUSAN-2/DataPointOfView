@@ -91,27 +91,9 @@ function Search(props: SearchProps) {
           style={styles.search}
           placeholder="검색어 입력"
         />
-        {/* 취소 버튼
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={() => {
-            //setKeyword(''); 검색내역지우기
-            //setKeyItems([]);
-            navigation.goBack(); //뒤로가기
-          }}>
-          <Text style={styles.cancelButtonText}>취소</Text>
-        </TouchableOpacity> */}
       </View>
 
       <View style={{marginTop: 10}}></View>
-      {/* 실선
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderTopColor: 'rgb(175, 171, 171)',
-          width: '100%', // 화면 전체 너비에 맞춤
-        }}
-      /> */}
 
       {keyword && !itemSelected && keyItems.length > 0 && keyword && (
         <View style={styles.autoSearchContainer}>
@@ -133,10 +115,6 @@ function Search(props: SearchProps) {
                 <Text>
                   {item.cat_emoji} {item.pill_nm}
                 </Text>
-                {/* <Image
-                  source={require('./assets/imgs/north_west.svg')}
-                  style={styles.arrowIcon}
-                /> */}
               </TouchableOpacity>
             )}
           />

@@ -176,7 +176,9 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleBackPress()}>
-          <Text style={styles.backButton}>{'< 기타 루틴 추가하기'}</Text>
+          <Text style={styles.backButton}>
+            {'<               기타 루틴 추가하기'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
