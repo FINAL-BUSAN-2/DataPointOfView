@@ -385,7 +385,7 @@ const Main: React.FC<MainProps> = ({
               </Text>
             </View>
 
-            <View style={styles.routineItemSection}>
+            <View style={styles.routineItemSectionTag}>
               <View style={styles.tagContainer}>
                 <Text
                   style={[
@@ -936,6 +936,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     height: 50,
+  },
+  routineItemSectionTag: {
+    flex: 2,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    height: 50,
+    marginLeft: 20,
   },
   routineItemSectionNM: {
     width: 150,
