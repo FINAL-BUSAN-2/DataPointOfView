@@ -55,10 +55,6 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
-  const [chartData7, setChartData7] = useState<chartData7 | null>(null);
-  const [chartData4, setChartData4] = useState([]);
-  const [chartData5, setChartData5] = useState([]);
-  const [chartData6, setChartData6] = useState([]);
   const [showRecommend, setShowRecommend] = useState(false);
   const [recommend, setRecommend] = useState([]);
   useEffect(() => {
@@ -78,24 +74,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
       .then(response => response.json())
       .then(chartData3 =>
         setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
-      );
-    fetch(`http://127.0.0.1:8000/finfunc/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData7 =>
-        setChartData7({result: chartData7[0], finemoji: chartData7[1]}),
       )
-      .catch(error => console.error('Error:', error));
-    fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData4 => setChartData4(chartData4))
-      .catch(error => console.error('Error:', error));
-    fetch(`http://127.0.0.1:8000/emailtest/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData5 => setChartData5(chartData5))
-      .catch(error => console.error('Error:', error));
-    fetch(`http://127.0.0.1:8000/fintest/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData6 => setChartData6(chartData6))
       .catch(error => console.error('Error:', error));
   }, []);
   // 운동 차트 데이터
@@ -122,20 +101,19 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
-  const fin_time = chartData5.map(item => item.fin_time);
-  const fin_emoji = chartData5.map(item => item.fin_emoji);
 
   const showRecommendButton = async () => {
-    try {
-      const recommendresponse = await axios.post(
-        'http://13.209.7.124:5000/recommend',
-        userEmail,
-      );
-      setShowRecommend(!showRecommend);
-      setRecommend(recommendresponse.data);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const recommendresponse = await axios.post(
+    //     'http://13.209.7.124:5000/recommend',
+    //     userEmail,
+    //   );
+    //   setShowRecommend(!showRecommend);
+    //   setRecommend(recommendresponse.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    setShowRecommend(!showRecommend);
   };
 
   console.log('finper:', chartData3?.result, chartData3?.finemoji);
@@ -194,7 +172,18 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
       {/* 유저 정보 */}
       <View style={styles.userinfo}>
-        <Text style={styles.usertext}>📍{userName}님의 daily log</Text>
+        <Text style={styles.usertext}>
+          📍{userName}님의{' '}
+          <Text
+            style={{
+              fontStyle: 'italic',
+              fontSize: 22,
+              color: 'black',
+              fontWeight: 'bold',
+            }}>
+            Daily log
+          </Text>
+        </Text>
       </View>
 
       <View style={styles.titletop}>
@@ -338,16 +327,45 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
             <Text style={styles.statictitletext}>추천 영양제</Text>
           </TouchableOpacity>
           {showRecommend && (
-            <>
+            // <>
+            //   {/* 추천 타이틀 */}
+            //   <Text style={styles.recotext}>{recommend[0]}</Text>
+            //   {/* 추천 제품1 */}
+            //   <Text style={styles.recoproducttext}>{recommend[1]}</Text>
+            //   {/* 추천 제품2 */}
+            //   <Text style={styles.cautiontext}>{recommend[2]}</Text>
+            //   {/* 추천 제품3 */}
+            //   <Text style={styles.cautiontext2}>{recommend[3]}</Text>
+            // </>
+            <View style={{alignItems: 'flex-start'}}>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>{recommend[0]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.recotext}>❗</Text>
+                <Text style={styles.recotext}>
+                  "비비랩 저분자 콜라겐 비오틴 플러스" & "애니멀 트레이닝 팩"
+                </Text>
+              </View>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>{recommend[1]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.recoproducttext}>
+                  함께 섭취 시 부작용이 있을 수 있어요!
+                </Text>
+              </View>
               {/* 추천 제품2 */}
-              <Text style={styles.cautiontext}>{recommend[2]}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.cautiontext}>👍</Text>
+                <Text style={styles.cautiontext}>
+                  추천제품 : "비타민"군의 "엠에스엠비타민C부스터"
+                </Text>
+              </View>
               {/* 추천 제품3 */}
-              <Text style={styles.cautiontext2}>{recommend[3]}</Text>
-            </>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={styles.cautiontext2}>👍</Text>
+                <Text style={styles.cautiontext2}>
+                  추천제품 : "비타민"군의 "코드 레드 팻 버너"
+                </Text>
+              </View>
+            </View>
           )}
         </View>
       </View>
@@ -434,6 +452,7 @@ const styles = StyleSheet.create({
   // user 정보
   userinfo: {
     flex: 0.5,
+    margin: 17,
   },
   usertext: {
     fontSize: 22,
@@ -673,9 +692,9 @@ const styles = StyleSheet.create({
     flex: 5,
     height: 100,
     flexDirection: 'column',
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
+    alignItems: 'center',
     marginTop: 25,
-    marginLeft: 65,
   },
   statictitle: {
     alignItems: 'center',
@@ -693,26 +712,27 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   recotext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     marginTop: 12,
+    maxWidth: '70%',
   },
   recoproducttext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
     marginLeft: 10,
   },
   cautiontext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
     marginLeft: 10,
   },
   cautiontext2: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
     marginTop: 12,
