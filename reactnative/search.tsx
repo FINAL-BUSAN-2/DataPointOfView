@@ -122,6 +122,7 @@ function Search(props: SearchProps) {
             keyExtractor={item => item.pill_nm}
             renderItem={({item}) => (
               <TouchableOpacity
+                key={item.pill_nm}
                 style={styles.item}
                 onPress={() => {
                   onSelect(item.pill_nm, item.pill_cd);
