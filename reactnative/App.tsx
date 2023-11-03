@@ -131,7 +131,6 @@ function App() {
             <Stack.Screen name="hplogset" component={SetWrapper} />
             <Stack.Screen name="Health" component={HealthWrapper} />
             <Stack.Screen name="Pill" component={PillWrapper} />
-            <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="Etc" component={EtcWrapper} />
 
             <Stack.Screen name="Access" component={AccessWrapper} />

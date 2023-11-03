@@ -223,7 +223,6 @@ const HplogSet: React.FC<HplogSetProps> = ({
                       <Text style={styles.modalKey}>가입일 : </Text>
                       <Text style={styles.modalValue}>{userInfo.mem_sday}</Text>
                     </View>
-                    <Text>* 성별, 연령대 비공개 시 일부 기능 이용 제한</Text>
                     <TouchableOpacity onPress={() => setShowUpdateMem(false)}>
                       <View
                         style={{
@@ -490,9 +489,13 @@ const styles = StyleSheet.create({
 
   modalLine: {marginVertical: 10, flexDirection: 'row'},
 
-  modalKey: {fontSize: 20, width: '25%'},
+  modalKey: {fontSize: 15, width: '30%'},
 
-  modalValue: {fontSize: 15, width: '75%', textAlign: 'center'},
+  modalValue: {
+    fontSize: 15,
+    width: '70%',
+    textAlign: 'center',
+  },
 });
 
 export default HplogSet;
