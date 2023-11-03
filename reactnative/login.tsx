@@ -22,41 +22,35 @@ const App = () => {
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        backgroundColor: '#fff',
       }}>
-      <Text
+      <Image
+        source={require('./android/app/src/img/logorec.png')}
         style={{
-          fontSize: 32,
-          marginBottom: 20,
-          height: 50,
-        }}>
-        HP-log 로그인
-      </Text>
-      <TouchableOpacity
-        onPress={kakaoPress}
-        style={{width: 315, height: 75, margin: 10}}>
-        <Image
-          source={require('./images/login/kakao_login_large_narrow.png')}
-          style={{width: '100%', height: '100%'}}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={naverPress}
-        style={{width: 315, height: 75, margin: 10}}>
-        <Image
-          source={require('./images/login/naver_login.png')}
-          style={{width: '100%', height: '100%', borderRadius: 12}}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={googlePress}
-        style={{width: 330, height: 80, margin: 6}}>
-        <Image
-          source={require('./images/login/google_login.png')}
-          style={{width: '100%', height: '100%'}}
-        />
-      </TouchableOpacity>
+          width: '45%',
+          height: '20%',
+          marginBottom: '15%',
+        }}
+      />
+      <View style={{alignItems: 'center', top: 50}}>
+        <Text
+          style={{
+            fontSize: 24,
+            marginBottom: 10,
+            height: 50,
+            color: 'rgb(171,170,170)',
+          }}>
+          웰 라 벨 로그인
+        </Text>
+        <TouchableOpacity
+          onPress={kakaoPress}
+          style={{width: 315, height: 75, margin: 10}}>
+          <Image
+            source={require('./images/login/kakao_login_large_narrow.png')}
+            style={{width: '100%', height: '100%'}}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
