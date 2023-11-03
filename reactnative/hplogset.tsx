@@ -44,6 +44,52 @@ const HplogSet: React.FC<HplogSetProps> = ({
     setShowSubButtons(!showSubButtons);
   };
 
+  const [gender, setGender] = useState<string | null>(null);
+
+  const changeGender = () => {
+    // 현재 상태를 기반으로 다음 상태를 결정
+    let nextGender;
+    if (gender === 'male') {
+      nextGender = 'female';
+    } else if (gender === 'female') {
+      nextGender = null;
+    } else {
+      nextGender = 'male';
+    }
+    setGender(nextGender);
+  };
+
+  const [ageRange, setAgeRange] = useState<string | null>(null);
+
+  const changeAgeRange = () => {
+    // 현재 상태를 기반으로 다음 상태를 결정
+    let nextAgeRange;
+    if (ageRange === '0~9') {
+      nextAgeRange = '10~19';
+    } else if (ageRange === '10~19') {
+      nextAgeRange = '20~29';
+    } else if (ageRange === '20~29') {
+      nextAgeRange = '30~39';
+    } else if (ageRange === '30~39') {
+      nextAgeRange = '40~49';
+    } else if (ageRange === '40~49') {
+      nextAgeRange = '50~59';
+    } else if (ageRange === '50~59') {
+      nextAgeRange = '60~69';
+    } else if (ageRange === '60~69') {
+      nextAgeRange = '70~79';
+    } else if (ageRange === '70~79') {
+      nextAgeRange = '80~89';
+    } else if (ageRange === '80~89') {
+      nextAgeRange = '90~99';
+    } else {
+      nextAgeRange = '0~9';
+    }
+    setAgeRange(nextAgeRange);
+  };
+
+  const displayGender = (gender === null ? 'null' : gender) as string;
+
   const updateMem = () => {
     axios
       .get(`http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`)
@@ -57,6 +103,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
           mem_sday: response.data.mem_sday,
         });
         setShowUpdateMem(true);
+        setGender(userInfo.mem_gen);
       });
   };
 
@@ -83,6 +130,18 @@ const HplogSet: React.FC<HplogSetProps> = ({
       console.error('네트워크 오류:', error);
       Alert.alert('네트워크 오류', '네트워크 오류가 발생했습니다.');
     }
+  };
+
+  const saveMemInput = async (gender, ageRange) => {
+    try {
+      const response = await axios.get(
+        `http://43.200.178.131:3344/saveMemInput?userEmail=${userEmail}&mem_gen=${gender}&mem_age=${ageRange}`,
+      );
+      Alert.alert(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    setShowUpdateMem(false);
   };
 
   const handleWithdrawal = () => {
@@ -213,22 +272,35 @@ const HplogSet: React.FC<HplogSetProps> = ({
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>성별 : </Text>
-                      <Text style={styles.modalValue}>{userInfo.mem_gen}</Text>
+                      <TouchableOpacity
+                        onPress={changeGender}
+                        style={{width: '70%', alignItems: 'center'}}>
+                        <Text style={(styles.modalValue, {color: 'gray'})}>
+                          {displayGender}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>연령대 : </Text>
-                      <Text style={styles.modalValue}>{userInfo.mem_age}</Text>
+                      <TouchableOpacity
+                        onPress={changeAgeRange}
+                        style={{width: '70%', alignItems: 'center'}}>
+                        <Text style={(styles.modalValue, {color: 'gray'})}>
+                          {ageRange}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>가입일 : </Text>
                       <Text style={styles.modalValue}>{userInfo.mem_sday}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setShowUpdateMem(false)}>
+                    <TouchableOpacity
+                      onPress={() => saveMemInput(gender, ageRange)}>
                       <View
                         style={{
                           width: '100%',
                           alignItems: 'center',
-                          marginTop: 10,
+                          marginTop: 20,
                         }}>
                         <Text>저장</Text>
                       </View>
@@ -481,6 +553,7 @@ const styles = StyleSheet.create({
   },
 
   modalTitle: {
+    color: 'black',
     fontSize: 30,
     textAlign: 'center',
     marginVertical: 10,
@@ -489,13 +562,9 @@ const styles = StyleSheet.create({
 
   modalLine: {marginVertical: 10, flexDirection: 'row'},
 
-  modalKey: {fontSize: 15, width: '30%'},
+  modalKey: {color: 'black', fontSize: 15, width: '30%'},
 
-  modalValue: {
-    fontSize: 15,
-    width: '70%',
-    textAlign: 'center',
-  },
+  modalValue: {color: 'black', fontSize: 15, width: '70%', textAlign: 'center'},
 });
 
 export default HplogSet;

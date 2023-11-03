@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
     zIndex: 2,
+    marginTop: '9%',
   },
   item: {
     padding: 10,
