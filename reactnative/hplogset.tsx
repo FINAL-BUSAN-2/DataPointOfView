@@ -52,7 +52,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
     if (gender === 'male') {
       nextGender = 'female';
     } else if (gender === 'female') {
-      nextGender = null;
+      nextGender = '비공개';
     } else {
       nextGender = 'male';
     }
@@ -88,23 +88,42 @@ const HplogSet: React.FC<HplogSetProps> = ({
     setAgeRange(nextAgeRange);
   };
 
-  const displayGender = (gender === null ? 'null' : gender) as string;
+  const displayGender = (() => {
+    switch (gender) {
+      case 'male':
+        return '남성';
+      case 'female':
+        return '여성';
+      case '비공개':
+        return '비공개';
+      default:
+        return gender;
+    }
+  })();
 
-  const updateMem = () => {
-    axios
-      .get(`http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`)
-      .then(response => {
-        console.log('응답 데이터:', response.data);
-        setUserInfo({
-          mem_email: response.data.mem_email,
-          mem_name: response.data.mem_name,
-          mem_gen: response.data.mem_gen,
-          mem_age: response.data.mem_age,
-          mem_sday: response.data.mem_sday,
-        });
-        setShowUpdateMem(true);
-        setGender(userInfo.mem_gen);
-      });
+  const updateMem = async () => {
+    const response = await axios.get(
+      `http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`,
+    );
+    console.log('응답 데이터:', response.data);
+
+    const newUserInfo = {
+      mem_email: response.data.mem_email,
+      mem_name: response.data.mem_name,
+      mem_gen: response.data.mem_gen,
+      mem_age: response.data.mem_age,
+      mem_sday: response.data.mem_sday,
+    };
+
+    setUserInfo(newUserInfo); // userInfo 업데이트
+    setGender(newUserInfo.mem_gen);
+    if (newUserInfo.mem_gen === null) {
+      setGender('비공개');
+    } else {
+      setGender(newUserInfo.mem_gen);
+    }
+    setAgeRange(newUserInfo.mem_age);
+    setShowUpdateMem(true);
   };
 
   const goHplogSet = async () => {
@@ -137,7 +156,7 @@ const HplogSet: React.FC<HplogSetProps> = ({
       const response = await axios.get(
         `http://43.200.178.131:3344/saveMemInput?userEmail=${userEmail}&mem_gen=${gender}&mem_age=${ageRange}`,
       );
-      Alert.alert(response.data);
+      Alert.alert(response.data.message);
     } catch (error) {
       console.error(error);
     }
