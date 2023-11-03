@@ -295,7 +295,7 @@ class PILL_FUNC(Base):
     __tablename__ = "pill_func"
     func_cd = Column(String(10), primary_key=True)
     func_nm = Column(String(60))
-    # func_emoji = Column(String(90)) 컬럼삭제됨
+    func_emoji = Column(String(90))
 
 
 class PILL_NUTR(Base):

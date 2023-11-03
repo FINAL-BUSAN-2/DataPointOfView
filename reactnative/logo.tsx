@@ -6,7 +6,7 @@ const LogoComponent: React.FC = () => {
     <View style={styles.container}>
       {/* 2.png 이미지 추가 */}
       <Image
-        source={require('./android/app/src/img/WLB.png')} // 이미지 파일의 경로를 지정
+        source={require('./android/app/src/img/logorec.png')} // 이미지 파일의 경로를 지정
         style={styles.logo}
       />
     </View>
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   logo: {
     width: 300,
