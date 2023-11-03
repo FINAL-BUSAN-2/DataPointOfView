@@ -949,7 +949,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     height: 50,
-    marginLeft: 20,
   },
   routineItemSectionNM: {
     width: 150,
