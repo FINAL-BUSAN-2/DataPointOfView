@@ -1490,3 +1490,13 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
 def getMemInfo(userEmail: str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     return mem_info
+
+@app.get('/saveMemInput')
+def saveMemInfo(userEmail: str, mem_gen: str, mem_age: str, db: Session = Depends(get_db)):
+    mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
+
+    mem_info.mem_gen = mem_gen
+    mem_info.mem_age = mem_age
+
+    db.commit()
+    return {"회원정보": "수정되었습니다."}
