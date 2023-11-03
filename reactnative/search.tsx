@@ -43,7 +43,7 @@ function Search(props: SearchProps) {
         return res.json();
       })
       .then(data => {
-        console.log('Fetched data:', data); // 로그 출력
+        console.log('연관검색어:', data); // 로그 출력
         return data;
       });
   };
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
   //연관검색창
   autoSearchContainer: {
     // flex: 1,
-    height: 180,
+    height: 300,
     // position: 'absolute',
     alignSelf: 'center',
-    // top: 36,
-    bottom: 30,
-    maxHeight: 300, // 높이를 제한
+    top: 20, //연관검색어창 검색창에 가리니깐 최소 0으로 지정해야함
+    bottom: 100,
+    maxHeight: 100, // 높이를 제한
     width: '99%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
