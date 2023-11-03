@@ -20,7 +20,7 @@ interface autoDatas {
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
-  func_emoji: string;
+  cat_emoji: string;
 }
 function Search(props: SearchProps) {
   const navigation = useNavigation();
@@ -131,7 +131,7 @@ function Search(props: SearchProps) {
                   props.onSelect(item.pill_nm, item.pill_cd);
                 }}>
                 <Text>
-                  {item.func_emoji} {item.pill_nm}
+                  {item.cat_emoji} {item.pill_nm}
                 </Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
