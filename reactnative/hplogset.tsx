@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import axios from 'axios';
 
 type HplogSetProps = {
@@ -30,7 +30,15 @@ const HplogSet: React.FC<HplogSetProps> = ({
   setUserName,
   setUserEmail,
 }) => {
+  const [showUpdateMem, setShowUpdateMem] = useState(false);
   const [showSubButtons, setShowSubButtons] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    mem_email: '',
+    mem_name: '',
+    mem_gen: '',
+    mem_age: '',
+    mem_sday: '',
+  });
 
   const toggleSubButtons = () => {
     setShowSubButtons(!showSubButtons);
@@ -41,9 +49,14 @@ const HplogSet: React.FC<HplogSetProps> = ({
       .get(`http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`)
       .then(response => {
         console.log('응답 데이터:', response.data);
-      })
-      .catch(error => {
-        console.error('오류:', error);
+        setUserInfo({
+          mem_email: response.data.mem_email,
+          mem_name: response.data.mem_name,
+          mem_gen: response.data.mem_gen,
+          mem_age: response.data.mem_age,
+          mem_sday: response.data.mem_sday,
+        });
+        setShowUpdateMem(true);
       });
   };
 
@@ -183,6 +196,47 @@ const HplogSet: React.FC<HplogSetProps> = ({
             <TouchableOpacity onPress={updateMem} style={styles.settButton}>
               <Text style={styles.buttonText}>회원정보 수정</Text>
             </TouchableOpacity>
+            {showUpdateMem && (
+              <Modal>
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>회원 정보 수정</Text>
+                    <View style={styles.modalLine}>
+                      <Text style={styles.modalKey}>이메일 : </Text>
+                      <Text style={styles.modalValue}>
+                        {userInfo.mem_email}
+                      </Text>
+                    </View>
+                    <View style={styles.modalLine}>
+                      <Text style={styles.modalKey}>닉네임 : </Text>
+                      <Text style={styles.modalValue}>{userInfo.mem_name}</Text>
+                    </View>
+                    <View style={styles.modalLine}>
+                      <Text style={styles.modalKey}>성별 : </Text>
+                      <Text style={styles.modalValue}>{userInfo.mem_gen}</Text>
+                    </View>
+                    <View style={styles.modalLine}>
+                      <Text style={styles.modalKey}>연령대 : </Text>
+                      <Text style={styles.modalValue}>{userInfo.mem_age}</Text>
+                    </View>
+                    <View style={styles.modalLine}>
+                      <Text style={styles.modalKey}>가입일 : </Text>
+                      <Text style={styles.modalValue}>{userInfo.mem_sday}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => setShowUpdateMem(false)}>
+                      <View
+                        style={{
+                          width: '100%',
+                          alignItems: 'center',
+                          marginTop: 10,
+                        }}>
+                        <Text>저장</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            )}
             <TouchableOpacity
               onPress={() => handleWithdrawal(userEmail)}
               style={styles.settButton}>
@@ -410,6 +464,37 @@ const styles = StyleSheet.create({
 
   scroll: {
     marginBottom: '15%',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+  },
+
+  modalTitle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginVertical: 10,
+    fontWeight: '700',
+  },
+
+  modalLine: {marginVertical: 10, flexDirection: 'row'},
+
+  modalKey: {fontSize: 15, width: '30%'},
+
+  modalValue: {
+    fontSize: 15,
+    width: '70%',
+    textAlign: 'center',
   },
 });
 

@@ -337,7 +337,6 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
               <Text style={styles.cautiontext2}>{recommend[3]}</Text>
             </>
           )}
-          <View></View>
         </View>
       </View>
 
