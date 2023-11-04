@@ -281,7 +281,10 @@ const Access: React.FC<AccessProps> = ({
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
             <Text style={styles.finpertext}>
-              {chartData3?.result.toFixed(0) ? chartData3?.result : 0}%
+              {chartData3?.result.toFixed(0)
+                ? chartData3?.result.toFixed(0)
+                : 0}
+              %
             </Text>
           </View>
         </View>
