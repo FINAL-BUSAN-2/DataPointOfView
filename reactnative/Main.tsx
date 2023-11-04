@@ -169,7 +169,7 @@ const Main: React.FC<MainProps> = ({
       if (response.data) {
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
-        console.log('Fetched completion data:', completionData);
+        console.log('달성된루틴데이터:', completionData);
         return completionData;
       } else {
         console.error('데이터가 없습니다.');

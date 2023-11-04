@@ -1474,10 +1474,10 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
             .filter(PRTN_FIN.prtn_id.like(f"%{prtn_id_fin}%"))
             .all()
         )
-        rtn_fin = [hrtn_fin_info,ertn_fin_info,prtn_fin_info]
+        rtn_fin = hrtn_fin_info, ertn_fin_info, prtn_fin_info
         # 조회한 루틴 달성 정보를 클라이언트에 반환
         return rtn_fin
-    
+
     except Exception as e:
         # 오류 발생 시 404 응답 반환
         raise HTTPException(status_code=404, detail="데이터가 없습니다.")
@@ -1488,11 +1488,14 @@ def getMemInfo(userEmail: str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     return mem_info
 
-@app.get('/saveMemInput')
-def saveMemInfo(userEmail: str, mem_gen: str, mem_age: str, db: Session = Depends(get_db)):
+
+@app.get("/saveMemInput")
+def saveMemInfo(
+    userEmail: str, mem_gen: str, mem_age: str, db: Session = Depends(get_db)
+):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
 
-    if mem_gen == '비공개':
+    if mem_gen == "비공개":
         mem_info.mem_gen = None
     else:
         mem_info.mem_gen = mem_gen
