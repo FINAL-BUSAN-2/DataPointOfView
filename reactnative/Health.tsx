@@ -302,7 +302,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
         //       httpsAgent: HttpAgent,
       })
       .then(response => {
-        Alert.alert('이 기구가 맞나요?', response.data['predicted_class'], [
+        Alert.alert('이 기구가 맞나요?', response.data['predicted_class_kr'], [
           {
             text: '네',
             onPress: () => {
