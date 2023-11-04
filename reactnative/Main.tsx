@@ -183,11 +183,11 @@ const Main: React.FC<MainProps> = ({
         // console.log('Fetched completion data:', completionData);
         return completionData;
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
         return null;
       }
     } catch (error) {
-      console.error('루틴달성 오류');
+      // console.error('루틴달성 오류');
       return null;
     }
   };
