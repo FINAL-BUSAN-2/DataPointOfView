@@ -72,20 +72,28 @@ const Access: React.FC<AccessProps> = ({
         );
         const healthData = await healthResponse.json();
         setChartData(healthData);
+      } catch (error) {
+        // 첫 번째 요청에서 발생한 에러 처리
+      }
 
+      try {
         const pillResponse = await fetch(
           `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
         );
         const pillData = await pillResponse.json();
         setChartData2(pillData);
+      } catch (error) {
+        // 두 번째 요청에서 발생한 에러 처리
+      }
 
+      try {
         const finResponse = await fetch(
           `http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`,
         );
         const finData = await finResponse.json();
         setChartData3({result: finData[0], finemoji: finData[1]});
       } catch (error) {
-        // 에러가 발생하더라도 아무 것도 하지 않음
+        // 세 번째 요청에서 발생한 에러 처리
       }
     };
 
@@ -281,7 +289,10 @@ const Access: React.FC<AccessProps> = ({
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
             <Text style={styles.finpertext}>
-              {chartData3?.result.toFixed(0) ? chartData3?.result : 0}%
+              {chartData3?.result.toFixed(0)
+                ? chartData3?.result.toFixed(0)
+                : 0}
+              %
             </Text>
           </View>
         </View>

@@ -172,7 +172,7 @@ const Main: React.FC<MainProps> = ({
         console.log('달성된루틴데이터:', completionData);
         return completionData;
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
         return null;
       }
     } catch (error) {
