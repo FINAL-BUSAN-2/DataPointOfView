@@ -176,7 +176,7 @@ const Main: React.FC<MainProps> = ({
         return null;
       }
     } catch (error) {
-      // console.error('루틴달성 오류');
+      console.error('루틴달성 오류', error);
       return null;
     }
   };

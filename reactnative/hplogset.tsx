@@ -35,7 +35,6 @@ const HplogSet: React.FC<HplogSetProps> = ({
   setCompletedItems,
 }) => {
   const [showUpdateMem, setShowUpdateMem] = useState(false);
-  const [showSubButtons, setShowSubButtons] = useState(false);
   const [userInfo, setUserInfo] = useState({
     mem_email: '',
     mem_name: '',
@@ -43,10 +42,6 @@ const HplogSet: React.FC<HplogSetProps> = ({
     mem_age: '',
     mem_sday: '',
   });
-
-  const toggleSubButtons = () => {
-    setShowSubButtons(!showSubButtons);
-  };
 
   const [gender, setGender] = useState<string | null>(null);
 
@@ -257,21 +252,6 @@ const HplogSet: React.FC<HplogSetProps> = ({
         </View>
         <ScrollView>
           <View style={styles.scroll}>
-            <TouchableOpacity
-              onPress={toggleSubButtons}
-              style={styles.settButton}>
-              <Text style={styles.buttonText}>화면 디자인 변경</Text>
-            </TouchableOpacity>
-            {showSubButtons && (
-              <View style={styles.themesection}>
-                <TouchableOpacity style={styles.themeButton1}>
-                  <Text style={{color: 'black'}}>기본</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.themeButton2}>
-                  <Text style={{color: 'white'}}>다크모드</Text>
-                </TouchableOpacity>
-              </View>
-            )}
             <TouchableOpacity onPress={logOut} style={styles.settButton}>
               <Text style={styles.buttonText}>로그아웃</Text>
             </TouchableOpacity>
