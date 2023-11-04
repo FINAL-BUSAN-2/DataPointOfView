@@ -25,6 +25,8 @@ type MainProps = {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 //DB에서 루틴정보받아오기
@@ -95,11 +97,11 @@ const Main: React.FC<MainProps> = ({
   setLogin,
   setUserName,
   setUserEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
-  //루틴달성여부
-  const [completedItems, setCompletedItems] = useState<string[]>([]);
   const [findata, setFindata] = useState<Findata[]>([]);
 
   useEffect(() => {
@@ -110,19 +112,6 @@ const Main: React.FC<MainProps> = ({
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     fetchRoutineCompletionData();
-    // .then(data => {
-    //   if (data) {
-    //     const ids = data.map(
-    //       (item: Fin) => item.hrtn_id || item.ertn_id || item.prtn_id || '',
-    //     );
-    //     setCompletedItems(ids);
-    //   } else {
-    //     console.error('Data is not an array:', data);
-    //   }
-    // })
-    // .catch(error => {
-    //   console.error('오류!:', error);
-    // });
 
     //카메라
     const platformPermissions = PERMISSIONS.ANDROID.CAMERA;
@@ -180,14 +169,14 @@ const Main: React.FC<MainProps> = ({
       if (response.data) {
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
-        // console.log('Fetched completion data:', completionData);
+        console.log('달성된루틴데이터:', completionData);
         return completionData;
       } else {
         // console.error('데이터가 없습니다.');
         return null;
       }
     } catch (error) {
-      // console.error('루틴달성 오류');
+      // console.error('루틴달성 오류', error);
       return null;
     }
   };
