@@ -28,12 +28,16 @@ interface RoutineAddProps {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({
   navigation,
   userName,
   userEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   const [selectedPillCd, setSelectedPillCd] = useState<string | null>(null);
   //검색창

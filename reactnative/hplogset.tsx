@@ -20,6 +20,8 @@ type HplogSetProps = {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const HplogSet: React.FC<HplogSetProps> = ({
@@ -29,6 +31,8 @@ const HplogSet: React.FC<HplogSetProps> = ({
   setLogin,
   setUserName,
   setUserEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   const [showUpdateMem, setShowUpdateMem] = useState(false);
   const [showSubButtons, setShowSubButtons] = useState(false);

@@ -25,6 +25,8 @@ type MainProps = {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 //DB에서 루틴정보받아오기
@@ -95,11 +97,11 @@ const Main: React.FC<MainProps> = ({
   setLogin,
   setUserName,
   setUserEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
-  //루틴달성여부
-  const [completedItems, setCompletedItems] = useState<string[]>([]);
   const [findata, setFindata] = useState<Findata[]>([]);
 
   useEffect(() => {
