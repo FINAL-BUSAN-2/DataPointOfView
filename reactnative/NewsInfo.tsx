@@ -107,7 +107,9 @@ const NewsInfo: React.FC<NewsInfoProps> = ({
         </View>
         <View style={styles.newsTitleContainer}>
           <TouchableOpacity onPress={handleBackPress}>
-            <Text style={styles.articleTitleText}>📰 Daily article</Text>
+            <Text style={styles.articleTitleText}>
+              <Text style={styles.newsTitleText1_1}>📰</Text> Daily article
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.newslabel}>
@@ -319,6 +321,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 22,
     fontStyle: 'italic',
+    fontWeight: '700',
+    margin: 5,
+  },
+  newsTitleText1_1: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 22,
     fontWeight: '700',
     margin: 5,
   },

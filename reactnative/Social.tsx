@@ -108,7 +108,9 @@ const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
         </View>
 
         <View style={styles.newsTitleContainer}>
-          <Text style={styles.newsTitleText1}>📰 Daily article</Text>
+          <Text style={styles.newsTitleText1}>
+            <Text style={styles.newsTitleText1_1}>📰</Text> Daily article
+          </Text>
           <Text style={styles.newsTitleText2}>하루 아티클</Text>
         </View>
         <View style={styles.newsContent}>
@@ -333,6 +335,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 22,
     fontStyle: 'italic',
+    fontWeight: '700',
+    margin: 5,
+  },
+  newsTitleText1_1: {
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+    fontSize: 22,
     fontWeight: '700',
     margin: 5,
   },
