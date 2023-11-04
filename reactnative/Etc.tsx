@@ -426,21 +426,23 @@ const styles = StyleSheet.create({
 
   //addContainer
   addContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
     height: 70,
+    width: '100%',
     alignItems: 'center',
+    backgroundColor: '#fff',
     elevation: 50, // for Android
   },
   //addTab
   addTab: {
     flexDirection: 'row',
-    height: 80,
-    width: '100%',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    height: 60,
+    width: '80%',
+    borderRadius: 50,
     backgroundColor: 'rgb(43,58,85)',
     alignItems: 'center',
     justifyContent: 'center',
