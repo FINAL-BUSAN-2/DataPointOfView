@@ -66,11 +66,11 @@ interface RoutineItem {
 }
 
 //루틴fin
-//interface Fin {
-//  ertn_id: string;
-//prtn_id: string;
-// hrtn_id: string;
-//}
+interface Fin {
+  ertn_id: string;
+  prtn_id: string;
+  hrtn_id: string;
+}
 
 // 타임라인 이모지
 interface Findata {

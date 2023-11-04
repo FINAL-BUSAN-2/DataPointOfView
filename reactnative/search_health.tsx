@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     top: 60,
     maxHeight: '100%', // 높이를 제한
-    width: '70%',
+    width: '85%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
     borderRadius: 15,
