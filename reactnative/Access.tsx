@@ -65,24 +65,31 @@ const Access: React.FC<AccessProps> = ({
   const [showRecommend, setShowRecommend] = useState(false);
   const [recommend, setRecommend] = useState([]);
   useEffect(() => {
-    fetch(
-      `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
-    )
-      .then(response => response.json())
-      .then(healthdata => setChartData(healthdata))
-      .catch(error => console.error('Error:', error));
-    fetch(
-      `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
-    )
-      .then(response => response.json())
-      .then(pilldata => setChartData2(pilldata))
-      .catch(error => console.error('Error:', error));
-    fetch(`http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`)
-      .then(response => response.json())
-      .then(chartData3 =>
-        setChartData3({result: chartData3[0], finemoji: chartData3[1]}),
-      )
-      .catch(error => console.error('Error:', error));
+    const fetchData = async () => {
+      try {
+        const healthResponse = await fetch(
+          `http://43.200.178.131:3344/health_piechartdata/?userEmail=${userEmail}`,
+        );
+        const healthData = await healthResponse.json();
+        setChartData(healthData);
+
+        const pillResponse = await fetch(
+          `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
+        );
+        const pillData = await pillResponse.json();
+        setChartData2(pillData);
+
+        const finResponse = await fetch(
+          `http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`,
+        );
+        const finData = await finResponse.json();
+        setChartData3({result: finData[0], finemoji: finData[1]});
+      } catch (error) {
+        // 에러가 발생하더라도 아무 것도 하지 않음
+      }
+    };
+
+    fetchData();
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
@@ -122,7 +129,7 @@ const Access: React.FC<AccessProps> = ({
     }
   };
 
-  console.log('finper:', chartData3?.result, chartData3?.finemoji);
+  // console.log('finper:', chartData3?.result, chartData3?.finemoji);
   // console.log('finemoji:', finfunc);
   // console.log('test:', test);
   // console.log('hcolor:', test);
@@ -266,13 +273,15 @@ const Access: React.FC<AccessProps> = ({
           {/* 달성률 이모지 영역*/}
           <View style={styles.finemoji}>
             {/* 달성률 이모지 스타일 */}
-            <Text style={styles.finemojitext}>{chartData3?.finemoji}</Text>
+            <Text style={styles.finemojitext}>
+              {chartData3?.finemoji ? chartData3.finemoji : '🌚'}
+            </Text>
           </View>
           {/* 달성률 수치 영역 */}
           <View style={styles.finper}>
             {/* 달성률 수치 스타일 */}
             <Text style={styles.finpertext}>
-              {chartData3?.result.toFixed(0)}%
+              {chartData3?.result.toFixed(0) ? chartData3?.result : 0}%
             </Text>
           </View>
         </View>
