@@ -1474,10 +1474,13 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
             .filter(PRTN_FIN.prtn_id.like(f"%{prtn_id_fin}%"))
             .all()
         )
-        rtn_fin = hrtn_fin_info, ertn_fin_info, prtn_fin_info
-        # 조회한 루틴 달성 정보를 클라이언트에 반환
-        return rtn_fin
 
+        # 조회한 루틴 달성 정보를 클라이언트에 반환
+        return {
+            "hrtn_fin": hrtn_fin_info,
+            "ertn_fin": ertn_fin_info,
+            "prtn_fin": prtn_fin_info,
+        }
     except Exception as e:
         # 오류 발생 시 404 응답 반환
         raise HTTPException(status_code=404, detail="데이터가 없습니다.")
