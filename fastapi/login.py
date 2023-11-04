@@ -1457,19 +1457,19 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
 
         # 이메일에 해당하는 루틴 달성 정보 조회 (가정)
         hrtn_fin_info = (
-            db.query(HRTN_FIN.hrtn_id)
+            db.query(HRTN_FIN)
             .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_date)
             .filter(HRTN_FIN.hrtn_id.like(f"%{hrtn_id_fin}%"))
             .all()
         )
         ertn_fin_info = (
-            db.query(ERTN_FIN.ertn_id)
+            db.query(ERTN_FIN)
             .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_date)
             .filter(ERTN_FIN.ertn_id.like(f"%{ertn_id_fin}%"))
             .all()
         )
         prtn_fin_info = (
-            db.query(PRTN_FIN.prtn_id)
+            db.query(PRTN_FIN)
             .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_date)
             .filter(PRTN_FIN.prtn_id.like(f"%{prtn_id_fin}%"))
             .all()
