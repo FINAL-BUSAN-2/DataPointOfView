@@ -28,6 +28,8 @@ type AccessProps = {
   // 사용자 정보를 변경시킬 수 있음
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 // type chartData = {
 //     tag:
@@ -44,7 +46,12 @@ type chartData3 = {
   finemoji: string;
 };
 // React 함수 컴포넌트 정의
-const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
+const Access: React.FC<AccessProps> = ({
+  userName,
+  userEmail,
+  completedItems,
+  setCompletedItems,
+}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
   const navigation =
     useNavigation<StackNavigationProp<RootStackPageList, 'Access'>>();
@@ -65,20 +72,28 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
         );
         const healthData = await healthResponse.json();
         setChartData(healthData);
+      } catch (error) {
+        // 첫 번째 요청에서 발생한 에러 처리
+      }
 
+      try {
         const pillResponse = await fetch(
           `http://43.200.178.131:3344/pill_piechartdata/?userEmail=${userEmail}`,
         );
         const pillData = await pillResponse.json();
         setChartData2(pillData);
+      } catch (error) {
+        // 두 번째 요청에서 발생한 에러 처리
+      }
 
+      try {
         const finResponse = await fetch(
           `http://43.200.178.131:3344/finfunc/?userEmail=${userEmail}`,
         );
         const finData = await finResponse.json();
         setChartData3({result: finData[0], finemoji: finData[1]});
       } catch (error) {
-        // 에러가 발생하더라도 아무 것도 하지 않음
+        // 세 번째 요청에서 발생한 에러 처리
       }
     };
 
