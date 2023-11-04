@@ -149,10 +149,10 @@ const Main: React.FC<MainProps> = ({
 
         setData(data);
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      // console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
     }
   };
 
