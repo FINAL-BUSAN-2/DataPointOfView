@@ -291,7 +291,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
         <View style={styles.chart}>
           {/* 운동 차트 */}
           <View style={styles.healthchart}>
-            {chartData.pie_chart_data ? (
+            {chartData?.pie_chart_data ? (
               <PieChart
                 widthAndHeight={90}
                 series={hcount}
@@ -306,7 +306,7 @@ const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
 
           {/* 영양 차트 */}
           <View style={styles.pillchart}>
-            {chartData2.pill_chart_data ? (
+            {chartData2?.pill_chart_data ? (
               <PieChart
                 widthAndHeight={90}
                 series={pcount}
