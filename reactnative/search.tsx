@@ -20,7 +20,7 @@ interface autoDatas {
   pill_cd: string;
   pill_nm: string;
   pill_mnf: string;
-  func_emoji: string;
+  cat_emoji: string;
 }
 function Search(props: SearchProps) {
   const navigation = useNavigation();
@@ -43,7 +43,7 @@ function Search(props: SearchProps) {
         return res.json();
       })
       .then(data => {
-        console.log('Fetched data:', data); // 로그 출력
+        console.log('연관검색어:', data); // 로그 출력
         return data;
       });
   };
@@ -118,7 +118,7 @@ function Search(props: SearchProps) {
           <FlatList
             data={keyItems}
             style={{flex: 1}}
-            nestedScrollEnabled={true}
+            nestedScrollEnabled={false}
             keyExtractor={item => item.pill_nm}
             renderItem={({item}) => (
               <TouchableOpacity
@@ -131,7 +131,7 @@ function Search(props: SearchProps) {
                   props.onSelect(item.pill_nm, item.pill_cd);
                 }}>
                 <Text>
-                  {item.func_emoji} {item.pill_nm}
+                  {item.cat_emoji} {item.pill_nm}
                 </Text>
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
   //연관검색창
   autoSearchContainer: {
     // flex: 1,
-    height: 180,
+    height: 300,
     // position: 'absolute',
     alignSelf: 'center',
-    // top: 36,
-    bottom: 30,
-    maxHeight: 300, // 높이를 제한
+    top: '-5%', //연관검색어창 검색창에 가리니깐 최소 0으로 지정해야함
+    bottom: 100,
+    maxHeight: 400, // 높이를 제한
     width: '99%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
     zIndex: 2,
+    // marginTop: '9%',
   },
   item: {
     padding: 10,

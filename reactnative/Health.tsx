@@ -27,14 +27,19 @@ interface RoutineAddProps {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const RoutineNameBox: React.FC<RoutineAddProps> = ({
   navigation,
   userName,
   userEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   const [predictImg, setPredictImg] = useState(null);
+  const [predictImgTag, setPredictImgTag] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [newFileName, setNewFileName] = useState('');
   const toggleModal = () => {
@@ -117,6 +122,8 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
 
   const delPredictImg = () => {
     setPredictImg(null);
+    setPredictImgTag(null);
+    setSelectedValue(null);
   };
 
   //태그 설정
@@ -303,7 +310,11 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
               RNFS.unlink(`${internalStoragePath}/${newFileName}`);
               setModalVisible(!isModalVisible);
               setCameraImgPath('');
-              setPredictImg(response.data['predicted_class']);
+              setPredictImg(response.data['predicted_class_kr']);
+              setPredictImgTag(response.data['predicted_tags']);
+              setSelectedValue(
+                `${response.data['predicted_class_kr']}-${response.data['predicted_tags']}`,
+              );
             },
           },
           {
@@ -460,7 +471,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
                         color: 'black',
                         fontSize: 15,
                       }}>
-                      - 숨쉬기 운동(호흡)
+                      {predictImgTag}
                     </Text>
                   </>
                 )}

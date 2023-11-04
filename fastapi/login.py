@@ -1311,7 +1311,7 @@ def pill_prod_search(
     if q:
         query = query.filter(PILL_PROD.pill_nm.like(f"%{q}%"))  # 검색어에 따른 필터링
 
-    # query = query.distinct()  # 중복된 결과 제거
+    query = query.distinct()  # 중복된 결과 제거
 
     results = query.all()
 
@@ -1490,3 +1490,19 @@ def search_rtn_fin(finemail: str, db: Session = Depends(get_db)):
 def getMemInfo(userEmail: str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     return mem_info
+
+
+@app.get("/saveMemInput")
+def saveMemInfo(
+    userEmail: str, mem_gen: str, mem_age: str, db: Session = Depends(get_db)
+):
+    mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
+
+    if mem_gen == "비공개":
+        mem_info.mem_gen = None
+    else:
+        mem_info.mem_gen = mem_gen
+    mem_info.mem_age = mem_age
+
+    db.commit()
+    return {"message": "수정되었습니다."}

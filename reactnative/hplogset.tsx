@@ -20,6 +20,8 @@ type HplogSetProps = {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const HplogSet: React.FC<HplogSetProps> = ({
@@ -29,9 +31,10 @@ const HplogSet: React.FC<HplogSetProps> = ({
   setLogin,
   setUserName,
   setUserEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   const [showUpdateMem, setShowUpdateMem] = useState(false);
-  const [showSubButtons, setShowSubButtons] = useState(false);
   const [userInfo, setUserInfo] = useState({
     mem_email: '',
     mem_name: '',
@@ -40,24 +43,86 @@ const HplogSet: React.FC<HplogSetProps> = ({
     mem_sday: '',
   });
 
-  const toggleSubButtons = () => {
-    setShowSubButtons(!showSubButtons);
+  const [gender, setGender] = useState<string | null>(null);
+
+  const changeGender = () => {
+    // 현재 상태를 기반으로 다음 상태를 결정
+    let nextGender;
+    if (gender === 'male') {
+      nextGender = 'female';
+    } else if (gender === 'female') {
+      nextGender = '비공개';
+    } else {
+      nextGender = 'male';
+    }
+    setGender(nextGender);
   };
 
-  const updateMem = () => {
-    axios
-      .get(`http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`)
-      .then(response => {
-        console.log('응답 데이터:', response.data);
-        setUserInfo({
-          mem_email: response.data.mem_email,
-          mem_name: response.data.mem_name,
-          mem_gen: response.data.mem_gen,
-          mem_age: response.data.mem_age,
-          mem_sday: response.data.mem_sday,
-        });
-        setShowUpdateMem(true);
-      });
+  const [ageRange, setAgeRange] = useState<string | null>(null);
+
+  const changeAgeRange = () => {
+    // 현재 상태를 기반으로 다음 상태를 결정
+    let nextAgeRange;
+    if (ageRange === '0~9') {
+      nextAgeRange = '10~19';
+    } else if (ageRange === '10~19') {
+      nextAgeRange = '20~29';
+    } else if (ageRange === '20~29') {
+      nextAgeRange = '30~39';
+    } else if (ageRange === '30~39') {
+      nextAgeRange = '40~49';
+    } else if (ageRange === '40~49') {
+      nextAgeRange = '50~59';
+    } else if (ageRange === '50~59') {
+      nextAgeRange = '60~69';
+    } else if (ageRange === '60~69') {
+      nextAgeRange = '70~79';
+    } else if (ageRange === '70~79') {
+      nextAgeRange = '80~89';
+    } else if (ageRange === '80~89') {
+      nextAgeRange = '90~99';
+    } else {
+      nextAgeRange = '0~9';
+    }
+    setAgeRange(nextAgeRange);
+  };
+
+  const displayGender = (() => {
+    switch (gender) {
+      case 'male':
+        return '남성';
+      case 'female':
+        return '여성';
+      case '비공개':
+        return '비공개';
+      default:
+        return gender;
+    }
+  })();
+
+  const updateMem = async () => {
+    const response = await axios.get(
+      `http://43.200.178.131:3344/getMemInfo/?userEmail=${userEmail}`,
+    );
+    console.log('응답 데이터:', response.data);
+
+    const newUserInfo = {
+      mem_email: response.data.mem_email,
+      mem_name: response.data.mem_name,
+      mem_gen: response.data.mem_gen,
+      mem_age: response.data.mem_age,
+      mem_sday: response.data.mem_sday,
+    };
+
+    setUserInfo(newUserInfo); // userInfo 업데이트
+    setGender(newUserInfo.mem_gen);
+    if (newUserInfo.mem_gen === null) {
+      setGender('비공개');
+    } else {
+      setGender(newUserInfo.mem_gen);
+    }
+    setAgeRange(newUserInfo.mem_age);
+    setShowUpdateMem(true);
   };
 
   const goHplogSet = async () => {
@@ -83,6 +148,18 @@ const HplogSet: React.FC<HplogSetProps> = ({
       console.error('네트워크 오류:', error);
       Alert.alert('네트워크 오류', '네트워크 오류가 발생했습니다.');
     }
+  };
+
+  const saveMemInput = async (gender, ageRange) => {
+    try {
+      const response = await axios.get(
+        `http://43.200.178.131:3344/saveMemInput?userEmail=${userEmail}&mem_gen=${gender}&mem_age=${ageRange}`,
+      );
+      Alert.alert(response.data.message);
+    } catch (error) {
+      console.error(error);
+    }
+    setShowUpdateMem(false);
   };
 
   const handleWithdrawal = () => {
@@ -175,21 +252,6 @@ const HplogSet: React.FC<HplogSetProps> = ({
         </View>
         <ScrollView>
           <View style={styles.scroll}>
-            <TouchableOpacity
-              onPress={toggleSubButtons}
-              style={styles.settButton}>
-              <Text style={styles.buttonText}>화면 디자인 변경</Text>
-            </TouchableOpacity>
-            {showSubButtons && (
-              <View style={styles.themesection}>
-                <TouchableOpacity style={styles.themeButton1}>
-                  <Text style={{color: 'black'}}>기본</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.themeButton2}>
-                  <Text style={{color: 'white'}}>다크모드</Text>
-                </TouchableOpacity>
-              </View>
-            )}
             <TouchableOpacity onPress={logOut} style={styles.settButton}>
               <Text style={styles.buttonText}>로그아웃</Text>
             </TouchableOpacity>
@@ -213,22 +275,35 @@ const HplogSet: React.FC<HplogSetProps> = ({
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>성별 : </Text>
-                      <Text style={styles.modalValue}>{userInfo.mem_gen}</Text>
+                      <TouchableOpacity
+                        onPress={changeGender}
+                        style={{width: '70%', alignItems: 'center'}}>
+                        <Text style={(styles.modalValue, {color: 'gray'})}>
+                          {displayGender}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>연령대 : </Text>
-                      <Text style={styles.modalValue}>{userInfo.mem_age}</Text>
+                      <TouchableOpacity
+                        onPress={changeAgeRange}
+                        style={{width: '70%', alignItems: 'center'}}>
+                        <Text style={(styles.modalValue, {color: 'gray'})}>
+                          {ageRange}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.modalLine}>
                       <Text style={styles.modalKey}>가입일 : </Text>
                       <Text style={styles.modalValue}>{userInfo.mem_sday}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setShowUpdateMem(false)}>
+                    <TouchableOpacity
+                      onPress={() => saveMemInput(gender, ageRange)}>
                       <View
                         style={{
                           width: '100%',
                           alignItems: 'center',
-                          marginTop: 10,
+                          marginTop: 20,
                         }}>
                         <Text>저장</Text>
                       </View>
@@ -481,6 +556,7 @@ const styles = StyleSheet.create({
   },
 
   modalTitle: {
+    color: 'black',
     fontSize: 30,
     textAlign: 'center',
     marginVertical: 10,
@@ -489,13 +565,9 @@ const styles = StyleSheet.create({
 
   modalLine: {marginVertical: 10, flexDirection: 'row'},
 
-  modalKey: {fontSize: 15, width: '30%'},
+  modalKey: {color: 'black', fontSize: 15, width: '30%'},
 
-  modalValue: {
-    fontSize: 15,
-    width: '70%',
-    textAlign: 'center',
-  },
+  modalValue: {color: 'black', fontSize: 15, width: '70%', textAlign: 'center'},
 });
 
 export default HplogSet;
