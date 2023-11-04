@@ -28,6 +28,8 @@ type AccessProps = {
   // 사용자 정보를 변경시킬 수 있음
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 // type chartData = {
 //     tag:
@@ -44,7 +46,12 @@ type chartData3 = {
   finemoji: string;
 };
 // React 함수 컴포넌트 정의
-const Access: React.FC<AccessProps> = ({userName, userEmail}) => {
+const Access: React.FC<AccessProps> = ({
+  userName,
+  userEmail,
+  completedItems,
+  setCompletedItems,
+}) => {
   // useNavigation을 사용해 navigation prop을 가져옴
   const navigation =
     useNavigation<StackNavigationProp<RootStackPageList, 'Access'>>();

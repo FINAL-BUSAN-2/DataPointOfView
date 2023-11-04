@@ -21,6 +21,7 @@ function App() {
   const [isLogin, setLogin] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
+  const [completedItems, setCompletedItems] = useState<string[]>([]);
   useEffect(() => {
     // 1초 후에 로고 화면을 숨기고 로그인 화면 보이기
     const timer = setTimeout(() => {
@@ -60,6 +61,8 @@ function App() {
         setLogin={setLogin}
         setUserName={setUserName}
         setUserEmail={setUserEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
       />
     );
   }
@@ -73,6 +76,8 @@ function App() {
         setLogin={setLogin}
         setUserName={setUserName}
         setUserEmail={setUserEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
       />
     );
   }
@@ -85,6 +90,8 @@ function App() {
         setLogin={setLogin}
         setUserName={setUserName}
         setUserEmail={setUserEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
       />
     );
   }
@@ -98,24 +105,70 @@ function App() {
         setLogin={setLogin}
         setUserName={setUserName}
         setUserEmail={setUserEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
       />
     );
   }
 
   function NewsInfoWrapper(props) {
-    return <NewsInfo {...props} userName={userName} userEmail={userEmail} />;
+    return (
+      <NewsInfo
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
+      />
+    );
   }
 
   function EtcWrapper(props) {
-    return <Etc {...props} userName={userName} userEmail={userEmail} />;
+    return (
+      <Etc
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
+      />
+    );
   }
 
   function HealthWrapper(props) {
-    return <Health {...props} userName={userName} userEmail={userEmail} />;
+    return (
+      <Health
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
+      />
+    );
+  }
+
+  function HealthWrapper(props) {
+    return (
+      <Health
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
+      />
+    );
   }
 
   function PillWrapper(props) {
-    return <Pill {...props} userName={userName} userEmail={userEmail} />;
+    return (
+      <Pill
+        {...props}
+        userName={userName}
+        userEmail={userEmail}
+        completedItems={completedItems}
+        setCompletedItems={setCompletedItems}
+      />
+    );
   }
 
   return (

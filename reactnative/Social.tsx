@@ -17,9 +17,17 @@ type SocialProps = {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setUserName: React.Dispatch<React.SetStateAction<string | null>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const Social: React.FC<SocialProps> = ({navigation, userName, userEmail}) => {
+const Social: React.FC<SocialProps> = ({
+  navigation,
+  userName,
+  userEmail,
+  completedItems,
+  setCompletedItems,
+}) => {
   // 개인 페이지 이동 함수
   const movetest3 = () => {
     navigation.navigate('Access');

@@ -26,6 +26,8 @@ type NewsInfoProps = {
   };
   userName: string;
   userEmail: string;
+  completedItems: string[];
+  setCompletedItems: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const NewsInfo: React.FC<NewsInfoProps> = ({
@@ -33,6 +35,8 @@ const NewsInfo: React.FC<NewsInfoProps> = ({
   route,
   userName,
   userEmail,
+  completedItems,
+  setCompletedItems,
 }) => {
   const {newsData, search, icon} = route.params;
   const handleBackPress = () => {
