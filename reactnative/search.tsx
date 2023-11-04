@@ -118,7 +118,7 @@ function Search(props: SearchProps) {
           <FlatList
             data={keyItems}
             style={{flex: 1}}
-            nestedScrollEnabled={true}
+            nestedScrollEnabled={false}
             keyExtractor={item => item.pill_nm}
             renderItem={({item}) => (
               <TouchableOpacity
@@ -195,9 +195,9 @@ const styles = StyleSheet.create({
     height: 300,
     // position: 'absolute',
     alignSelf: 'center',
-    top: 20, //연관검색어창 검색창에 가리니깐 최소 0으로 지정해야함
+    top: '-5%', //연관검색어창 검색창에 가리니깐 최소 0으로 지정해야함
     bottom: 100,
-    maxHeight: 100, // 높이를 제한
+    maxHeight: 400, // 높이를 제한
     width: '99%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175,171,171)',
     marginHorizontal: 20,
     zIndex: 2,
-    marginTop: '9%',
+    // marginTop: '9%',
   },
   item: {
     padding: 10,
