@@ -103,6 +103,7 @@ const Main: React.FC<MainProps> = ({
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   const [findata, setFindata] = useState<Findata[]>([]);
+  const [completionData, setCompletionData] = useState<Fin[]>([]);
 
   useEffect(() => {
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
@@ -170,7 +171,7 @@ const Main: React.FC<MainProps> = ({
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
         console.log('달성된루틴데이터:', completionData);
-        return completionData;
+        setCompletionData(completionData);
       } else {
         console.error('데이터가 없습니다.');
         return null;
