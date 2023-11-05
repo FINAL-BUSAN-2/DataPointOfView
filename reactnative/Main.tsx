@@ -67,9 +67,9 @@ interface RoutineItem {
 
 //루틴fin
 interface Fin {
-  ertn_id: string;
-  prtn_id: string;
-  hrtn_id: string;
+  ertn_fin?: {ertn_id: string};
+  prtn_id?: {prtn_id: string};
+  hrtn_id?: {hrtn_id: string};
 }
 
 // 타임라인 이모지
