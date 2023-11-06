@@ -358,7 +358,7 @@ const Access: React.FC<AccessProps> = ({
               {/* 추천 타이틀 */}
               <Text style={styles.recotext}>{userName}님 영양제 추천</Text>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>{eval(recommend)[0]}</Text>
+              <Text style={styles.recoproducttext}>{recommend}</Text>
               {/* 추천 제품2 */}
               <Text style={styles.cautiontext}>{recommend}</Text>
               {/* 추천 제품3 */}
