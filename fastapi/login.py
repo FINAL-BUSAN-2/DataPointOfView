@@ -1506,3 +1506,31 @@ def saveMemInfo(
 
     db.commit()
     return {"message": "수정되었습니다."}
+
+class Rull_Data(Base):
+    __tablename__ = "news_data"
+    upload = Column(String(20))
+    age = Column(String(20), primary_key=True)
+    gen = Column(String(20), primary_key=True)
+    rull = Column(String(100))
+
+
+class Rull_DataBase(BaseModel):
+    upload: str
+    age: str
+    gen: str
+    rull: str
+
+
+class Rull_DataInDB(Rull_DataBase):
+    class Config:
+        orm_mode = True
+
+@app.post("/recommend")
+def recommend(userEmail:str, db: Session = Depends(get_db)):
+    mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
+    if mem_info.mem_age == None or mem_info.mem_gen == None :
+        return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
+    else :
+        pillRecommend = db.query(Rull_Data).filter(or_(Rull_Data.age == mem_info.mem_age,Rull_Data.gen == mem_info.mem_gen)).first()
+        return(pillRecommend.rull)
