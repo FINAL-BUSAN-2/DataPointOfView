@@ -1529,7 +1529,7 @@ class Rule_DataInDB(Rule_DataBase):
 @app.get("/recommend")
 def recommend(userEmail:str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-    mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).distinct.all()
+    mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).distinct().all()
     
     if mem_info.mem_age == None or mem_info.mem_gen == None :
         return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
