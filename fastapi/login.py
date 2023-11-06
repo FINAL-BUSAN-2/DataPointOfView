@@ -1543,4 +1543,4 @@ def recommend(userEmail:str, db: Session = Depends(get_db)):
         pillRecommend = db.query(Rule_Data).filter(or_(Rule_Data.age == mem_info.mem_age,Rule_Data.gen == mem_info.mem_gen)).first()
         for pr in eval(pillRecommend.rule) :
             if pr not in result :  
-                return(pr)
+                return([pr,result])
