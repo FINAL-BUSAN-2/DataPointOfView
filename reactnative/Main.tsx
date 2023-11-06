@@ -14,6 +14,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {useFocusEffect} from '@react-navigation/native';
 
 import axios from 'axios';
 
@@ -104,6 +105,13 @@ const Main: React.FC<MainProps> = ({
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   const [findata, setFindata] = useState<Findata[]>([]);
   const [completionData, setCompletionData] = useState<Fin[]>([]);
+
+  // 메인페이지에 포커스가 있을 때마다
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, []),
+  );
 
   useEffect(() => {
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
