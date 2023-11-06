@@ -1213,7 +1213,7 @@ def emailfind(userEmail: str, db: Session = Depends(get_db)):
         .all()
     )
     p_t_es = (
-        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        db.query(PRTN_FIN.fin_prtn_time, PILL_CAT.cat_emoji)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
         .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
         .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
