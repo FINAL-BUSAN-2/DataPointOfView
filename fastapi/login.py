@@ -1506,3 +1506,100 @@ def saveMemInfo(
 
     db.commit()
     return {"message": "수정되었습니다."}
+
+
+# 루틴리스트+달성루틴한번에
+@app.get("/rtn_status")
+def get_routine_status(email: str, db: Session = Depends(get_db)):
+    try:
+        # 현재 날짜와 요일 얻기
+        today = datetime.today().date()
+        today_str = today.strftime("%Y-%m-%d")
+        korean_days = ["월", "화", "수", "목", "금", "토", "일"]
+        day_of_week = korean_days[today.weekday()]
+
+        # 루틴 설정 정보 조회
+        ertn_list = (
+            db.query(ERTN_SETTING)
+            .filter(ERTN_SETTING.ertn_mem == email)
+            .filter(
+                (ERTN_SETTING.ertn_sdate == today)
+                | (ERTN_SETTING.ertn_day.contains(day_of_week))
+            )
+            .all()
+        )
+
+        prtn_query = (
+            db.query(PRTN_SETTING, PILL_PROD.pill_nm)
+            .outerjoin(PILL_PROD, PILL_PROD.pill_cd == PRTN_SETTING.prtn_nm)
+            .filter(PRTN_SETTING.prtn_mem == email)
+            .filter(
+                (PRTN_SETTING.prtn_sdate == today)
+                | (PRTN_SETTING.prtn_day.contains(day_of_week))
+            )
+        )
+        prtn_list = [
+            {"prtn_setting": record[0], "pill_nm": record[1]}
+            for record in prtn_query.all()
+        ]
+
+        hrtn_list = (
+            db.query(HRTN_SETTING)
+            .filter(HRTN_SETTING.hrtn_mem == email)
+            .filter(
+                (HRTN_SETTING.hrtn_sdate == today)
+                | (HRTN_SETTING.hrtn_day.contains(day_of_week))
+            )
+            .all()
+        )
+
+        # 루틴 달성 정보 조회
+        at_index = email.find("@")
+        first_part = email[:at_index]  # "@" 앞부분 추출
+        first_char_after_at = email[at_index + 1]  # "@" 다음 첫 문자 추출
+        domain = f"{first_part}@{first_char_after_at}"
+
+        hrtn_id_fin = f"{domain}h"
+        ertn_id_fin = f"{domain}e"
+        prtn_id_fin = f"{domain}p"
+
+        hrtn_fin_info = (
+            db.query(HRTN_FIN)
+            .filter(cast(HRTN_FIN.fin_hrtn_time, Date) == today_str)
+            .filter(HRTN_FIN.hrtn_id.like(f"%{hrtn_id_fin}%"))
+            .all()
+        )
+
+        ertn_fin_info = (
+            db.query(ERTN_FIN)
+            .filter(cast(ERTN_FIN.fin_ertn_time, Date) == today_str)
+            .filter(ERTN_FIN.ertn_id.like(f"%{ertn_id_fin}%"))
+            .all()
+        )
+
+        prtn_fin_info = (
+            db.query(PRTN_FIN)
+            .filter(cast(PRTN_FIN.fin_prtn_time, Date) == today_str)
+            .filter(PRTN_FIN.prtn_id.like(f"%{prtn_id_fin}%"))
+            .all()
+        )
+
+        # 세 결과를 합쳐서 반환
+        combined_result = {
+            "routine_settings": {
+                "ertn_list": ertn_list,
+                "prtn_list": prtn_list,
+                "hrtn_list": hrtn_list,
+            },
+            "routine_fin_info": {
+                "hrtn_fin": hrtn_fin_info,
+                "ertn_fin": ertn_fin_info,
+                "prtn_fin": prtn_fin_info,
+            },
+        }
+
+        return combined_result
+
+    except Exception as e:
+        # 오류 발생 시 404 응답 반환
+        raise HTTPException(status_code=404, detail=str(e))
