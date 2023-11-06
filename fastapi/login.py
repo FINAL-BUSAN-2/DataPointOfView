@@ -1530,17 +1530,8 @@ class Rule_DataInDB(Rule_DataBase):
 def recommend(userEmail:str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
-    result = []
-    for pn in mem_prtn_nm :
-        cn = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pn).first()).first()
-        if cn not in result:
-            result.append(cn)
     
     if mem_info.mem_age == None or mem_info.mem_gen == None :
         return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
     else :
-        pillRecommend = db.query(Rule_Data).filter(or_(Rule_Data.age == mem_info.mem_age,Rule_Data.gen == mem_info.mem_gen)).first()
-        # for pr in eval(pillRecommend.rule) :
-        #     if pr not in result :  
-        
-        return(result)
+        return(mem_prtn_nm[0])
