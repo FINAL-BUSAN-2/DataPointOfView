@@ -1213,7 +1213,7 @@ def emailfind(userEmail: str, db: Session = Depends(get_db)):
         .all()
     )
     p_t_es = (
-        db.query(PRTN_FIN.fin_prtn_time, PILL_FUNC.func_emoji)
+        db.query(PRTN_FIN.fin_prtn_time, PILL_CAT.cat_emoji)
         .join(PRTN_SETTING, PRTN_SETTING.prtn_id == PRTN_FIN.prtn_id)
         .join(PILL_PROD, PRTN_SETTING.prtn_nm == PILL_PROD.pill_cd)
         .join(PILL_CMB, PILL_PROD.pill_cd == PILL_CMB.cmb_pill)
@@ -1508,6 +1508,46 @@ def saveMemInfo(
     return {"message": "수정되었습니다."}
 
 
+
+
+class Rule_Data(Base):
+    __tablename__ = "rule_data"
+    upload = Column(String(20))
+    age = Column(String(20), primary_key=True)
+    gen = Column(String(20), primary_key=True)
+    rule = Column(String(100))
+
+
+class Rule_DataBase(BaseModel):
+    upload: str
+    age: str
+    gen: str
+    rule: str
+
+
+class Rule_DataInDB(Rule_DataBase):
+    class Config:
+        orm_mode = True
+
+@app.get("/recommend")
+def recommend(userEmail:str, db: Session = Depends(get_db)):
+    mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
+    mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
+    result = []
+    for pn in mem_prtn_nm :
+        cn = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pn).first()).first()
+        if cn not in result:
+            result.append(cn)
+    
+    if mem_info.mem_age == None or mem_info.mem_gen == None :
+        return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
+    else :
+        pillRecommend = db.query(Rule_Data).filter(or_(Rule_Data.age == mem_info.mem_age,Rule_Data.gen == mem_info.mem_gen)).first()
+        for pr in eval(pillRecommend.rule) :
+            if pr not in result :  
+                return(cn)
+
+              
 # 루틴리스트+달성루틴한번에
 @app.get("/rtn_status")
 def get_routine_status(email: str, db: Session = Depends(get_db)):

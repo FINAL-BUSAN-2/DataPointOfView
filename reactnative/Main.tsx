@@ -117,7 +117,7 @@ const Main: React.FC<MainProps> = ({
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
       .then(response => response.json())
       .then(data => setFindata(data))
-      .catch(error => console.error('Error:', error));
+      .catch(() => {});
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     fetchRoutineCompletionData();
@@ -158,10 +158,10 @@ const Main: React.FC<MainProps> = ({
 
         setData(data);
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
       }
     } catch (error) {
-      console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
+      // console.error('데이터를 가져오는 동안 오류가 발생했습니다.');
     }
   };
 
@@ -181,11 +181,11 @@ const Main: React.FC<MainProps> = ({
         console.log('달성된루틴데이터:', completionData);
         setCompletionData(completionData);
       } else {
-        console.error('데이터가 없습니다.');
+        // console.error('데이터가 없습니다.');
         return null;
       }
     } catch (error) {
-      console.error('루틴달성 오류');
+      // console.error('루틴달성 오류', error);
       return null;
     }
   };
@@ -303,7 +303,7 @@ const Main: React.FC<MainProps> = ({
           {/* 알림 아이콘 */}
           <TouchableOpacity>
             <Image
-              source={require('./android/app/src/img/notification.png')}
+              source={require('./android/app/src/img/noimg.png')}
               style={{
                 width: 30,
                 height: 30,

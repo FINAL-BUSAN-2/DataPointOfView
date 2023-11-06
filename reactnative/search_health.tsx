@@ -180,11 +180,12 @@ const styles = StyleSheet.create({
   autoSearchContainer: {
     position: 'absolute',
     alignSelf: 'center',
-    top: 60,
+    marginTop: '7%',
     maxHeight: '100%', // 높이를 제한
     width: '85%',
     backgroundColor: 'rgb(231,230,230)',
     padding: 15,
+    paddingTop: 40,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: 'rgb(175,171,171)',
