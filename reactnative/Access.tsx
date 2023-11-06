@@ -8,6 +8,9 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  TouchableHighlight,
+  Alert,
+  Modal,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -64,6 +67,8 @@ const Access: React.FC<AccessProps> = ({
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
   const [showRecommend, setShowRecommend] = useState(false);
   const [recommend, setRecommend] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible1, setModalVisible1] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,6 +107,7 @@ const Access: React.FC<AccessProps> = ({
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
     ? chartData.pie_chart_data.map(item => ({
+        tag: item.tag,
         count: item.count,
         color: item.color,
       }))
@@ -109,6 +115,7 @@ const Access: React.FC<AccessProps> = ({
   // 영양 차트 데이터
   const pillChartData = chartData2.pill_chart_data
     ? chartData2.pill_chart_data.map(item => ({
+        func: item.func,
         count1: item.count1,
         color1: item.color1,
       }))
@@ -117,13 +124,15 @@ const Access: React.FC<AccessProps> = ({
   // 데이터 변수 설정
   const hcount = pieChartData.map(item => item.count);
   const hcolor = pieChartData.map(item => item.color);
+  const htag = pieChartData.map(item => item.tag);
   const htopTag = chartData.top_tag;
   const htopEmoji = chartData.top_emoji;
   const pcount = pillChartData.map(item => item.count1);
+  const pfunc = pillChartData.map(item => item.func);
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
-
+  console.log(pillChartData);
   const showRecommendButton = async () => {
     try {
       const recommendresponse = await axios.get(
@@ -148,7 +157,7 @@ const Access: React.FC<AccessProps> = ({
           {/* 알림 아이콘 */}
           <TouchableOpacity>
             <Image
-              source={require('./android/app/src/img/notification.png')}
+              source={require('./android/app/src/img/noimg.png')}
               style={{
                 width: 30,
                 height: 30,
@@ -318,30 +327,95 @@ const Access: React.FC<AccessProps> = ({
           {/* 운동 차트 */}
           <View style={styles.healthchart}>
             {chartData?.pie_chart_data ? (
-              <PieChart
-                widthAndHeight={90}
-                series={hcount}
-                sliceColor={hcolor}
-              />
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <PieChart
+                  widthAndHeight={90}
+                  series={hcount}
+                  sliceColor={hcolor}
+                />
+              </TouchableOpacity>
             ) : (
               <Text>
                 달성한 루틴이 <Text style={{left: 10}}>없어요.</Text>
               </Text>
             )}
           </View>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(!modalVisible)}>
+            <View style={styles.charthealthmodal}>
+              <Text style={{alignSelf: 'center', color: 'white'}}>운동</Text>
+              {htag.map((tag, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                  }}>
+                  <PieChart
+                    widthAndHeight={10}
+                    series={[hcount[index]]}
+                    sliceColor={[hcolor[index]]}
+                  />
+                  <Text style={{color: 'white', marginLeft: 10}}>{tag}</Text>
+                </View>
+              ))}
 
+              <Text
+                onPress={() => setModalVisible(!modalVisible)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                닫기
+              </Text>
+            </View>
+          </Modal>
           {/* 영양 차트 */}
           <View style={styles.pillchart}>
             {chartData2?.pill_chart_data ? (
-              <PieChart
-                widthAndHeight={90}
-                series={pcount}
-                sliceColor={pcolor}
-              />
+              <TouchableOpacity onPress={() => setModalVisible1(true)}>
+                <PieChart
+                  widthAndHeight={90}
+                  series={pcount}
+                  sliceColor={pcolor}
+                />
+              </TouchableOpacity>
             ) : (
               <Text>달성한 루틴이 없어요.</Text>
             )}
           </View>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible1}
+            onRequestClose={() => setModalVisible1(!modalVisible1)}>
+            <View style={styles.chartpillmodal}>
+              <Text style={{alignSelf: 'center', color: 'white'}}>영양</Text>
+              {pfunc.map((func, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                  }}>
+                  <PieChart
+                    widthAndHeight={10}
+                    series={[pcount[index]]}
+                    sliceColor={[pcolor[index]]}
+                  />
+                  <Text style={{color: 'white', marginLeft: 10}}>{func}</Text>
+                </View>
+              ))}
+
+              <Text
+                onPress={() => setModalVisible1(!modalVisible1)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                닫기
+              </Text>
+            </View>
+          </Modal>
         </View>
 
         <View style={styles.line}></View>
@@ -629,7 +703,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '30%',
     height: '60%',
-    right: 15,
+    right: '40%',
     borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
     borderRadius: 20,
@@ -650,7 +724,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '30%',
     height: '60%',
-    left: 15,
+    left: '40%',
     borderWidth: 2,
     borderColor: 'rgb(231,230,230)',
     borderRadius: 20,
@@ -669,7 +743,7 @@ const styles = StyleSheet.create({
   // 차트 영역
   chart: {
     flex: 3,
-    width: '80%',
+    width: '85%',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -679,10 +753,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  charthealthmodal: {
+    alignSelf: 'center',
+    top: '63%',
+    right: '22%',
+    width: '35%',
+    padding: 10,
+    // borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: 'rgba(43,58,85,0.9)',
+  },
   pillchart: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  chartpillmodal: {
+    alignSelf: 'center',
+    top: '63%',
+    width: '35%',
+    left: '22%',
+    padding: 10,
+    // borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: 'rgba(43,58,85,0.9)',
   },
 
   // 통계 텍스트 영역
