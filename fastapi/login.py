@@ -1532,8 +1532,7 @@ def recommend(userEmail:str, db: Session = Depends(get_db)):
     mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
     result = []
     for pn in mem_prtn_nm :
-        pc = db.query(PILL_PROD.pill_nm).filter(PILL_PROD.pill_cd == pn).first()
-        cn = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pc).first()).first()
+        cn = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pn).first()).first()
         if cn not in result:
             result.append(cn)
     
