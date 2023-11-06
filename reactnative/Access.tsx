@@ -126,9 +126,8 @@ const Access: React.FC<AccessProps> = ({
 
   const showRecommendButton = async () => {
     try {
-      const recommendresponse = await axios.post(
-        'http://43.200.178.131:3344/recommend',
-        userEmail,
+      const recommendresponse = await axios.get(
+        `http://43.200.178.131:3344/recommend/?userEmail=${userEmail}`,
       );
       setShowRecommend(!showRecommend);
       setRecommend(recommendresponse.data);

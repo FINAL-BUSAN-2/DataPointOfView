@@ -1526,7 +1526,7 @@ class Rull_DataInDB(Rull_DataBase):
     class Config:
         orm_mode = True
 
-@app.post("/recommend")
+@app.get("/recommend")
 def recommend(userEmail:str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
     if mem_info.mem_age == None or mem_info.mem_gen == None :
