@@ -1508,7 +1508,7 @@ def saveMemInfo(
     return {"message": "수정되었습니다."}
 
 class Rull_Data(Base):
-    __tablename__ = "news_data"
+    __tablename__ = "rull_data"
     upload = Column(String(20))
     age = Column(String(20), primary_key=True)
     gen = Column(String(20), primary_key=True)
