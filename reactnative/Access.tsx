@@ -356,13 +356,13 @@ const Access: React.FC<AccessProps> = ({
           {showRecommend && (
             <>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>{recommend[0]}</Text>
+              <Text style={styles.recotext}>{userName}님 영양제 추천</Text>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>{recommend[1]}</Text>
+              <Text style={styles.recoproducttext}>{eval(recommend)[0]}</Text>
               {/* 추천 제품2 */}
-              <Text style={styles.cautiontext}>{recommend[2]}</Text>
+              <Text style={styles.cautiontext}>{recommend}</Text>
               {/* 추천 제품3 */}
-              <Text style={styles.cautiontext2}>{recommend[3]}</Text>
+              <Text style={styles.cautiontext2}>{recommend}</Text>
             </>
           )}
         </View>
