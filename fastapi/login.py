@@ -1527,11 +1527,19 @@ class Rule_DataInDB(Rule_DataBase):
         orm_mode = True
 
 @app.get("/recommend")
-def recommend(userEmail:str, db: Session = Depends(get_db)):
+def getRecommend(userEmail:str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-    mem_prtn = db.query(PRTN_SETTING).filter(PRTN_SETTING.prtn_mem == userEmail).all()
-    
+    recommendRule = db.query(Rule_Data.rule).filter(and_((Rule_Data.age == mem_info.mem_age),(Rule_Data.gen == mem_info.mem_gen))).first()
+    mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
+    result = []
+    for pn in mem_prtn_nm :
+        pc = db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pn.prtn_nm).distinct().first()
+        rc = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == pc.cmb_cat).first()
+        result.append(rc.cat_nm)
     if mem_info.mem_age == None or mem_info.mem_gen == None :
         return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
     else :
-        return(mem_prtn)
+        for rr in eval(recommendRule.rule) :
+            if rr not in result :
+                break
+        return(rr)
