@@ -108,7 +108,7 @@ const Main: React.FC<MainProps> = ({
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
       .then(response => response.json())
       .then(data => setFindata(data))
-      .catch(error => console.error('Error:', error));
+      .catch(() => {});
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     fetchRoutineCompletionData();
@@ -294,7 +294,7 @@ const Main: React.FC<MainProps> = ({
           {/* 알림 아이콘 */}
           <TouchableOpacity>
             <Image
-              source={require('./android/app/src/img/notification.png')}
+              source={require('./android/app/src/img/noimg.png')}
               style={{
                 width: 30,
                 height: 30,
