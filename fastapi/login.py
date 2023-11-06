@@ -1535,4 +1535,6 @@ def recommend(userEmail:str, db: Session = Depends(get_db)):
         return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
     else :
         pillRecommend = db.query(Rule_Data).filter(or_(Rule_Data.age == mem_info.mem_age,Rule_Data.gen == mem_info.mem_gen)).first()
-        return(mem_prtn_nm)
+        for pr in eval(pillRecommend.rule) :
+            if pr not in mem_prtn_nm :  
+                return(pr)
