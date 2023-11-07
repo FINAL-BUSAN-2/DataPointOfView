@@ -119,7 +119,7 @@ function Search(props: SearchProps) {
             data={keyItems}
             style={{flex: 1}}
             nestedScrollEnabled={false}
-            keyExtractor={item => item.pill_nm}
+            keyExtractor={(item, index) => item.pill_cd + index}
             renderItem={({item}) => (
               <TouchableOpacity
                 key={item.pill_nm}
@@ -133,6 +133,7 @@ function Search(props: SearchProps) {
                 <Text>
                   {item.cat_emoji} {item.pill_nm}
                 </Text>
+
                 {/* <Image
                   source={require('./assets/imgs/north_west.svg')}
                   style={styles.arrowIcon}
