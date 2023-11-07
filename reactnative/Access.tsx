@@ -66,7 +66,6 @@ const Access: React.FC<AccessProps> = ({
   const [chartData, setChartData] = useState([]);
   const [chartData2, setChartData2] = useState([]);
   const [chartData3, setChartData3] = useState<chartData3 | null>(null);
-  const [showRecommend, setShowRecommend] = useState(false);
   const [recommend, setRecommend] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible1, setModalVisible1] = useState(false);
@@ -103,7 +102,15 @@ const Access: React.FC<AccessProps> = ({
       }
     };
 
+    const getRecommend = async () => {
+      const recommendresponse = await axios.get(
+        `http://43.200.178.131:3344/recommend/?userEmail=${userEmail}`,
+      );
+      setRecommend(recommendresponse.data);
+    };
+
     fetchData();
+    getRecommend();
   }, []);
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
@@ -133,14 +140,6 @@ const Access: React.FC<AccessProps> = ({
   const pcolor = pillChartData.map(item => item.color1);
   const ptopFunc = chartData2.top_func1;
   const ptopEmoji = chartData2.top_emoji1;
-  console.log(pillChartData);
-  const showRecommendButton = async () => {
-    const recommendresponse = await axios.get(
-      `http://43.200.178.131:3344/recommend/?userEmail=${userEmail}`,
-    );
-    setShowRecommend(!showRecommend);
-    setRecommend(recommendresponse.data);
-  };
 
   const marketSearch = async pill_nm => {
     const pillUrl = `https://www.coupang.com/np/search?component=&q=${pill_nm}`;
@@ -424,41 +423,26 @@ const Access: React.FC<AccessProps> = ({
 
         {/* 통계 텍스트 영역 */}
         <View style={styles.statisticstextbox}>
-          <TouchableOpacity
-            onPress={showRecommendButton}
-            style={styles.statictitle}>
+          <View style={styles.statictitle}>
             <Text style={styles.statictitletext}>추천 영양제</Text>
+          </View>
+          {/* 추천 타이틀 */}
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.recotext1}>👍 추천 영양군</Text>
+            <Text style={styles.recotext2}>: "{recommend.rr}"</Text>
+          </View>
+          {/* 추천 제품1 */}
+          <TouchableOpacity onPress={() => marketSearch(recommend)}>
+            <Text style={styles.recoproducttext}>- {recommend.recommend1}</Text>
           </TouchableOpacity>
-          {showRecommend && (
-            <>
-              {/* 추천 타이틀 */}
-              <View style={{flexDirection: 'row'}}>
-                <Text style={styles.recotext1}>👍 추천 영양군</Text>
-                <Text style={styles.recotext2}>: "비타민 및 무기질"</Text>
-              </View>
-              {/* 추천 제품1 */}
-              <TouchableOpacity
-                onPress={() => marketSearch(recommend.recommend1)}>
-                <Text style={styles.recoproducttext}>
-                  - {recommend.recommend1}
-                </Text>
-              </TouchableOpacity>
-              {/* 추천 제품2 */}
-              <TouchableOpacity
-                onPress={() => marketSearch(recommend.recommend2)}>
-                <Text style={styles.recoproducttext}>
-                  - {recommend.recommend2}
-                </Text>
-              </TouchableOpacity>
-              {/* 추천 제품3 */}
-              <TouchableOpacity
-                onPress={() => marketSearch(recommend.recommend3)}>
-                <Text style={styles.recoproducttext}>
-                  - {recommend.recommend3}
-                </Text>
-              </TouchableOpacity>
-            </>
-          )}
+          {/* 추천 제품2 */}
+          <TouchableOpacity onPress={() => marketSearch(recommend.recommend2)}>
+            <Text style={styles.recoproducttext}>- {recommend.recommend2}</Text>
+          </TouchableOpacity>
+          {/* 추천 제품3 */}
+          <TouchableOpacity onPress={() => marketSearch(recommend.recommend3)}>
+            <Text style={styles.recoproducttext}>- {recommend.recommend3}</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
