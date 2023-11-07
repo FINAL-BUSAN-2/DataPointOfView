@@ -1550,4 +1550,4 @@ def getRecommend(userEmail:str, db: Session = Depends(get_db)):
 @app.get("/getProdInfo")
 def getProdInfo(pill_nm:str, db: Session = Depends(get_db)):
     pill_info = db.query(PILL_PROD).filter(PILL_PROD.pill_nm == pill_nm).first()
-    return pill_info
+    return {'pill_nm':pill_info.pill_nm,'pill_cd':pill_info.pill_cd,'pill_mnf':pill_info.pill_mnf,'pill_rv':pill_info.pill_rv,'pill_rvnum':pill_info.pill_rvnum,'pill_info':pill_info.pill_info}
