@@ -69,6 +69,10 @@ const Access: React.FC<AccessProps> = ({
   const [recommend, setRecommend] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
+  const [modalVisible4, setModalVisible4] = useState(false);
+  const [pillProdInfo, setPillProdInfo] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -112,6 +116,14 @@ const Access: React.FC<AccessProps> = ({
     fetchData();
     getRecommend();
   }, []);
+
+  const getProdInfo = async pill_nm => {
+    const prodInfo = await axios.get(
+      `http://43.200.178.131:3344/getProdInfo/?pill_nm=${pill_nm}`,
+    );
+    setPillProdInfo(prodInfo.data);
+  };
+
   // 운동 차트 데이터
   const pieChartData = chartData.pie_chart_data
     ? chartData.pie_chart_data.map(item => ({
@@ -431,16 +443,91 @@ const Access: React.FC<AccessProps> = ({
             <Text style={styles.recotext1}>👍 추천 영양군</Text>
             <Text style={styles.recotext2}>: "{recommend.rr}"</Text>
           </View>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible2}
+            onRequestClose={() => setModalVisible2(!modalVisible2)}
+            onShow={() => getProdInfo(recommend.recommend1)}>
+            <View style={styles.chartpillmodal}>
+              <Text style={{alignSelf: 'center', color: 'white'}}>
+                {recommend.recommend1}
+              </Text>
+              <Text>{pillProdInfo}</Text>
+
+              <Text
+                onPress={() => marketSearch(recommend.recommend1)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                구매하러 가기
+              </Text>
+
+              <Text
+                onPress={() => setModalVisible2(!modalVisible2)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                닫기
+              </Text>
+            </View>
+          </Modal>
           {/* 추천 제품1 */}
-          <TouchableOpacity onPress={() => marketSearch(recommend.recommend1)}>
+          <TouchableOpacity onPress={() => setModalVisible2(true)}>
             <Text style={styles.recoproducttext}>- {recommend.recommend1}</Text>
           </TouchableOpacity>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible3}
+            onRequestClose={() => setModalVisible3(!modalVisible3)}
+            onShow={() => getProdInfo(recommend.recommend2)}>
+            <View style={styles.chartpillmodal}>
+              <Text style={{alignSelf: 'center', color: 'white'}}>
+                {recommend.recommend2}
+              </Text>
+              <Text>{pillProdInfo}</Text>
+
+              <Text
+                onPress={() => marketSearch(recommend.recommend2)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                구매하러 가기
+              </Text>
+
+              <Text
+                onPress={() => setModalVisible3(!modalVisible3)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                닫기
+              </Text>
+            </View>
+          </Modal>
           {/* 추천 제품2 */}
-          <TouchableOpacity onPress={() => marketSearch(recommend.recommend2)}>
+          <TouchableOpacity onPress={() => setModalVisible3(true)}>
             <Text style={styles.recoproducttext}>- {recommend.recommend2}</Text>
           </TouchableOpacity>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible4}
+            onRequestClose={() => setModalVisible4(!modalVisible4)}
+            onShow={() => getProdInfo(recommend.recommend3)}>
+            <View style={styles.chartpillmodal}>
+              <Text style={{alignSelf: 'center', color: 'white'}}>
+                {recommend.recommend3}
+              </Text>
+              <Text>{pillProdInfo}</Text>
+
+              <Text
+                onPress={() => marketSearch(recommend.recommend3)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                구매하러 가기
+              </Text>
+
+              <Text
+                onPress={() => setModalVisible4(!modalVisible4)}
+                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                닫기
+              </Text>
+            </View>
+          </Modal>
           {/* 추천 제품3 */}
-          <TouchableOpacity onPress={() => marketSearch(recommend.recommend3)}>
+          <TouchableOpacity onPress={() => setModalVisible4(true)}>
             <Text style={styles.recoproducttext}>- {recommend.recommend3}</Text>
           </TouchableOpacity>
         </View>
@@ -775,8 +862,7 @@ const styles = StyleSheet.create({
   chartpillmodal: {
     alignSelf: 'center',
     top: '63%',
-    width: '35%',
-    left: '22%',
+    width: '80%',
     padding: 10,
     // borderWidth: 1,
     borderRadius: 20,
