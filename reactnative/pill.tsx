@@ -189,7 +189,12 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
             [
               {
                 text: '확인',
-                onPress: () => navigation.navigate('Main'),
+                onPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Main'}],
+                  });
+                },
               },
             ],
           );
