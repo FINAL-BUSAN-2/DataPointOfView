@@ -356,13 +356,13 @@ const Access: React.FC<AccessProps> = ({
           {showRecommend && (
             <>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>{userName}님 영양제 추천</Text>
+              <Text style={styles.recotext}>{userName}님 추천 영양제</Text>
               {/* 추천 제품1 */}
               <Text style={styles.recoproducttext}>{recommend}</Text>
               {/* 추천 제품2 */}
-              <Text style={styles.cautiontext}>{recommend}</Text>
+              <Text style={styles.recoproducttext}>{recommend}</Text>
               {/* 추천 제품3 */}
-              <Text style={styles.cautiontext2}>{recommend}</Text>
+              <Text style={styles.recoproducttext}>{recommend}</Text>
             </>
           )}
         </View>
@@ -715,20 +715,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   recoproducttext: {
-    fontSize: 16,
-    color: '#000',
-    alignSelf: 'flex-start',
-    marginTop: 12,
-    marginLeft: 10,
-  },
-  cautiontext: {
-    fontSize: 16,
-    color: '#000',
-    alignSelf: 'flex-start',
-    marginTop: 12,
-    marginLeft: 10,
-  },
-  cautiontext2: {
     fontSize: 16,
     color: '#000',
     alignSelf: 'flex-start',
