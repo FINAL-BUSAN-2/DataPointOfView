@@ -432,7 +432,7 @@ const Access: React.FC<AccessProps> = ({
             <Text style={styles.recotext2}>: "{recommend.rr}"</Text>
           </View>
           {/* 추천 제품1 */}
-          <TouchableOpacity onPress={() => marketSearch(recommend)}>
+          <TouchableOpacity onPress={() => marketSearch(recommend.recommend1)}>
             <Text style={styles.recoproducttext}>- {recommend.recommend1}</Text>
           </TouchableOpacity>
           {/* 추천 제품2 */}
