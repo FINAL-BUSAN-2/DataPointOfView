@@ -68,7 +68,7 @@ const NewsInfo: React.FC<NewsInfoProps> = ({
             {/* 알림 아이콘 */}
             <TouchableOpacity>
               <Image
-                source={require('./android/app/src/img/notification.png')}
+                source={require('./android/app/src/img/noimg.png')}
                 style={{
                   width: 30,
                   height: 30,

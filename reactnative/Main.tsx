@@ -14,6 +14,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackPageList} from './CommonType';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {useFocusEffect} from '@react-navigation/native';
 
 import axios from 'axios';
 
@@ -66,11 +67,11 @@ interface RoutineItem {
 }
 
 //루틴fin
-//interface Fin {
-//  ertn_id: string;
-//prtn_id: string;
-// hrtn_id: string;
-//}
+interface Fin {
+  ertn_fin?: {ertn_id: string};
+  prtn_fin?: {prtn_id: string};
+  hrtn_fin?: {hrtn_id: string};
+}
 
 // 타임라인 이모지
 interface Findata {
@@ -103,12 +104,20 @@ const Main: React.FC<MainProps> = ({
   ///추가된루틴데이터가져오기
   const [data, setData] = useState<RoutineData[]>([]); // 데이터상태추가
   const [findata, setFindata] = useState<Findata[]>([]);
+  const [completionData, setCompletionData] = useState<Fin[]>([]);
+
+  // 메인페이지에 포커스가 있을 때마다
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, []),
+  );
 
   useEffect(() => {
     fetch(`http://43.200.178.131:3344/emailtest/?userEmail=${userEmail}`)
       .then(response => response.json())
       .then(data => setFindata(data))
-      .catch(error => console.error('Error:', error));
+      .catch(() => {});
     fetchData(); // 컴포넌트가 마운트되면 데이터를 가져오도록 설정
 
     fetchRoutineCompletionData();
@@ -170,7 +179,7 @@ const Main: React.FC<MainProps> = ({
         // 서버로부터 데이터를 가져온 후, response.data를 활용하여 루틴 달성 정보를 처리
         const completionData = response.data;
         console.log('달성된루틴데이터:', completionData);
-        return completionData;
+        setCompletionData(completionData);
       } else {
         // console.error('데이터가 없습니다.');
         return null;
@@ -294,7 +303,7 @@ const Main: React.FC<MainProps> = ({
           {/* 알림 아이콘 */}
           <TouchableOpacity>
             <Image
-              source={require('./android/app/src/img/notification.png')}
+              source={require('./android/app/src/img/noimg.png')}
               style={{
                 width: 30,
                 height: 30,
