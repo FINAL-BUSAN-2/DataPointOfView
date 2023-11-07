@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Linking,
   TouchableHighlight,
   Alert,
   Modal,
@@ -134,15 +135,16 @@ const Access: React.FC<AccessProps> = ({
   const ptopEmoji = chartData2.top_emoji1;
   console.log(pillChartData);
   const showRecommendButton = async () => {
-    try {
-      const recommendresponse = await axios.get(
-        `http://43.200.178.131:3344/recommend/?userEmail=${userEmail}`,
-      );
-      setShowRecommend(!showRecommend);
-      setRecommend(recommendresponse.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const recommendresponse = await axios.get(
+      `http://43.200.178.131:3344/recommend/?userEmail=${userEmail}`,
+    );
+    setShowRecommend(!showRecommend);
+    setRecommend(recommendresponse.data);
+  };
+
+  const marketSearch = async pill_nm => {
+    const pillUrl = `https://www.coupang.com/np/search?component=&q=${pill_nm}`;
+    Linking.openURL(pillUrl);
   };
 
   // console.log('finper:', chartData3?.result, chartData3?.finemoji);
@@ -430,13 +432,31 @@ const Access: React.FC<AccessProps> = ({
           {showRecommend && (
             <>
               {/* 추천 타이틀 */}
-              <Text style={styles.recotext}>{userName}님 추천 영양제</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.recotext1}>👍 추천 영양군</Text>
+                <Text style={styles.recotext2}>: "비타민 및 무기질"</Text>
+              </View>
               {/* 추천 제품1 */}
-              <Text style={styles.recoproducttext}>{recommend}</Text>
+              <TouchableOpacity
+                onPress={() => marketSearch(recommend.recommend1)}>
+                <Text style={styles.recoproducttext}>
+                  - {recommend.recommend1}
+                </Text>
+              </TouchableOpacity>
               {/* 추천 제품2 */}
-              <Text style={styles.recoproducttext}>{recommend}</Text>
+              <TouchableOpacity
+                onPress={() => marketSearch(recommend.recommend2)}>
+                <Text style={styles.recoproducttext}>
+                  - {recommend.recommend2}
+                </Text>
+              </TouchableOpacity>
               {/* 추천 제품3 */}
-              <Text style={styles.recoproducttext}>{recommend}</Text>
+              <TouchableOpacity
+                onPress={() => marketSearch(recommend.recommend3)}>
+                <Text style={styles.recoproducttext}>
+                  - {recommend.recommend3}
+                </Text>
+              </TouchableOpacity>
             </>
           )}
         </View>
@@ -803,17 +823,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
   },
-  recotext: {
+  recotext1: {
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#000',
+    marginTop: 12,
+  },
+  recotext2: {
     fontSize: 16,
     color: '#000',
     marginTop: 12,
   },
   recoproducttext: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#000',
     alignSelf: 'flex-start',
-    marginTop: 12,
-    marginLeft: 10,
+    marginTop: 9,
+    marginLeft: 20,
   },
 
   //네비게이션바
