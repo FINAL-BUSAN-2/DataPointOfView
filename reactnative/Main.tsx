@@ -239,7 +239,7 @@ const Main: React.FC<MainProps> = ({
         item.hrtn_id || item.ertn_id || item.prtn_id || '',
       )
     ) {
-      Alert.alert('이미 루틴을 수행하셨습니다1111');
+      Alert.alert('이미 루틴을 수행하셨습니다.');
       99;
       return;
     }
@@ -269,7 +269,7 @@ const Main: React.FC<MainProps> = ({
 
   const saveToDatabase = async (tableName: string, data: DatabaseData) => {
     try {
-      console.log('2222222222222222', tableName, 'With Data:', data);
+      //console.log('2222222222222222', tableName, 'With Data:', data);
       Alert.alert;
       const response = await fetch(
         `http://43.200.178.131:3344/rtn_done/${tableName}`,
@@ -281,17 +281,17 @@ const Main: React.FC<MainProps> = ({
           body: JSON.stringify(data),
         },
       );
-      console.log('333333333333333333333:', response);
+      // console.log('333333333333333333333:', response);
 
       if (!response.ok) {
         throw new Error('Failed to save data to server');
       }
       const result = await response.json();
-      console.log('4444444444444444444444:', result);
+      console.log('4444444444444444444444: 루틴DB저장완료!', result);
       return result;
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('이미 루틴을 수행하셨습니다222');
+      Alert.alert('루틴 달성 작업중 오류가 발생했습니다.');
     }
   };
 
