@@ -862,7 +862,8 @@ const styles = StyleSheet.create({
   chartpillmodal: {
     alignSelf: 'center',
     top: '63%',
-    width: '80%',
+    left: '22%',
+    width: '35%',
     padding: 10,
     // borderWidth: 1,
     borderRadius: 20,
