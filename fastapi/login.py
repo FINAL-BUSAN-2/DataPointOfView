@@ -1544,5 +1544,5 @@ def getRecommend(userEmail:str, db: Session = Depends(get_db)):
                 break
         rrc = db.query(PILL_CAT.cat_cd).filter(PILL_CAT.cat_nm == rr).first()
         subquery = db.query(PILL_CMB.cmb_pill).filter(PILL_CMB.cmb_cat == rrc.cat_cd).subquery()
-        recommendFinal = db.query(PILL_PROD).filter(PILL_PROD.pill_cd.in_(subquery),~PILL_PROD.pill_nm.like('%(단종)%')).order_by(PILL_PROD.pill_nm.asc()).limit(3).all()
-        return({'rr':rr,'recommend1' : recommendFinal[0],'recommend2' : recommendFinal[1],'recommend3' : recommendFinal[2]})
+        recommendFinal = db.query(PILL_PROD.pill_nm).filter(PILL_PROD.pill_cd.in_(subquery),~PILL_PROD.pill_nm.like('%(단종)%')).order_by(PILL_PROD.pill_nm.asc()).limit(3).all()
+        return({'rr':rr,'recommend1' : recommendFinal[0].pill_nm,'recommend2' : recommendFinal[1].pill_nm,'recommend3' : recommendFinal[2].pill_nm})
