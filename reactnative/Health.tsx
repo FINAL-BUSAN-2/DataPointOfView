@@ -208,7 +208,7 @@ const RoutineNameBox: React.FC<RoutineAddProps> = ({
           hrtn_nm: selectedValue.split('-')[0],
           hrtn_set: parseInt(set),
           hrtn_reps: parseInt(reps),
-          hrtn_day: daysString || '',
+          hrtn_day: daysString || null,
           hrtn_sdate: selectedDate || new Date().toDateString(),
           hrtn_time: selectedTime || currentTime,
           hrtn_alram: ertn_alram,
