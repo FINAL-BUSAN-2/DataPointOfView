@@ -478,15 +478,23 @@ const Access: React.FC<AccessProps> = ({
               getProdInfo(recommend.recommend1).then(() => setLoading(false));
             }}>
             <View style={styles.recommendModal}>
-              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    marginVertical: '17%',
-                  }}>
-                  잠시만 기다려주세요...
-                </Text>
+              {loading ? (
+                <>
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      color: 'white',
+                      marginVertical: '17%',
+                    }}>
+                    잠시만 기다려주세요...
+                  </Text>
+
+                  <Text
+                    onPress={() => visible2Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
               ) : (
                 <>
                   <View style={styles.pillInfoLine}>
@@ -527,15 +535,23 @@ const Access: React.FC<AccessProps> = ({
               getProdInfo(recommend.recommend2).then(() => setLoading(false));
             }}>
             <View style={styles.recommendModal}>
-              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    marginVertical: '17%',
-                  }}>
-                  잠시만 기다려주세요...
-                </Text>
+              {loading ? (
+                <>
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      color: 'white',
+                      marginVertical: '17%',
+                    }}>
+                    잠시만 기다려주세요...
+                  </Text>
+
+                  <Text
+                    onPress={() => visible3Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
               ) : (
                 <>
                   <View style={styles.pillInfoLine}>
@@ -576,15 +592,23 @@ const Access: React.FC<AccessProps> = ({
               getProdInfo(recommend.recommend3).then(() => setLoading(false));
             }}>
             <View style={styles.recommendModal}>
-              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    marginVertical: '17%',
-                  }}>
-                  잠시만 기다려주세요...
-                </Text>
+              {loading ? (
+                <>
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      color: 'white',
+                      marginVertical: '17%',
+                    }}>
+                    잠시만 기다려주세요...
+                  </Text>
+
+                  <Text
+                    onPress={() => visible4Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
               ) : (
                 <>
                   <View style={styles.pillInfoLine}>
