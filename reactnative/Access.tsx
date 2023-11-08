@@ -72,7 +72,10 @@ const Access: React.FC<AccessProps> = ({
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [modalVisible4, setModalVisible4] = useState(false);
-  const [pillProdInfo, setPillProdInfo] = useState([]);
+  const [pillNM, setPillNM] = useState(null);
+  const [pillMNF, setPillMNF] = useState(null);
+  const [pillINFO, setPillINFO] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -121,7 +124,9 @@ const Access: React.FC<AccessProps> = ({
     const prodInfo = await axios.get(
       `http://43.200.178.131:3344/getProdInfo/?pill_nm=${pill_nm}`,
     );
-    setPillProdInfo(prodInfo.data);
+    setPillNM(prodInfo.data.pill_nm);
+    setPillMNF(prodInfo.data.pill_mnf);
+    setPillINFO(prodInfo.data.pill_info);
   };
 
   // 운동 차트 데이터
@@ -156,6 +161,27 @@ const Access: React.FC<AccessProps> = ({
   const marketSearch = async pill_nm => {
     const pillUrl = `https://www.coupang.com/np/search?component=&q=${pill_nm}`;
     Linking.openURL(pillUrl);
+  };
+
+  const visible2Close = () => {
+    setPillNM(null);
+    setPillMNF(null);
+    setPillINFO(null);
+    setModalVisible2(false);
+  };
+
+  const visible3Close = () => {
+    setPillNM(null);
+    setPillMNF(null);
+    setPillINFO(null);
+    setModalVisible3(false);
+  };
+
+  const visible4Close = () => {
+    setPillNM(null);
+    setPillMNF(null);
+    setPillINFO(null);
+    setModalVisible4(false);
   };
 
   // console.log('finper:', chartData3?.result, chartData3?.finemoji);
@@ -447,25 +473,45 @@ const Access: React.FC<AccessProps> = ({
             animationType="none"
             transparent={true}
             visible={modalVisible2}
-            onRequestClose={() => setModalVisible2(!modalVisible2)}
-            onShow={() => getProdInfo(recommend.recommend1)}>
-            <View style={styles.chartpillmodal}>
-              <Text style={{alignSelf: 'center', color: 'white'}}>
-                {recommend.recommend1}
-              </Text>
-              <Text>{pillProdInfo}</Text>
+            onShow={() => {
+              setLoading(true);
+              getProdInfo(recommend.recommend1).then(() => setLoading(false));
+            }}>
+            <View style={styles.recommendModal}>
+              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    color: 'white',
+                    marginVertical: '17%',
+                  }}>
+                  잠시만 기다려주세요...
+                </Text>
+              ) : (
+                <>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>제품명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillNM}</Text>
+                  </View>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>회사명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillMNF}</Text>
+                  </View>
+                  <Text style={styles.recommendModalText3}>{pillINFO}</Text>
 
-              <Text
-                onPress={() => marketSearch(recommend.recommend1)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                구매하러 가기
-              </Text>
+                  <Text
+                    onPress={() => marketSearch(recommend.recommend1)}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    구매하러 가기
+                  </Text>
 
-              <Text
-                onPress={() => setModalVisible2(!modalVisible2)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                닫기
-              </Text>
+                  <Text
+                    onPress={() => visible2Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
+              )}
             </View>
           </Modal>
           {/* 추천 제품1 */}
@@ -476,25 +522,45 @@ const Access: React.FC<AccessProps> = ({
             animationType="none"
             transparent={true}
             visible={modalVisible3}
-            onRequestClose={() => setModalVisible3(!modalVisible3)}
-            onShow={() => getProdInfo(recommend.recommend2)}>
-            <View style={styles.chartpillmodal}>
-              <Text style={{alignSelf: 'center', color: 'white'}}>
-                {recommend.recommend2}
-              </Text>
-              <Text>{pillProdInfo}</Text>
+            onShow={() => {
+              setLoading(true);
+              getProdInfo(recommend.recommend2).then(() => setLoading(false));
+            }}>
+            <View style={styles.recommendModal}>
+              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    color: 'white',
+                    marginVertical: '17%',
+                  }}>
+                  잠시만 기다려주세요...
+                </Text>
+              ) : (
+                <>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>제품명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillNM}</Text>
+                  </View>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>회사명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillMNF}</Text>
+                  </View>
+                  <Text style={styles.recommendModalText3}>{pillINFO}</Text>
 
-              <Text
-                onPress={() => marketSearch(recommend.recommend2)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                구매하러 가기
-              </Text>
+                  <Text
+                    onPress={() => marketSearch(recommend.recommend2)}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    구매하러 가기
+                  </Text>
 
-              <Text
-                onPress={() => setModalVisible3(!modalVisible3)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                닫기
-              </Text>
+                  <Text
+                    onPress={() => visible3Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
+              )}
             </View>
           </Modal>
           {/* 추천 제품2 */}
@@ -505,25 +571,45 @@ const Access: React.FC<AccessProps> = ({
             animationType="none"
             transparent={true}
             visible={modalVisible4}
-            onRequestClose={() => setModalVisible4(!modalVisible4)}
-            onShow={() => getProdInfo(recommend.recommend3)}>
-            <View style={styles.chartpillmodal}>
-              <Text style={{alignSelf: 'center', color: 'white'}}>
-                {recommend.recommend3}
-              </Text>
-              <Text>{pillProdInfo}</Text>
+            onShow={() => {
+              setLoading(true);
+              getProdInfo(recommend.recommend3).then(() => setLoading(false));
+            }}>
+            <View style={styles.recommendModal}>
+              {loading ? ( // 로딩 상태에 따라 로딩 메시지 또는 내용을 렌더링
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    color: 'white',
+                    marginVertical: '17%',
+                  }}>
+                  잠시만 기다려주세요...
+                </Text>
+              ) : (
+                <>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>제품명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillNM}</Text>
+                  </View>
+                  <View style={styles.pillInfoLine}>
+                    <Text style={styles.recommendModalText}>회사명 :</Text>
+                    <Text style={styles.recommendModalText2}>{pillMNF}</Text>
+                  </View>
+                  <Text style={styles.recommendModalText3}>{pillINFO}</Text>
 
-              <Text
-                onPress={() => marketSearch(recommend.recommend3)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                구매하러 가기
-              </Text>
+                  <Text
+                    onPress={() => marketSearch(recommend.recommend3)}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    구매하러 가기
+                  </Text>
 
-              <Text
-                onPress={() => setModalVisible4(!modalVisible4)}
-                style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
-                닫기
-              </Text>
+                  <Text
+                    onPress={() => visible4Close()}
+                    style={{color: 'white', alignSelf: 'center', fontSize: 18}}>
+                    닫기
+                  </Text>
+                </>
+              )}
             </View>
           </Modal>
           {/* 추천 제품3 */}
@@ -868,6 +954,38 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderRadius: 20,
     backgroundColor: 'rgba(43,58,85,0.9)',
+  },
+
+  pillInfoLine: {
+    flexDirection: 'row',
+    width: '90%',
+    alignSelf: 'center',
+  },
+
+  recommendModal: {
+    alignSelf: 'center',
+    top: '50%',
+    width: '80%',
+    padding: 10,
+    // borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: 'rgba(43,58,85,0.9)',
+  },
+
+  recommendModalText: {
+    color: 'white',
+    margin: 5,
+  },
+
+  recommendModalText2: {
+    color: 'white',
+    alignSelf: 'center',
+  },
+
+  recommendModalText3: {
+    alignSelf: 'center',
+    color: 'white',
+    margin: 5,
   },
 
   // 통계 텍스트 영역
