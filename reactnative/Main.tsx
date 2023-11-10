@@ -239,7 +239,8 @@ const Main: React.FC<MainProps> = ({
         item.hrtn_id || item.ertn_id || item.prtn_id || '',
       )
     ) {
-      Alert.alert('이미 루틴을 수행하셨습니다');
+      Alert.alert('이미 루틴을 수행하셨습니다.');
+
       99;
       return;
     }
@@ -937,22 +938,24 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(175, 171, 171)', // Set the border color
   },
   routineItemSection: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: 'center',
     alignSelf: 'center',
     height: 50,
   },
   routineItemSectionTag: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
     height: 50,
+    right: '10%',
   },
   routineItemSectionNM: {
     width: 150,
     justifyContent: 'center',
     alignSelf: 'center',
     height: 50,
+    left: '25.%',
   },
 
   routineInfo: {
@@ -971,7 +974,7 @@ const styles = StyleSheet.create({
     padding: 3, // Adjust the padding as needed
     borderRadius: 8,
     alignSelf: 'flex-start',
-    width: '60%',
+    width: '100%',
   },
 
   routineInfoWithEmoji: {
@@ -985,7 +988,7 @@ const styles = StyleSheet.create({
 
   //루틴달성동그라미 컨테이너
   routineItemSection_done: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: 'center',
     alignItems: 'flex-end',
     height: 50,
