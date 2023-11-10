@@ -1093,6 +1093,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
                     or_(
                         ERTN_SETTING.ertn_day.like(f"%{day_of_week}%"),
                         ERTN_SETTING.ertn_day.is_(None),
+                        ERTN_SETTING.ertn_day == "",
                     ),
                     or_(
                         ERTN_SETTING.ertn_edate == today,  ## 2023-10-29
@@ -1110,6 +1111,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
                     or_(
                         HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
                         HRTN_SETTING.hrtn_day.is_(None),
+                        HRTN_SETTING.hrtn_day == "",
                     ),
                     or_(
                         HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
@@ -1127,6 +1129,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
                     or_(
                         PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
                         PRTN_SETTING.prtn_day.is_(None),
+                        PRTN_SETTING.prtn_day == "",
                     ),
                     or_(
                         PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
@@ -1171,6 +1174,7 @@ def finfunc(userEmail: str, db: Session = Depends(get_db)):
             .count()
         )
         result = (efin + hfin + pfin) / (ertn + hrtn + prtn) * 100
+
         if result < 20:
             finemoji = "🌚"
         elif result < 40:
@@ -1289,6 +1293,49 @@ def fintest(userEmail: str, db: Session = Depends(get_db)):
         .all()
     )
     return e_test, h_test, p_test
+
+
+@app.get("/test")
+# def finfunc(userEmail: str, db: Session = Depends(get_db)):
+def finfunc(userEmail: str, db: Session = Depends(get_db)):
+    prtn = (
+        db.query(PRTN_SETTING)
+        .filter(
+            and_(
+                PRTN_SETTING.prtn_mem == userEmail,
+                or_(
+                    PRTN_SETTING.prtn_day.like(f"%{day_of_week}%"),
+                    PRTN_SETTING.prtn_day.is_(None),
+                ),
+                or_(
+                    PRTN_SETTING.prtn_edate == today,  ## 2023-10-29
+                    PRTN_SETTING.prtn_edate.is_(None),
+                ),
+            )
+        )
+        .all()
+        # .count()
+    )
+    hrtn = (
+        db.query(HRTN_SETTING)
+        .filter(
+            and_(
+                HRTN_SETTING.hrtn_mem == userEmail,
+                or_(
+                    HRTN_SETTING.hrtn_day.like(f"%{day_of_week}%"),
+                    HRTN_SETTING.hrtn_day.is_(None),
+                    HRTN_SETTING.hrtn_day == "",
+                ),
+                or_(
+                    HRTN_SETTING.hrtn_edate == today,  ## 2023-10-29
+                    HRTN_SETTING.hrtn_edate.is_(None),
+                ),
+            )
+        )
+        .all()
+        # .count()
+    )
+    return hrtn
 
 
 ############################################################## pill_prod((영양검색창활용)
@@ -1507,6 +1554,7 @@ def saveMemInfo(
     db.commit()
     return {"message": "수정되었습니다."}
 
+
 class Rule_Data(Base):
     __tablename__ = "rule_data"
     upload = Column(String(20))
@@ -1526,28 +1574,64 @@ class Rule_DataInDB(Rule_DataBase):
     class Config:
         orm_mode = True
 
+
 @app.get("/recommend")
-def getRecommend(userEmail:str, db: Session = Depends(get_db)):
+def getRecommend(userEmail: str, db: Session = Depends(get_db)):
     mem_info = db.query(Mem_Detail).filter(Mem_Detail.mem_email == userEmail).first()
-    recommendRule = db.query(Rule_Data.rule).filter(and_((Rule_Data.age == mem_info.mem_age),(Rule_Data.gen == mem_info.mem_gen))).first()
-    mem_prtn_nm = db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
+    recommendRule = (
+        db.query(Rule_Data.rule)
+        .filter(
+            and_(
+                (Rule_Data.age == mem_info.mem_age), (Rule_Data.gen == mem_info.mem_gen)
+            )
+        )
+        .first()
+    )
+    mem_prtn_nm = (
+        db.query(PRTN_SETTING.prtn_nm).filter(PRTN_SETTING.prtn_mem == userEmail).all()
+    )
     result = []
-    for pn in mem_prtn_nm :
-        pc = db.query(PILL_CMB.cmb_cat).filter(PILL_CMB.cmb_pill == pn.prtn_nm).distinct().first()
+    for pn in mem_prtn_nm:
+        pc = (
+            db.query(PILL_CMB.cmb_cat)
+            .filter(PILL_CMB.cmb_pill == pn.prtn_nm)
+            .distinct()
+            .first()
+        )
         rc = db.query(PILL_CAT.cat_nm).filter(PILL_CAT.cat_cd == pc.cmb_cat).first()
         result.append(rc.cat_nm)
-    if mem_info.mem_age == None or mem_info.mem_gen == None :
-        return('회원정보 수정에서 성별과 연령대 정보를 수정해주세요.')
-    else :
-        for rr in eval(recommendRule.rule) :
-            if rr not in result :
+    if mem_info.mem_age == None or mem_info.mem_gen == None:
+        return "회원정보 수정에서 성별과 연령대 정보를 수정해주세요."
+    else:
+        for rr in eval(recommendRule.rule):
+            if rr not in result:
                 break
         rrc = db.query(PILL_CAT.cat_cd).filter(PILL_CAT.cat_nm == rr).first()
-        subquery = db.query(PILL_CMB.cmb_pill).filter(PILL_CMB.cmb_cat == rrc.cat_cd).subquery()
-        recommendFinal = db.query(PILL_PROD.pill_nm).filter(PILL_PROD.pill_cd.in_(subquery),~PILL_PROD.pill_nm.like('%(단종)%')).order_by(PILL_PROD.pill_nm.asc()).limit(3).all()
-        return({'rr':rr,'recommend1' : recommendFinal[0].pill_nm,'recommend2' : recommendFinal[1].pill_nm,'recommend3' : recommendFinal[2].pill_nm})
-    
+        subquery = (
+            db.query(PILL_CMB.cmb_pill)
+            .filter(PILL_CMB.cmb_cat == rrc.cat_cd)
+            .subquery()
+        )
+        recommendFinal = (
+            db.query(PILL_PROD.pill_nm)
+            .filter(PILL_PROD.pill_cd.in_(subquery), ~PILL_PROD.pill_nm.like("%(단종)%"))
+            .order_by(PILL_PROD.pill_nm.asc())
+            .limit(3)
+            .all()
+        )
+        return {
+            "rr": rr,
+            "recommend1": recommendFinal[0].pill_nm,
+            "recommend2": recommendFinal[1].pill_nm,
+            "recommend3": recommendFinal[2].pill_nm,
+        }
+
+
 @app.get("/getProdInfo")
-def getProdInfo(pill_nm:str, db: Session = Depends(get_db)):
+def getProdInfo(pill_nm: str, db: Session = Depends(get_db)):
     pill_info = db.query(PILL_PROD).filter(PILL_PROD.pill_nm == pill_nm).first()
-    return {'pill_nm':pill_info.pill_nm,'pill_mnf':pill_info.pill_mnf,'pill_info':pill_info.pill_info}
+    return {
+        "pill_nm": pill_info.pill_nm,
+        "pill_mnf": pill_info.pill_mnf,
+        "pill_info": pill_info.pill_info,
+    }
